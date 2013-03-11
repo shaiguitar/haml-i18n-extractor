@@ -1,24 +1,10 @@
 # Haml::I18n::Extractor
 
-TODO: Write a gem description
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'haml-i18n-extractor'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install haml-i18n-extractor
+Extract strings likely to be translated from haml into locale file
 
 ## Usage
 
-TODO: Write usage instructions here
+Right now there is a FindText class that will find text likely to be imported into a locale file. More TBD.
 
 ## Contributing
 
