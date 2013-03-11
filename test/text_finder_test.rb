@@ -89,7 +89,7 @@ module Haml
 
     def find_text(haml)
       output_haml_debug(haml) if ENV['DEBUG']
-      find_text = Haml::I18n::Extractor::FindText.new(haml) # this is on a line per-line basis.
+      find_text = Haml::I18n::Extractor::TextFinder.new(haml) # this is on a line per-line basis.
       find_text.run
     end
 

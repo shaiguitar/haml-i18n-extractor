@@ -1,0 +1,25 @@
+#header.page
+  %p#brand= link_to t(.some_place), '/'
+  #menu
+    %ul.header-links
+      - if true
+        - if false
+          %li
+            %a#cheese-rice{:href => url_for([:admin, :dashboard])}
+              %span.thing-ok t(".admin")
+            #bla
+              %ul#admin-dropdown-box
+                %li
+                  %a{:href => url_for([:admin, :dashboard])}
+                    %span t(".admin_dashboar")
+                %li
+                  %a{:href => url_for([:admin, :stacks])}
+                    %span t(".stacks")
+                %li
+                  %a{:href => url_for([:admin, :environments])}
+                    %span t(".alerts")
+                %li
+                  %a{:href => url_for([:admin, :accounts])}
+                    %span t(".accounts")
+        - if true
+          %li{:class => some_ruby.any?{|a| a.ok? } ? 'ok' : 'notok'}

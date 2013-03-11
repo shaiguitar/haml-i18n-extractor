@@ -2,8 +2,10 @@ require 'haml'
 require 'haml/parser'
 module Haml
   module I18n
-    module Extractor
-      class FindText
+    class Extractor
+      class TextFinder
+        
+        # FIXME? right now this class should be used on a line per line basis
 
         def initialize(haml)
           @haml = haml

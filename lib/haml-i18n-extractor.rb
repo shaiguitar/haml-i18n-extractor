@@ -1,11 +1,5 @@
 require "haml-i18n-extractor/version"
-require "haml-i18n-extractor/find_text"
-
-module Haml
-  module I18n
-    module Extractor
-
-
-    end
-  end
-end
+require "haml-i18n-extractor/text_finder"
+require "haml-i18n-extractor/text_replacer"
+require "haml-i18n-extractor/haml_reader"
+require "haml-i18n-extractor/extractor"
