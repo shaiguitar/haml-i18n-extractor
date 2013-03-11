@@ -4,32 +4,6 @@ module Haml
   module I18n
     class Extractor
       class TextFinder
-        
-        # FIXME? right now this class should be used on a line per line basis
-
-        def initialize(haml)
-          @haml = haml
-          @parser = Haml::Parser.new(haml, Haml::Options.new)
-          create_lines(@haml)
-        end
-        
-        def create_lines(haml)
-          match = haml.rstrip.scan(/(([ \t]+)?(.*?))(?:\Z|\r\n|\r|\n)/m)
-          match.pop
-          match.each_with_index.map do |(full, whitespace, text), index|
-            Haml::Parser::Line.new(whitespace, text.rstrip, full, index, @parser, false)
-          end
-        end
-        
-        def run
-          result = []
-          create_lines(@haml).each{|line|
-            if txt = plain_text(line)
-              result << txt
-            end
-           }
-           result.compact
-        end
 
         THINGS_THAT_ARE_NOT_TEXT = [ Haml::Parser::DIV_CLASS, Haml::Parser::DIV_ID,
             Haml::Parser::COMMENT, Haml::Parser::SANITIZE, Haml::Parser::FLAT_SCRIPT,
@@ -48,6 +22,30 @@ module Haml
         # %foo.bar= no
         # %foo{:a => 'b'} yes
         # rubular.com against %foo#bar#cheez{:cheeze => 'hell'}= "what #{var}"
+        
+        def initialize(haml)
+          @haml = haml
+          @parser = Haml::Parser.new(haml, Haml::Options.new)
+          create_lines(@haml)
+        end
+        
+        def create_lines(haml)
+          match = haml.rstrip.scan(/(([ \t]+)?(.*?))(?:\Z|\r\n|\r|\n)/m)
+          match.pop
+          match.each_with_index.map do |(full, whitespace, text), index|
+            Haml::Parser::Line.new(whitespace, text.rstrip, full, index, @parser, false)
+          end
+        end
+        
+        def find
+          result = []
+          create_lines(@haml).each{|line|
+            if txt = plain_text(line)
+              result << txt
+            end
+           }
+           result.compact.first # there should only be one match, per-line.
+        end
   
         def plain_text(line)
           case line.full[0]

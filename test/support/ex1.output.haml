@@ -1,25 +1,25 @@
 #header.page
-  %p#brand= link_to "Some place", '/'
+  %p#brand= link_to t('.some_place'), '/'
   #menu
     %ul.header-links
       - if true
         - if false
           %li
             %a#cheese-rice{:href => url_for([:admin, :dashboard])}
-              %span.thing-ok Admin
+              %span.thing-ok t('.admin')
             #bla
               %ul#admin-dropdown-box
                 %li
                   %a{:href => url_for([:admin, :dashboard])}
-                    %span Admin Dashboard
+                    %span t('.admin_dashboard')
                 %li
                   %a{:href => url_for([:admin, :stacks])}
-                    %span Stacks
+                    %span t('.stacks')
                 %li
                   %a{:href => url_for([:admin, :environments])}
-                    %span Alerts
+                    %span t('.alerts')
                 %li
                   %a{:href => url_for([:admin, :accounts])}
-                    %span Accounts
+                    %span t('.accounts')
         - if true
-          What is@ supposed to be, is supposed to be! ~
+          t('.what_is_supposed_to_be_is_supp')
