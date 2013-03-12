@@ -18,6 +18,11 @@ module Haml
       assert_equal replacer.replace_hash, { :replace_with => "%span t('.admin_dashboard')" }
     end
 
+    test "it won't replace already replaced t() characters" do
+      replacer = Haml::I18n::Extractor::TextReplacer.new("%span t('.admin_dashboard')", "t('.admin_dashboard')")
+      assert_equal replacer.replace_hash, { :replace_with => "%span t('.admin_dashboard')" }
+    end
+
     test "it can replace the body of haml with t() characters example for link_to and removes surrounding quotes as well" do
       replacer = Haml::I18n::Extractor::TextReplacer.new(%{%p#brand= link_to 'Some Place', '/'}, "Some Place")
       assert_equal replacer.replace_hash, { :replace_with => %{%p#brand= link_to t('.some_place'), '/'} }

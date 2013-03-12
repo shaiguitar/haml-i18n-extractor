@@ -5,6 +5,7 @@ module Haml
 
         attr_reader :full_line, :text_to_replace
 
+        T_REGEX = /t\('\..*'\)/
         # limit the number of chars
         LIMIT_KEY_NAME = 30
         # do not pollute the key space it will make it invalid yaml
@@ -21,12 +22,8 @@ module Haml
         
         def modified_line
           full_line = @full_line.dup
-          # if there are quotes surrounding the string, we want them removed as well...
-          unless full_line.gsub!('"' + @text_to_replace + '"', keyname)
-            unless full_line.gsub!("'" + @text_to_replace + "'", keyname)
-              full_line.gsub!(@text_to_replace, keyname)
-            end
-          end
+          return @full_line if has_been_translated?(full_line)
+          remove_surrounding_quotes(full_line)
           full_line
         end
         
@@ -34,6 +31,19 @@ module Haml
         
         def keyname
           "t('.#{to_keyname(@text_to_replace.dup)}')"
+        end
+
+        def has_been_translated?(str)
+          str.match T_REGEX
+        end
+
+        def remove_surrounding_quotes(str)
+          # if there are quotes surrounding the string, we want them removed as well...
+          unless str.gsub!('"' + @text_to_replace + '"', keyname)
+            unless str.gsub!("'" + @text_to_replace + "'", keyname)
+              str.gsub!(@text_to_replace, keyname)
+            end
+          end
         end
         
         def to_keyname(str)
