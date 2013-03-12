@@ -3,12 +3,10 @@ require 'test_helper'
 module Haml
   class ExtractorTest < MiniTest::Unit::TestCase
 
-    # TODO: read in the file, parse it line by line, use text_finder and extract away
-    # TODO: ensure if there are duplicate strings on one line, to handle that correctly? not sure if that's even a use-case?
-    # for eg: find_text("%a{'href' => 'http://whatever'} whatever"), ["whatever"]
-    # TODO: Do extraction, verify the haml is parsable at the end.
-    # TODO: handles duplicate texts and doesn't silently let that pass somehow
-    # TODO: does not fail on handling text with weird characters so t() fails weirdly ("hell's a ~@~" => t(".hell's_a_~@~"))...
+    test "it can process the haml and replace it with other text!" do
+      @ex1 = Haml::I18n::Extractor.new(file_path("ex1.haml"))
+      @ex1.run
+    end
 
     def file_path(name)
       File.dirname(__FILE__) + "/support/#{name}"
@@ -26,11 +24,6 @@ module Haml
     test "can initialize if the haml is valid syntax" do
       @ex1 = Haml::I18n::Extractor.new(file_path("ex1.haml"))
       assert true, "extractor can initialize"
-    end
-
-    test "it can process the haml and replace it with other text" do
-      @ex1 = Haml::I18n::Extractor.new(file_path("ex1.haml"))
-      @ex1.run
     end
 
     test "it can replace a string body and have expected output" do

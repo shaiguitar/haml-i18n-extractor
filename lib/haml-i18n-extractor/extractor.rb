@@ -49,8 +49,7 @@ module Haml
       private
       
       def validate_haml(haml)
-        options ||= Haml::Options.new
-        parser = Haml::Parser.new(haml, options)
+        parser = Haml::Parser.new(haml, Haml::Options.new)
         parser.parse
         rescue Haml::SyntaxError
           raise InvalidSyntax, "invalid syntax for haml #{@haml_reader.path}"

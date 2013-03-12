@@ -7,6 +7,8 @@ Gem::Specification.new do |gem|
   gem.description   = %q{Parse the texts out of the haml files into localization files}
   gem.summary       = %q{Parse the texts out of the haml files into localization files}
   gem.homepage      = ""
+  gem.executables = ['haml-i18n-extractor']
+  gem.default_executable = 'haml-i18n-extractor'
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
