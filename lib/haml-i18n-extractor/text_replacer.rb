@@ -17,9 +17,10 @@ module Haml
         end
 
         def replace_hash
-          { :replace_with => modified_line }
+          @replace_hash ||= { :modified_line => modified_line, :keyname => keyname, :replaced_text => @text_to_replace }
         end
         
+        # the new full line, including a `t()` replacement instead of the `text_to_replace` portion.
         def modified_line
           full_line = @full_line.dup
           return @full_line if has_been_translated?(full_line)
@@ -30,7 +31,8 @@ module Haml
         private
         
         def keyname
-          "t('.#{to_keyname(@text_to_replace.dup)}')"
+          text_to_replace = @text_to_replace.dup
+          has_been_translated?(text_to_replace) ? text_to_replace : "t('.#{to_keyname(text_to_replace)}')"
         end
 
         def has_been_translated?(str)

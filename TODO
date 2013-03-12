@@ -1,4 +1,7 @@
 - Work on more syntax/parsing
 - Move the keyname replacements over to a yaml file...etc.
+- Have an interactive mode: define workflow(s) for using this lib/tool.
 - Ensure if there are duplicate strings on one line, to handle that correctly? not sure if that's even a use-case?
   - for eg: find_text("%a{'href' => 'http://whatever'} whatever"), ["whatever"]
+- Remove the ex1.output ex1.i18n-extractor duplication. (or move to tmp dir)
+- Add {} to disallowed characters
