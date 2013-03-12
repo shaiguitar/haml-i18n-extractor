@@ -4,7 +4,13 @@ Extract strings likely to be translated from haml into locale file
 
 ## Usage
 
-Right now there is a FindText class that will find text likely to be imported into a locale file. More TBD.
+Right now, after installing this gem, you can run the binary:
+
+`cd your-rails-app; haml-i18n-extractor .`
+
+It will create a bunch of copied over templates, with the text copied over.
+
+TODO: move the replaced text into yaml files.
 
 ## Contributing
 
