@@ -32,15 +32,17 @@ module Haml
 
         def locale_file
           if @locale_hash
-            full_path = Pathname.new(@locale_hash.map{|_,h| h[:path] }.compact.first)
-            base_name = full_path.basename.to_s
-            File.expand_path(File.join( @locales_dir, standardized_viewname(full_path) + ".#{base_name}.yml"))
+            pth = @locale_hash.map{|_,h| h[:path] }.compact.first
+            if pth
+              full_path = Pathname.new(pth)
+              base_name = full_path.basename.to_s
+              File.expand_path(File.join( @locales_dir, standardized_viewname(full_path) + ".#{base_name}.yml"))
+            end
           end.to_s
         end
         
         def write_file
           f = File.open(locale_file, "w+")
-          puts yaml_hash.inspect
           f.puts yaml_hash.to_yaml
           f.flush
         end

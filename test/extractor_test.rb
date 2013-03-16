@@ -44,6 +44,16 @@ module Haml
       assert_equal YAML.load(File.read(@ex1.yaml_tool.locale_file)), @ex1.yaml_tool.yaml_hash
     end
 
+    test "it raises if there is nothing to translate" do
+      begin
+        @nothing_to_translate = Haml::I18n::Extractor.new(file_path("nothing_to_translate.haml"))
+        assert_equal @ex1.yaml_tool.locale_hash, nil
+        @nothing_to_translate.run
+      rescue Haml::I18n::Extractor::NothingToTranslate
+        assert true, "NothingToTranslate raised"
+      end
+    end
+
     test "sends a hash over of replacement info to its yaml tool when run" do
       @ex1 = Haml::I18n::Extractor.new(file_path("ex1.haml"))
       assert_equal @ex1.yaml_tool.locale_hash, nil

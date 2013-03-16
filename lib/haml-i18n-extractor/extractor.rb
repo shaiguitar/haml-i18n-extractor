@@ -7,6 +7,7 @@ module Haml
       end
       
       class InvalidSyntax < StandardError ; end
+      class NothingToTranslate < StandardError ; end
 
       attr_reader :haml_reader, :haml_writer
       attr_reader :locale_hash, :yaml_tool
@@ -43,6 +44,7 @@ module Haml
       # to be used later by the yaml tool.
       def new_body
         new_lines = []
+        file_has_been_parsed = false
         @haml_reader.lines.each_with_index do |orig_line, line_no|
           orig_line.chomp!
           orig_line.rstrip.match(/([ \t]+)?(.*)/)   # taken from haml lib
@@ -50,6 +52,7 @@ module Haml
           orig_line = $2                            # but in order to find text it needs no indentiation, we just want the text.
           line_match = Haml::I18n::Extractor::TextFinder.new(orig_line).find
           if line_match && !line_match.empty?
+            file_has_been_parsed = true
             replacer = Haml::I18n::Extractor::TextReplacer.new(orig_line, line_match)
             @locale_hash[line_no] = replacer.replace_hash.dup.merge!({:path => @haml_reader.path }) # need the path for the full keyspace in the yaml
             new_lines << "#{whitespace_indentation}#{replacer.replace_hash[:modified_line]}"
@@ -58,6 +61,7 @@ module Haml
             new_lines << "#{whitespace_indentation}#{orig_line}"
           end
         end
+        raise NothingToTranslate if !file_has_been_parsed
         new_lines.join("\n")
       end
       

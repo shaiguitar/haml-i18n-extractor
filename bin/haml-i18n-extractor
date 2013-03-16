@@ -24,5 +24,7 @@ haml_paths.each do |haml_path|
     @ex1.run
   rescue Haml::I18n::Extractor::InvalidSyntax
     puts "There was an error with #{haml_path}"
+  rescue Haml::I18n::Extractor::NothingToTranslate
+    puts "Nothing to translate for #{haml_path}"
   end
 end
