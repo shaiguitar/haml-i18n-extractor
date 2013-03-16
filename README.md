@@ -4,13 +4,30 @@ Extract strings likely to be translated from haml into locale file
 
 ## Usage
 
-Right now, after installing this gem, you can run the binary:
+After installing this gem, you can run the binary in a rails app:
 
 `cd your-rails-app; haml-i18n-extractor .`
 
-It will create a bunch of copied over templates, with the text copied over.
+## Notes
 
-TODO: move the replaced text into yaml files.
+Right now the design works on a per-file basis:
+
+<pre>
+begin
+  @ex1 = Haml::I18n::Extractor.new(haml_path)
+  @ex1.run
+rescue Haml::I18n::Extractor::InvalidSyntax
+  puts "There was an error with #{haml_path}"
+rescue Haml::I18n::Extractor::NothingToTranslate
+  puts "Nothing to translate for #{haml_path}"
+end  
+</pre>
+
+This is pretty much beta - but it does work! Since it is beta, it does not overwrite anything but lets you decide what you want, and don't want.
+
+The workflow at the moment is, to run the binary, then do a `git diff` and see all the changes. 
+
+What you should be seeing for a "foo.haml" file is a dumped version "foo.i18n-extractor.haml" file which has the temporary representation of the file it tried to translate. It also dumps the corresponding i18n locale .yml file for the haml just translated in the current working directory, suffixed with the path of the haml file it was working on.
 
 ## Contributing
 
