@@ -6,20 +6,23 @@
         - if false
           %li
             %a#cheese-rice{:href => url_for([:admin, :dashboard])}
-              %span.thing-ok t('.admin')
+              %span.thing-ok= t('.admin')
             #bla
               %ul#admin-dropdown-box
                 %li
                   %a{:href => url_for([:admin, :dashboard])}
-                    %span t('.admin_dashboard')
+                    %span= t('.admin_dashboard')
                 %li
                   %a{:href => url_for([:admin, :stacks])}
-                    %span t('.stacks')
+                    %span= t('.stacks')
                 %li
                   %a{:href => url_for([:admin, :environments])}
                     %span t('.alerts')
                 %li
+                  %a{:href => url_for([:admin, :environments])}
+                    %span= t('.alerts')
+                %li
                   %a{:href => url_for([:admin, :accounts])}
-                    %span t('.accounts')
+                    %span= t('.accounts')
         - if true
-          t('.what_is_supposed_to_be_is_supp')
+          = t('.what_is_supposed_to_be_is_supp')

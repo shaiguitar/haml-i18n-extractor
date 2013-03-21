@@ -8,7 +8,11 @@ module Haml
       
       class InvalidSyntax < StandardError ; end
       class NothingToTranslate < StandardError ; end
+      class NotDefinedLineType < StandardError ; end
 
+      LINE_TYPES_ALL = [:text, :not_text, :loud, :silent, :element]
+      LINE_TYPES_ADD_EVAL = [:text, :element]
+      
       attr_reader :haml_reader, :haml_writer
       attr_reader :locale_hash, :yaml_tool
 
@@ -47,14 +51,14 @@ module Haml
         file_has_been_parsed = false
         @haml_reader.lines.each_with_index do |orig_line, line_no|
           orig_line.chomp!
-          orig_line.rstrip.match(/([ \t]+)?(.*)/)   # taken from haml lib
-          whitespace_indentation = $1               # keep indentation to use later when printing out.
-          orig_line = $2                            # but in order to find text it needs no indentiation, we just want the text.
-          line_match = Haml::I18n::Extractor::TextFinder.new(orig_line).find
+          orig_line.rstrip.match(/([ \t]+)?(.*)/)                                                         # taken from haml lib
+          whitespace_indentation = $1                                                                     # keep indentation to use later when printing out.
+          orig_line = $2                                                                                  # but in order to find text it needs no indentiation, we just want the text.
+          line_type, line_match = Haml::I18n::Extractor::TextFinder.new(orig_line).process_by_regex
           if line_match && !line_match.empty?
             file_has_been_parsed = true
-            replacer = Haml::I18n::Extractor::TextReplacer.new(orig_line, line_match)
-            @locale_hash[line_no] = replacer.replace_hash.dup.merge!({:path => @haml_reader.path }) # need the path for the full keyspace in the yaml
+            replacer = Haml::I18n::Extractor::TextReplacer.new(orig_line, line_match, line_type)
+            @locale_hash[line_no] = replacer.replace_hash.dup.merge!({:path => @haml_reader.path })
             new_lines << "#{whitespace_indentation}#{replacer.replace_hash[:modified_line]}"
           else
             @locale_hash[line_no] = { :modified_line => nil,:keyname => nil,:replaced_text => nil, :path => nil }

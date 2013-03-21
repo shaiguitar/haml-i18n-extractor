@@ -19,6 +19,9 @@
                   %a{:href => url_for([:admin, :environments])}
                     %span t('.alerts')
                 %li
+                  %a{:href => url_for([:admin, :environments])}
+                    %span= t('.alerts')
+                %li
                   %a{:href => url_for([:admin, :accounts])}
                     %span Accounts
         - if true

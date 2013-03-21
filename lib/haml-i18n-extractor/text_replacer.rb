@@ -3,7 +3,7 @@ module Haml
     class Extractor
       class TextReplacer
 
-        attr_reader :full_line, :text_to_replace
+        attr_reader :full_line, :text_to_replace, :line_type
 
         T_REGEX = /t\('\..*'\)/
         # limit the number of chars
@@ -11,9 +11,14 @@ module Haml
         # do not pollute the key space it will make it invalid yaml
         NOT_ALLOWED_IN_KEYNAME =  %w( ~ ` ! @ # $ % ^ & * - ( ) , )
         
-        def initialize(full_line, text_to_replace)
+        def initialize(full_line, text_to_replace,line_type)
           @full_line = full_line
           @text_to_replace = text_to_replace
+          if LINE_TYPES_ALL.include?(line_type)
+            @line_type = line_type
+          else
+            raise Extractor::NotDefinedLineType, "line type #{line_type} for #{full_line} does not make sense!"
+          end
         end
 
         def replace_hash
@@ -25,6 +30,7 @@ module Haml
           full_line = @full_line.dup
           return @full_line if has_been_translated?(full_line)
           remove_surrounding_quotes(full_line)
+          apply_ruby_evaling(full_line)
           full_line
         end
         
@@ -33,6 +39,18 @@ module Haml
         def keyname
           text_to_replace = @text_to_replace.dup
           has_been_translated?(text_to_replace) ? text_to_replace : "t('.#{to_keyname(text_to_replace)}')"
+        end
+
+        def apply_ruby_evaling(str)
+          if LINE_TYPES_ADD_EVAL.include?(@line_type)
+            if @line_type == :element
+              str.match /^([^\s\t]*)(.*)$/
+              elem, keyname = $1, $2
+              str.gsub!($2, "= #{$2.strip}")
+            elsif @line_type == :text
+              str.gsub!(str, "= "+str)
+            end
+          end
         end
 
         def has_been_translated?(str)

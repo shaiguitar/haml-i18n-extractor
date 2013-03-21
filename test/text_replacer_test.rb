@@ -4,47 +4,62 @@ module Haml
   class TextReplacerTest < MiniTest::Unit::TestCase
     
     test "it initializes with the line it is going to replace and the match to replace" do
-      Haml::I18n::Extractor::TextReplacer.new("this is whatever", "this is whatever")
+      Haml::I18n::Extractor::TextReplacer.new("this is whatever", "this is whatever", :text)
+    end
+
+    test "but it raises if passed a wrong line type" do
+      begin
+        replacer = Haml::I18n::Extractor::TextReplacer.new("regular text", "regular text", :this_is_not_defined)
+        assert false, 'should raise'
+      rescue Haml::I18n::Extractor::NotDefinedLineType
+        assert true, 'raised NotDefinedLineType'
+      end
     end
 
     # some text replacement examples
     test "it can replace the body of haml with t() characters" do
-      replacer = Haml::I18n::Extractor::TextReplacer.new("this is whatever", "this is whatever")
-      assert_equal replacer.replace_hash, { :modified_line => "t('.this_is_whatever')", 
+      replacer = Haml::I18n::Extractor::TextReplacer.new("this is whatever", "this is whatever", :text)
+      assert_equal replacer.replace_hash, { :modified_line => "= t('.this_is_whatever')", 
                                           :keyname => "t('.this_is_whatever')", :replaced_text => "this is whatever"  }
     end
 
     test "it can replace the body of haml with t() characters example" do
-      replacer = Haml::I18n::Extractor::TextReplacer.new("%span Admin Dashboard", "Admin Dashboard")
-      assert_equal replacer.replace_hash, { :modified_line => "%span t('.admin_dashboard')",
+      replacer = Haml::I18n::Extractor::TextReplacer.new("%span Admin Dashboard", "Admin Dashboard", :element)
+      assert_equal replacer.replace_hash, { :modified_line => "%span= t('.admin_dashboard')",
                                            :keyname => "t('.admin_dashboard')", :replaced_text => "Admin Dashboard" }
     end
 
-    test "it won't replace already replaced t() characters" do
-      replacer = Haml::I18n::Extractor::TextReplacer.new("%span t('.admin_dashboard')", "t('.admin_dashboard')")
+    test "it won't replace already replaced t() characters if they are not ruby evaled" do
+      replacer = Haml::I18n::Extractor::TextReplacer.new("%span t('.admin_dashboard')", "t('.admin_dashboard')", :element)
       assert_equal replacer.replace_hash, { :modified_line => "%span t('.admin_dashboard')",
                                            :keyname => "t('.admin_dashboard')", :replaced_text => "t('.admin_dashboard')" }
     end
 
+    test "it won't replace already replaced t() characters that are ruby evaled" do
+      replacer = Haml::I18n::Extractor::TextReplacer.new("%span= t('.admin_dashboard')", "t('.admin_dashboard')", :loud)
+      assert_equal replacer.replace_hash, { :modified_line => "%span= t('.admin_dashboard')",
+                                           :keyname => "t('.admin_dashboard')", :replaced_text => "t('.admin_dashboard')" }
+    end
+
     test "it can replace the body of haml with t() characters example for link_to and removes surrounding quotes as well" do
-      replacer = Haml::I18n::Extractor::TextReplacer.new(%{%p#brand= link_to 'Some Place', '/'}, "Some Place")
+      replacer = Haml::I18n::Extractor::TextReplacer.new(%{%p#brand= link_to 'Some Place', '/'}, "Some Place", :loud)
       assert_equal replacer.replace_hash, { :modified_line => %{%p#brand= link_to t('.some_place'), '/'} , 
                                             :keyname => "t('.some_place')", :replaced_text => "Some Place" }
 
-      replacer = Haml::I18n::Extractor::TextReplacer.new(%{%p#brand= link_to "Some Place", "/"}, "Some Place")
+      replacer = Haml::I18n::Extractor::TextReplacer.new(%{%p#brand= link_to "Some Place", "/"}, "Some Place", :loud)
       assert_equal replacer.replace_hash, { :modified_line => %{%p#brand= link_to t('.some_place'), "/"} ,
                                             :keyname => "t('.some_place')", :replaced_text => "Some Place" }
     end
 
     # keyname restrictions
     test "it limits the characters of the t namespace it provides to LIMIT_KEY_NAME" do
-      replacer = Haml::I18n::Extractor::TextReplacer.new("this is whatever" * 80, "this is whatever" * 80)
-      assert_equal replacer.replace_hash[:modified_line].size, Haml::I18n::Extractor::TextReplacer::LIMIT_KEY_NAME + 6 # t('.')
+      replacer = Haml::I18n::Extractor::TextReplacer.new("this is whatever" * 80, "this is whatever" * 80, :text)
+      assert_equal replacer.replace_hash[:modified_line].size, Haml::I18n::Extractor::TextReplacer::LIMIT_KEY_NAME + 8 # = t('.')
     end
     
     test "it does not allow weird characters in the keyname" do
-      replacer = Haml::I18n::Extractor::TextReplacer.new("this (is `ch@racter ~ madness!", "this (is `ch@racter ~ madness!")
-      assert_equal replacer.replace_hash, { :modified_line => "t('.this_is_chracter_madness')", 
+      replacer = Haml::I18n::Extractor::TextReplacer.new("this (is `ch@racter ~ madness!", "this (is `ch@racter ~ madness!", :text)
+      assert_equal replacer.replace_hash, { :modified_line => "= t('.this_is_chracter_madness')", 
                                             :keyname => "t('.this_is_chracter_madness')", :replaced_text => "this (is `ch@racter ~ madness!" }
     end
 
