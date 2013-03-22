@@ -3,6 +3,12 @@ require 'test_helper'
 module Haml
   class StringFinderTest < MiniTest::Unit::TestCase
 
+    # empty line
+    test "empty line does not explode" do
+      assert_equal find_text(""), ""
+      assert_equal find_type(""), :text
+    end
+
     # regular text mode
     test "regular text without whitespaces" do
       assert_equal find_text("iphone"), "iphone"

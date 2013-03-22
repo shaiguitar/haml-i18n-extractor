@@ -46,14 +46,15 @@ module Haml
 
       # processes the haml document, replaces the input body to an output body of replacements. also sets an in memory hash of replacement info
       # to be used later by the yaml tool.
+      # keep indentation to use later when printing out.
       def new_body
         new_lines = []
         file_has_been_parsed = false
         @haml_reader.lines.each_with_index do |orig_line, line_no|
           orig_line.chomp!
-          orig_line.rstrip.match(/([ \t]+)?(.*)/)                                                         # taken from haml lib
-          whitespace_indentation = $1                                                                     # keep indentation to use later when printing out.
-          orig_line = $2                                                                                  # but in order to find text it needs no indentiation, we just want the text.
+          orig_line.rstrip.match(/([ \t]+)?(.*)/)
+          whitespace_indentation = $1
+          orig_line = $2
           line_type, line_match = Haml::I18n::Extractor::TextFinder.new(orig_line).process_by_regex
           if line_match && !line_match.empty?
             file_has_been_parsed = true

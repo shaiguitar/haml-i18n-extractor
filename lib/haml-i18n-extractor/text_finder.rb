@@ -29,12 +29,16 @@ module Haml
         end
         
         def line
+          if @haml == ""
+            return Haml::Parser::Line.new("", "", "", 0, @parser, false)
+          end
+
           match = @haml.rstrip.scan(/(([ \t]+)?(.*?))(?:\Z|\r\n|\r|\n)/m)
           match.pop
-          # memoize line for subsequent calls
           haml_line ||= match.each_with_index.map do |(full, whitespace, text), index|
             Haml::Parser::Line.new(whitespace, text.rstrip, full, index, @parser, false)
           end.first
+          haml_line
         end
         
         def find

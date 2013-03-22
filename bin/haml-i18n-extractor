@@ -20,6 +20,7 @@ end
 
 haml_paths.each do |haml_path|
   begin
+    puts "extracting strings for #{haml_path}"
     @ex1 = Haml::I18n::Extractor.new(haml_path)
     @ex1.run
   rescue Haml::I18n::Extractor::InvalidSyntax
