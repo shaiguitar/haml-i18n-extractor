@@ -3,3 +3,4 @@
 - Add {} to disallowed characters
 - Add yaml fixtures and compare those
 - handled email suffixes (foo.en.html.haml etc)
+- admin/bla should be en.admin.bla vs just en.bla in the yml file?
