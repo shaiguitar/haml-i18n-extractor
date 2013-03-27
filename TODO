@@ -19,3 +19,16 @@
   merge itself in.
 
   give user more context on line changes (like grep -C 4)
+  agreegate yaml:
+
+<ruby>
+
+  require 'yaml'
+  require 'pp'
+  ActiveSupport::HashWithIndifferentAccess = HashWithIndifferentAccess # hack when it writes out the yaml, it should not be with_indifferent_access
+  all_yaml =  Dir.glob('*yml').collect{|x| File.read(x) }
+  locale_hash = Hash.new
+  all_yaml.map{|y| YAML.load(y) }.map{|x| locale_hash.deep_merge!(x)}
+  pp locale_hash; "file.write it"
+
+</ruby>
