@@ -7,25 +7,5 @@ if ARGV.empty?
   abort
 end
 
-relative_path = ARGV[0]
-absolute_path = File.expand_path(relative_path)
-
-all_files = Dir.glob("**/*")
-haml_paths = all_files.select do |file|
-  file.match /.haml$/
-end
-
-# right now, this should create a copy of the haml file in that directory with a special suffix for review.
-# review it, see what fails, fix, etc.
-
-haml_paths.each do |haml_path|
-  begin
-    puts "extracting strings for #{haml_path}"
-    @ex1 = Haml::I18n::Extractor.new(haml_path)
-    @ex1.run
-  rescue Haml::I18n::Extractor::InvalidSyntax
-    puts "There was an error with #{haml_path}"
-  rescue Haml::I18n::Extractor::NothingToTranslate
-    puts "Nothing to translate for #{haml_path}"
-  end
-end
+workflow = Haml::I18n::Extractor::Workflow.new(File.expand_path(ARGV[0]))
+workflow.run

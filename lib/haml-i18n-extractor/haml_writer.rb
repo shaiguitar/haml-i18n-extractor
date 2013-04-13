@@ -3,10 +3,17 @@ module Haml
     class Extractor
       class HamlWriter
 
-        attr_accessor :path, :lines, :body
+        attr_accessor :path, :lines, :body, :type
 
-        def initialize(orig_path)
-          @path = orig_path.gsub(/.haml$/, ".i18n-extractor.haml")
+        def initialize(orig_path, options = {})
+          @type = options[:type] || :dump # safe default.
+          
+          if overwrite?
+            @path = orig_path
+          elsif dump?
+            @path = orig_path.gsub(/.haml$/, ".i18n-extractor.haml")
+          end
+          
         end
 
         def write_file
@@ -15,6 +22,14 @@ module Haml
           f.close
         end
 
+        def overwrite?
+          @type == :overwrite
+        end
+        
+        def dump?
+          @type == :dump
+        end
+        
       end
     end
   end

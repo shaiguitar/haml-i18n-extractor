@@ -7,10 +7,17 @@ module Haml
       @ex1 = Haml::I18n::Extractor.new(file_path("ex1.haml"))
     end
 
-    test "it can process the haml and replace it with other text!" do
+    test "it can process the haml and replace it with other text" do
       @ex1.run
     end
-
+    
+    test "it can initialize with a type of overwrite or dump which creates an overwrite type haml writer" do
+      h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :type => :overwrite)
+      assert_equal h.haml_writer.overwrite?, true
+      h = Haml::I18n::Extractor.new(file_path("ex1.haml"))
+      assert_equal h.haml_writer.overwrite?, false
+    end
+    
     test "can not initialize if the haml is not valid syntax" do
       begin
         Haml::I18n::Extractor.new(file_path("bad.haml"))
@@ -18,11 +25,6 @@ module Haml
       rescue Haml::I18n::Extractor::InvalidSyntax
         assert true, "it should fail with invalid syntax"
       end
-    end
-
-    test "can initialize if the haml is valid syntax" do
-      # setup method initializes
-      assert true, "extractor can initialize"
     end
 
     test "it can replace a string body and have expected output" do
@@ -49,6 +51,7 @@ module Haml
         @nothing_to_translate = Haml::I18n::Extractor.new(file_path("nothing_to_translate.haml"))
         assert_equal @ex1.yaml_tool.locale_hash, nil
         @nothing_to_translate.run
+        assert false, "should raise"
       rescue Haml::I18n::Extractor::NothingToTranslate
         assert true, "NothingToTranslate raised"
       end
@@ -69,6 +72,7 @@ module Haml
           @ex1.haml_writer.body = File.read(file_path("bad.haml"))
           @ex1.run
         end
+        assert false, "should raise"
       rescue Haml::I18n::Extractor::InvalidSyntax
         assert true, "it should not allow invalid output to be written"
       end

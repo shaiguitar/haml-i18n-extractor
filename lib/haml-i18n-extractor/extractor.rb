@@ -7,6 +7,7 @@ module Haml
       end
       
       class InvalidSyntax < StandardError ; end
+      class NotADirectory < StandardError ; end
       class NothingToTranslate < StandardError ; end
       class NotDefinedLineType < StandardError ; end
 
@@ -14,12 +15,13 @@ module Haml
       LINE_TYPES_ADD_EVAL = [:text, :element]
       
       attr_reader :haml_reader, :haml_writer
-      attr_reader :locale_hash, :yaml_tool
+      attr_reader :locale_hash, :yaml_tool, :type
 
-      def initialize(haml_path)
+      def initialize(haml_path, opts = {})
+        @type = opts[:type]
         @haml_reader = Haml::I18n::Extractor::HamlReader.new(haml_path)
         validate_haml(@haml_reader.body)
-        @haml_writer = Haml::I18n::Extractor::HamlWriter.new(haml_path)
+        @haml_writer = Haml::I18n::Extractor::HamlWriter.new(haml_path, {:type => @type})
         @yaml_tool = Haml::I18n::Extractor::YamlTool.new
         @locale_hash = {}
       end
@@ -44,9 +46,11 @@ module Haml
         assign_yaml
       end
 
-      # processes the haml document, replaces the input body to an output body of replacements. also sets an in memory hash of replacement info
+      # processes the haml document, replaces the input body to an output body of replacements.
+      # also sets an in memory hash of replacement info
       # to be used later by the yaml tool.
       # keep indentation to use later when printing out.
+      # TODO: cleanup
       def new_body
         new_lines = []
         file_has_been_parsed = false

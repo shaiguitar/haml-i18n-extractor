@@ -13,8 +13,8 @@ require 'action_view'
 require 'nokogiri'
 require 'rails'
 require 'fileutils'
-
 require 'pry'
+
 module Declarative
   def test(name, &block)
     define_method("test #{name}", &block)
@@ -96,3 +96,55 @@ EOR
   yield
 end
 
+module TestHelper
+
+  TMPDIR = File.join(File.dirname(__FILE__) +  "/tmp/")
+  PROJECT_DIR = File.join(TMPDIR, "workflow/")
+
+  def self.setup_project_directory!
+    # mimic a rails app.
+    view1 = File.join(PROJECT_DIR, "app", "views", "view1")
+    view2 = File.join(PROJECT_DIR, "app", "views", "view2")
+    [ view1, view2 ].map do |dir|
+      FileUtils.mkdir_p(dir)
+      ["thing.haml", "thang.haml"].map do |fn|
+        haml_text=<<EOH
+%h1 Notifications
+
+.nav= will_paginate(@consumer_notifications)
+%table.themed{cellspacing: 0}
+  %thead
+    %tr
+      %th.first Type #{fn}_#{dir}
+      %th Identifier #{fn}_#{dir}
+      %th Data #{fn}_#{dir}
+      %th Success #{fn}_#{dir}
+      %th Reported To #{fn}_#{dir}
+      %th.last &nbsp; #{fn}_#{dir}
+  - @consumer_notifications.each do |cn|
+    %tr
+      %td.type= cn.notification.type
+      %td.identifier= cn.notification.identifier
+      %td.data= cn.notification.data
+      %td.success= cn.success
+      %td.reported_to= cn.reported_to
+.nav= will_paginate(@consumer_notifications)     
+EOH
+        File.open(File.join(dir, fn), "w") do |f|
+          f.write haml_text
+        end
+      end
+    end
+    # config dir
+    FileUtils.mkdir_p(File.join(PROJECT_DIR, "config/locales"))
+    # for testing we're only working on .haml files.
+    File.open(File.join(view1, "not_haml.rb"), "w") do |f|
+      f.write "puts :not_haml"
+    end
+  end
+
+  def self.teardown_project_directory!
+    FileUtils.rm_rf(PROJECT_DIR)
+  end
+  
+end
