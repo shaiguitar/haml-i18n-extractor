@@ -4,7 +4,7 @@ require 'fileutils'
 module Haml
   class HamlWriterTest < MiniTest::Unit::TestCase
 
-    ORIG_TEMP_FILE_PATH = "/tmp/foo_haml_extractor_test.haml"
+    ORIG_TEMP_FILE_PATH = File.join(TestHelper::TMPDIR, "foo_haml_extractor_test.haml")
 
     def setup
       File.open(ORIG_TEMP_FILE_PATH, "w") do |f|
@@ -18,15 +18,19 @@ module Haml
       FileUtils.rm_rf(ORIG_TEMP_FILE_PATH)
     end
 
-    test "is initialized with an array of lines, an original path and constructs a body and path with it" do
-      @writer = Haml::I18n::Extractor::HamlWriter.new(ORIG_TEMP_FILE_PATH)
-      assert_equal @writer.path, "/tmp/foo_haml_extractor_test.i18n-extractor.haml"
-    end
-    
-    test "it can write the file" do
+    test "it can dump the file and that is the default" do
       @writer = Haml::I18n::Extractor::HamlWriter.new(ORIG_TEMP_FILE_PATH)
       @writer.body = "This is what it is"
       @writer.write_file
+      assert_equal @writer.path, "#{TestHelper::TMPDIR}foo_haml_extractor_test.i18n-extractor.haml"
+      assert_equal File.read(@writer.path), "This is what it is\n"
+    end
+
+    test "it can overwrite the file" do
+      @writer = Haml::I18n::Extractor::HamlWriter.new(ORIG_TEMP_FILE_PATH, {:type => :overwrite})
+      @writer.body = "This is what it is"
+      @writer.write_file
+      assert_equal @writer.path, ORIG_TEMP_FILE_PATH # we ovewrote the original one.
       assert_equal File.read(@writer.path), "This is what it is\n"
     end
 
