@@ -30,15 +30,15 @@ end
 
 `cd your-rails-app-to-translate && haml-i18n-extractor .` 
 
-This will run on all the haml files it finds, by suffix, in the cwd you are in and convert them, following the example provided later, below.
+The workflow is an interactive one using highline which will allow you to choose if you want to:
 
-Though it works great, I'm dubbing it beta at the moment and ensuring it does not overwrite anything but lets you decide what you want, and don't want. 
+1) overwrite the haml file.
+2) place a tmp haml file.
+3) pass, move on to the next haml file.
 
-The workflow at the moment is to run the binary then do a `git diff` and see all the changes. I would be interested for any feedback you may have on how you would like to use this lib and/or other comments.
+Run the binary and see!
 
-What you should be seeing for a "foo.haml" file is a dumped version "foo.i18n-extractor.haml" file which has the representation of the file it tried to translate. It also dumps the corresponding i18n locale .yml file for the haml just translated in the current working directory, suffixed with the path of the haml file it was working on.
-
-## Example 
+## Example output
 
 This should be a before and after picture of using this lib, whether directly in rubyland or using the executable:
 

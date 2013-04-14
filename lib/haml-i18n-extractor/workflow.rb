@@ -20,20 +20,25 @@ module Haml
         end
 
         def output_stats
-          say("Found #{files.size} files:\n\n#{files.join("\n")}\n\n")
+          say(highlight("Wowza! Found #{files.size} haml files!\n\n", :red))
+          say("#{files.join("\n")}\n\n")
         end
+        
+        CHOICES = {o: :overwrite, d: :dump, n: :next}
 
         def process_file?(file)
-          say("Process file #{file}?")
-          say("[o]verwrite/[d]ump/[n]ext\n")
-          choices = "odn"
-          answer = ask("Your choice [#{choices}]? ") do |q|
+          say("[#{highlight(:o, :red)}]verwrite OR [#{highlight(:d, :red)}]ump OR [#{highlight(:n, :red)}]ext\n")
+          say("Choose the right option for")
+          say("#{index_for(file)} #{highlight(file)}")
+          choices = CHOICES.keys.map(&:to_s)
+          prompt = "Your choice #{highlight(choices, :red)}?"
+          answer = ask(prompt) do |q|
                      q.echo      = false
                      q.character = true
-                     q.validate  = /\A[#{choices}]\Z/
+                     q.validate  = /\A[#{choices}r]\Z/
                    end
-          say("Your choice: #{answer}")
           return :overwrite if answer == 'o'
+          return :overwrite if answer == 'r' # cheat
           return :dump if answer == 'd'
         end
 
@@ -43,14 +48,28 @@ module Haml
             if type = process_file?(haml_path)
               process(haml_path, type)
             else
-              say("Not processing file #{haml_path}.")
+              say(highlight("Not processing") + " file #{haml_path}.")
             end
           end
+        end_message
         end
-
+        
         private
 
+        def highlight(str, color = :yellow)
+          "<%= color('#{str.to_s}', :black, :on_#{color}) %>"
+        end
+
+        def end_message
+          say(highlight("\n\n\nNow run a git diff or such and see what changed!"))
+        end
+
+        def index_for(file)
+          highlight((files.index(file) + 1).to_s, :green)
+        end
+
         def process(haml_path, type)
+          say(highlight("#{type}-d file") + " #{haml_path}\n\n")
           options = {:type => type} # overwrite or dump haml
           begin
             @ex1 = Haml::I18n::Extractor.new(haml_path, options)

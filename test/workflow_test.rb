@@ -37,35 +37,32 @@ module Haml
   def test_outputs_stats
     with_highline do
       @workflow.output_stats
-      assert @output.string.match(/Found 4 files/), "Outputs stats"
+      assert @output.string.match(/Found 4 haml files/), "Outputs stats"
     end
   end
   
   def test_asks_to_process_file_yes
     with_highline("o") do
       assert_equal @workflow.process_file?(@workflow.files.first), :overwrite
-      assert @output.string.match(/Process file #{@workflow.files.first}?/), "o to overwriting the file"
     end
   end      
 
   def test_asks_to_process_file_no
     with_highline("n") do
       assert_equal @workflow.process_file?(@workflow.files.first), nil
-      assert @output.string.match(/Process file #{@workflow.files.first}?/), "n for next file"
     end
   end
   
   def test_asks_to_process_file_dump
     with_highline("d") do
       assert_equal @workflow.process_file?(@workflow.files.first), :dump
-      assert @output.string.match(/Process file #{@workflow.files.first}?/), "d for dumping the file"
     end
   end
                        
   def test_run_works
-    with_highline("odnd") do
+    # with_highline("odnd") do #overwrite, dump, next, dump
       @workflow.run
-    end
+    # end
   end
 
   end
