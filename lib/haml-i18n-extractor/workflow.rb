@@ -80,7 +80,6 @@ module Haml
             say("Nothing to translate for #{haml_path}")
           end
         end
-        
       end
     end
   end

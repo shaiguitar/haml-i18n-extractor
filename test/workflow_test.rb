@@ -60,9 +60,9 @@ module Haml
   end
                        
   def test_run_works
-    # with_highline("odnd") do #overwrite, dump, next, dump
+     with_highline("odnd") do #overwrite, dump, next, dump
       @workflow.run
-    # end
+     end
   end
 
   end
