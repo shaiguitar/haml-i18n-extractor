@@ -5,7 +5,7 @@ module Haml
       def self.debug?
         ENV['DEBUG']
       end
-      
+
       class InvalidSyntax < StandardError ; end
       class NotADirectory < StandardError ; end
       class NothingToTranslate < StandardError ; end
@@ -13,12 +13,13 @@ module Haml
 
       LINE_TYPES_ALL = [:text, :not_text, :loud, :silent, :element]
       LINE_TYPES_ADD_EVAL = [:text, :element]
-      
+
       attr_reader :haml_reader, :haml_writer
       attr_reader :locale_hash, :yaml_tool, :type
 
       def initialize(haml_path, opts = {})
         @type = opts[:type]
+        @prompt_per_line = opts[:prompt_per_line]
         @haml_reader = Haml::I18n::Extractor::HamlReader.new(haml_path)
         validate_haml(@haml_reader.body)
         @haml_writer = Haml::I18n::Extractor::HamlWriter.new(haml_path, {:type => @type})
@@ -35,15 +36,15 @@ module Haml
         @haml_writer.write_file
         @yaml_tool.write_file
       end
-      
+
       def assign_new_body
         @haml_writer.body = new_body
       end
-      
+
       def assign_yaml
         @yaml_tool.locale_hash = @locale_hash
       end
-      
+
       def assign_replacements
         assign_new_body
         assign_yaml
@@ -62,9 +63,16 @@ module Haml
         orig_line.chomp!
         orig_line, whitespace = handle_line_whitespace(orig_line)
         line_type, line_match = handle_line_finding(orig_line)
-        is_replaced, replaced_text = handle_line_replacing(orig_line, line_match, line_type, line_no)
-        add_to_body("#{whitespace}#{replaced_text}")
-        return is_replaced
+        should_be_replaced, text_to_replace = handle_line_replacing(orig_line, line_match, line_type, line_no)
+        if should_be_replaced && prompt_per_line?
+          Haml::I18n::Extractor::Prompter.new(orig_line,text_to_replace).ask_user
+        end
+        add_to_body("#{whitespace}#{text_to_replace}")
+        return should_be_replaced
+      end
+
+      def prompt_per_line?
+        !!@prompt_per_line
       end
 
       private
@@ -94,14 +102,14 @@ module Haml
       def add_to_body(ln)
         @body << ln
       end
-      
+
       def validate_haml(haml)
         parser = Haml::Parser.new(haml, Haml::Options.new)
         parser.parse
         rescue Haml::SyntaxError
           raise InvalidSyntax, "invalid syntax for haml #{@haml_reader.path}"
       end
-      
+
     end
   end
 end

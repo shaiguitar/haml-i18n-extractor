@@ -9,3 +9,14 @@
 - Add yaml fixtures and compare those
 - handled email suffixes (foo.en.html.haml etc)
 - admin/bla should be namespaced such as: en.admin.bla vs just en.bla in the yml file?
+- add to README 'it is idempotent...' :P
+
+## chage the workflow to work per-line
+
+   regarding overwriting or not:
+     right now just leave be (tmp file). figure out later.
+        pass in opts...
+   cleanup workflow - keep around
+     but no prompting, just handle a rails project dir.
+     move any prompting in workflow into prompter.
+   if the user says 'no' on a line, make sure to not replace it!

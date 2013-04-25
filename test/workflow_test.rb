@@ -8,16 +8,6 @@ module Haml
     @workflow = Haml::I18n::Extractor::Workflow.new(TestHelper::PROJECT_DIR)
   end
 
-  def with_highline(input = nil, &blk)
-    old_terminal = $terminal
-    @input     = input ? StringIO.new(input) : StringIO.new
-    @output    = StringIO.new
-    $terminal = HighLine.new(@input, @output)
-    yield
-  ensure
-    $terminal = old_terminal
-  end
-  
   def teardown
     TestHelper.teardown_project_directory!
   end
@@ -40,29 +30,37 @@ module Haml
       assert @output.string.match(/Found 4 haml files/), "Outputs stats"
     end
   end
-  
+
   def test_asks_to_process_file_yes
-    with_highline("o") do
+    with_highline("O") do
       assert_equal @workflow.process_file?(@workflow.files.first), :overwrite
     end
-  end      
+  end
 
   def test_asks_to_process_file_no
-    with_highline("n") do
+    with_highline("N") do
       assert_equal @workflow.process_file?(@workflow.files.first), nil
     end
   end
   
   def test_asks_to_process_file_dump
-    with_highline("d") do
+    with_highline("D") do
       assert_equal @workflow.process_file?(@workflow.files.first), :dump
     end
   end
-                       
+
   def test_run_works
-     with_highline("odnd") do #overwrite, dump, next, dump
+    automate_user_interaction = ""
+    6.times do                            # should be number of files we're testing on
+      automate_user_interaction << "O"    # overwrite file
+      50.times do                         # should be number of lines in file,
+                                          # this should do right now.
+        automate_user_interaction << "y"  # replace line
+      end
+    end
+    with_highline(automate_user_interaction ) do
       @workflow.run
-     end
+    end
   end
 
   end

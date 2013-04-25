@@ -17,6 +17,13 @@ module Haml
       h = Haml::I18n::Extractor.new(file_path("ex1.haml"))
       assert_equal h.haml_writer.overwrite?, false
     end
+
+    test "it can initialize with a prompt_per_line option which prompts the user-per line" do
+      h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :prompt_per_line => true)
+      assert_equal h.prompt_per_line?, true
+      h = Haml::I18n::Extractor.new(file_path("ex1.haml"))
+      assert_equal h.prompt_per_line?, false
+   end
     
     test "can not initialize if the haml is not valid syntax" do
       begin

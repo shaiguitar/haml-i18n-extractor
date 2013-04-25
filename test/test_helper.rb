@@ -79,6 +79,18 @@ def file_path(name)
   File.dirname(__FILE__) + "/support/#{name}"
 end
 
+def with_highline(input = nil, &blk)
+  old_terminal = $terminal
+  @input     = input ? StringIO.new(input) : StringIO.new
+  @output    = StringIO.new
+  $terminal = HighLine.new(@input, @output)
+  yield
+ensure
+  $terminal = old_terminal
+end
+
+
+
 def without_rails_mode
   Object.send(:remove_const, :Rails) if defined?(Rails)
   yield
