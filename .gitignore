@@ -15,4 +15,7 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
+
+# hacks, these should not appear where thye are.
 *.yml
+test/support/ex1.i18n-extractor.haml

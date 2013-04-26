@@ -1,15 +1,13 @@
-- Have an interactive mode: define workflow(s) for using this lib/tool.
-
 - Remove the ex1.output ex1.i18n-extractor duplication. (or move to tmp dir):
     Move to test/tmp a-la the way workflow is working.
-
 - Ensure that yaml file gets written to the right directory, and does a deep merge.
-
 - Add {} to disallowed characters
 - Add yaml fixtures and compare those
 - handled email suffixes (foo.en.html.haml etc)
 - admin/bla should be namespaced such as: en.admin.bla vs just en.bla in the yml file?
 - add to README 'it is idempotent...' :P
+- add herbgobbler (ERB) and this to another more generalized repo for translating templates?
+- Refactor tests: split out what is integration vs unit, too much coupling.
 
 ## chage the workflow to work per-line
 

@@ -13,7 +13,7 @@ module Haml
           @lines = file.readlines
           file.rewind
         end
-        
+
       end
     end
   end

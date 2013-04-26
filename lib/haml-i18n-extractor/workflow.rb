@@ -82,8 +82,6 @@ module Haml
             @ex1.run
           rescue Haml::I18n::Extractor::InvalidSyntax
             say("Haml Syntax error fo #{haml_path}. Please inspect further.")
-          rescue Haml::I18n::Extractor::NothingToTranslate
-            say("Nothing to translate for #{haml_path}")
           end
         end
       end

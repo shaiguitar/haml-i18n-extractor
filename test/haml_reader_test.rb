@@ -3,9 +3,9 @@ require 'fileutils'
 
 module Haml
   class HamlReaderTest < MiniTest::Unit::TestCase
-    
+
     TEMP_FILE_PATH = "/tmp/foo_haml_extractor_test"
-    
+
     def setup
       FileUtils.rm_rf(TEMP_FILE_PATH)
       10.times do |index|

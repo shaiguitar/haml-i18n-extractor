@@ -10,21 +10,34 @@ module Haml
     test "it can process the haml and replace it with other text" do
       @ex1.run
     end
-    
-    test "it can initialize with a type of overwrite or dump which creates an overwrite type haml writer" do
+
+    test "with a type of overwrite or dump affecting haml writer" do
       h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :type => :overwrite)
       assert_equal h.haml_writer.overwrite?, true
       h = Haml::I18n::Extractor.new(file_path("ex1.haml"))
       assert_equal h.haml_writer.overwrite?, false
     end
 
-    test "it can initialize with a prompt_per_line option which prompts the user-per line" do
+    test "with a prompt_per_line option which prompts the user-per line" do
       h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :prompt_per_line => true)
       assert_equal h.prompt_per_line?, true
       h = Haml::I18n::Extractor.new(file_path("ex1.haml"))
       assert_equal h.prompt_per_line?, false
-   end
-    
+    end
+
+    test "with a prompt_per_line option takes user input into consideration" do
+      h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :prompt_per_line => true)
+      user_input = "D" # dump
+      File.readlines(file_path("ex1.haml")).size.times do
+        user_input << "n" # do not replace lines
+      end
+      with_highline(user_input) do
+        h.run
+      end
+      # no changes were made cause user was all like 'uhhh, no thxk'
+      assert_equal File.read(h.haml_writer.path), File.read(file_path("ex1.haml"))
+    end
+
     test "can not initialize if the haml is not valid syntax" do
       begin
         Haml::I18n::Extractor.new(file_path("bad.haml"))
@@ -45,23 +58,12 @@ module Haml
       @ex1.run
       assert_equal File.exists?(@ex1.haml_writer.path), true
     end
-    
+
     test "it writes the locale info to an out file when run" do
       assert_equal File.exists?(@ex1.yaml_tool.locale_file), false
       @ex1.run
       assert_equal File.exists?(@ex1.yaml_tool.locale_file), true
       assert_equal YAML.load(File.read(@ex1.yaml_tool.locale_file)), @ex1.yaml_tool.yaml_hash
-    end
-
-    test "it raises if there is nothing to translate" do
-      begin
-        @nothing_to_translate = Haml::I18n::Extractor.new(file_path("nothing_to_translate.haml"))
-        assert_equal @ex1.yaml_tool.locale_hash, nil
-        @nothing_to_translate.run
-        assert false, "should raise"
-      rescue Haml::I18n::Extractor::NothingToTranslate
-        assert true, "NothingToTranslate raised"
-      end
     end
 
     test "sends a hash over of replacement info to its yaml tool when run" do
