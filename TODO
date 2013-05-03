@@ -19,3 +19,4 @@
   make sure yaml keys are in one file and fall into config/locales properly.
   give user more context on line changes (like grep -C 4)
   also right now there is a bug where it asks for 'y' twice?
+  jan@get2play.it https://twitter.com/JanHelwich/status/330210722019672064
