@@ -13,7 +13,7 @@ However I don't upload gems to rubygems in my spare time, so if you want the lat
 
 ## Usage
 
-- You can use the lib directly: 
+- You can use the lib directly:
 
 <pre>
 begin
@@ -21,9 +21,7 @@ begin
   @ex1.run
 rescue Haml::I18n::Extractor::InvalidSyntax
   puts "There was an error with #{haml_path}"
-rescue Haml::I18n::Extractor::NothingToTranslate
-  puts "Nothing to translate for #{haml_path}"
-end  
+end
 </pre>
 
 - You can also simply run the binary provided with the gem on a rails app:
@@ -36,7 +34,7 @@ The workflow is an interactive one using highline which will allow you to choose
 2) place a tmp haml file.
 3) pass, move on to the next haml file.
 
-Run the binary and see!
+Then it will ask you on a line-per-line basis if you wish to replace that line or not. It's WIP, but it does work, so - Run the binary and see!
 
 ## Example output
 

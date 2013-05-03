@@ -1,3 +1,5 @@
+## general todo's
+
 - Remove the ex1.output ex1.i18n-extractor duplication. (or move to tmp dir):
     Move to test/tmp a-la the way workflow is working.
 - Ensure that yaml file gets written to the right directory, and does a deep merge.
@@ -5,16 +7,15 @@
 - Add yaml fixtures and compare those
 - handled email suffixes (foo.en.html.haml etc)
 - admin/bla should be namespaced such as: en.admin.bla vs just en.bla in the yml file?
-- add to README 'it is idempotent...' :P
 - add herbgobbler (ERB) and this to another more generalized repo for translating templates?
 - Refactor tests: split out what is integration vs unit, too much coupling.
 
-## chage the workflow to work per-line
+## workflow todo's
 
-   regarding overwriting or not:
-     right now just leave be (tmp file). figure out later.
-        pass in opts...
-   cleanup workflow - keep around
-     but no prompting, just handle a rails project dir.
-     move any prompting in workflow into prompter.
-   if the user says 'no' on a line, make sure to not replace it!
+  cleanup workflow - keep around
+    just handle a rails project dir  move any prompting in workflow into prompter.
+  if the user says 'no' on a line, make sure to not replace it
+    no extra yaml keys...
+  make sure yaml keys are in one file and fall into config/locales properly.
+  give user more context on line changes (like grep -C 4)
+  also right now there is a bug where it asks for 'y' twice?
