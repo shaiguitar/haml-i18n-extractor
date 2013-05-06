@@ -25,7 +25,7 @@ module Haml
       assert_equal h.prompt_per_line?, false
     end
 
-    test "with a prompt_per_line option takes user input into consideration" do
+    test "with a prompt_per_line option takes user input into consideration for haml" do
       h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :prompt_per_line => true)
       user_input = "D" # dump
       File.readlines(file_path("ex1.haml")).size.times do
@@ -36,6 +36,19 @@ module Haml
       end
       # no changes were made cause user was all like 'uhhh, no thxk'
       assert_equal File.read(h.haml_writer.path), File.read(file_path("ex1.haml"))
+    end
+
+    test "with a prompt_per_line option takes user input into consideration for yaml" do
+      h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :prompt_per_line => true)
+      user_input = "D" # dump
+      File.readlines(file_path("ex1.haml")).size.times do
+        user_input << "n" # do not replace lines
+      end
+      with_highline(user_input) do
+        h.run
+      end
+      # no changes were made cause user was all like 'uhhh, no thxk'
+      assert_equal YAML.load(File.read(h.yaml_tool.locale_file)), {}
     end
 
     test "can not initialize if the haml is not valid syntax" do
@@ -60,6 +73,7 @@ module Haml
     end
 
     test "it writes the locale info to an out file when run" do
+      Dir.glob("*yml").map {|p| FileUtils.rm(p) } # HAX, TODO: handle with yaml files correctly (config/en.yml)
       assert_equal File.exists?(@ex1.yaml_tool.locale_file), false
       @ex1.run
       assert_equal File.exists?(@ex1.yaml_tool.locale_file), true

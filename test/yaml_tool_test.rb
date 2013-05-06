@@ -41,12 +41,12 @@ module Haml
         assert_equal yaml_tool.locales_dir, File.expand_path(".")
       end
     end
-    
+
     test "you can set the locale_dir" do
       yaml_tool = Haml::I18n::Extractor::YamlTool.new(@temp_locale_dir)
       assert_equal yaml_tool.locales_dir, @temp_locale_dir
     end
-    
+
     test "it relies on the locale_hash having a certain format" do
       setup_locale_hash
       @ex1.yaml_tool.locale_hash.each do |line_no, info_for_line|

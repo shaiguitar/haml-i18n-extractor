@@ -7,7 +7,7 @@ module Haml
   module I18n
     class Extractor
       class YamlTool
-        
+
         attr_accessor :locales_dir, :locale_hash
 
         def initialize(locales_dir = nil)
@@ -38,15 +38,15 @@ module Haml
               base_name = full_path.basename.to_s
               File.expand_path(File.join( @locales_dir, standardized_viewname(full_path) + ".#{base_name}.yml"))
             end
-          end.to_s
+          end || "haml-i18-extractor.yml"
         end
-        
+
         def write_file
           f = File.open(locale_file, "w+")
           f.puts yaml_hash.to_yaml
           f.flush
         end
-        
+
         private
 
         def i18n_scope

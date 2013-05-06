@@ -16,6 +16,8 @@ module Haml
       attr_reader :haml_reader, :haml_writer
       attr_reader :locale_hash, :yaml_tool, :type
 
+      DEFAULT_LINE_LOCALE_HASH = { :modified_line => nil,:keyname => nil,:replaced_text => nil, :path => nil }
+
       def initialize(haml_path, opts = {})
         @type = opts[:type]
         @prompt_per_line = opts[:prompt_per_line]
@@ -64,19 +66,19 @@ module Haml
         orig_line.chomp!
         orig_line, whitespace = handle_line_whitespace(orig_line)
         line_type, line_match = handle_line_finding(orig_line)
-        should_be_replaced, text_to_replace, locale_hash = handle_line_replacing(orig_line, line_match, line_type, line_no)
+        should_be_replaced, text_to_replace, line_locale_hash = handle_line_replacing(orig_line, line_match, line_type, line_no)
         if should_be_replaced
           if prompt_per_line?
-            Haml::I18n::Extractor::Prompter.new(orig_line,text_to_replace).ask_user
             user_approves = Haml::I18n::Extractor::Prompter.new(orig_line,text_to_replace).ask_user
           else
             user_approves = true
           end
         end
-        append_to_locale_hash(line_no, locale_hash)
         if user_approves
+          append_to_locale_hash(line_no, line_locale_hash)
           add_to_body("#{whitespace}#{text_to_replace}")
         else
+          append_to_locale_hash(line_no, DEFAULT_LINE_LOCALE_HASH)
           add_to_body("#{whitespace}#{orig_line}")
         end
         return should_be_replaced
@@ -94,7 +96,7 @@ module Haml
           hash = replacer.replace_hash.dup.merge!({:path => @haml_reader.path })
           [ true, hash[:modified_line], hash ]
         else
-          hash = { :modified_line => nil,:keyname => nil,:replaced_text => nil, :path => nil }
+          hash = DEFAULT_LINE_LOCALE_HASH
           [ false, orig_line, hash ]
         end
       end
