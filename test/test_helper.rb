@@ -89,25 +89,6 @@ ensure
   $terminal = old_terminal
 end
 
-
-
-def without_rails_mode
-  Object.send(:remove_const, :Rails) if defined?(Rails)
-  yield
-end
-
-def with_rails_mode
-  create_klass=<<EOR
-  module Rails
-    def self.root
-      "/data/current/name"
-    end
-  end
-EOR
-  eval create_klass
-  yield
-end
-
 module TestHelper
 
   TMPDIR = File.join(File.dirname(__FILE__) +  "/tmp/")

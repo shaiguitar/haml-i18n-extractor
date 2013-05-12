@@ -14,8 +14,7 @@ module Haml
           if locales_dir
             @locales_dir = locales_dir
           else
-            # locales_dir = rails_mode? ? (Rails.root.to_s + "/config/locales") : "."
-            @locales_dir = File.expand_path(".")
+            @locales_dir = File.expand_path("./config/locales/")
           end
         end
 
@@ -36,6 +35,9 @@ module Haml
             if pth
               full_path = Pathname.new(pth)
               base_name = full_path.basename.to_s
+              if ! File.exist?(@locales_dir)
+                FileUtils.mkdir_p(@locales_dir)
+              end
               File.expand_path(File.join( @locales_dir, standardized_viewname(full_path) + ".#{base_name}.yml"))
             end
           end || "haml-i18-extractor.yml"
@@ -64,11 +66,7 @@ module Haml
           Pathname.new(pth).dirname.to_s.split("/").last
         end
 
-        # def rails_mode?
-        #   defined?(Rails)
-        # end
-
-      end
+     end
     end
   end
 end

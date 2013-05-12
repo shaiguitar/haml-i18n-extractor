@@ -28,18 +28,9 @@ module Haml
         }
     end
 
-    # test "locale dir defaults for rails if you do not pass anything" do
-    #   with_rails_mode do
-    #     yaml_tool = Haml::I18n::Extractor::YamlTool.new
-    #     assert_equal yaml_tool.locales_dir, "/data/current/name/config/locales"
-    #   end
-    # end
-
-    test "locale dir defaults to cwd if no rails" do
-      without_rails_mode do
-        yaml_tool = Haml::I18n::Extractor::YamlTool.new
-        assert_equal yaml_tool.locales_dir, File.expand_path(".")
-      end
+    test "locale dir defaults to config/locales/" do
+      yaml_tool = Haml::I18n::Extractor::YamlTool.new
+      assert_equal yaml_tool.locales_dir, File.expand_path("./config/locales")
     end
 
     test "you can set the locale_dir" do

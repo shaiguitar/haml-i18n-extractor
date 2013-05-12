@@ -12,6 +12,18 @@ module Haml
     TestHelper.teardown_project_directory!
   end
 
+  def full_project_user_interaction
+    automate_user_interaction = ""
+    6.times do                            # should be number of files we're testing on
+      automate_user_interaction << "O"    # overwrite file
+      50.times do                         # should be number of lines in file,
+                                          # this should do right now.
+        automate_user_interaction << "y"  # replace line
+      end
+    end
+    automate_user_interaction
+ end
+
   def test_it_should_work_on_a_directory_mkay
     filename = "#{TestHelper::PROJECT_DIR}app/views/bar/thang.haml"
     bad_worfklow = Haml::I18n::Extractor::Workflow.new(filename)
@@ -19,7 +31,7 @@ module Haml
     rescue Haml::I18n::Extractor::NotADirectory
       assert true, "workflow works on a directory bubba."
   end
-  
+
   def test_it_finds_all_haml_files
     assert_equal @workflow.files.size, 4
   end
@@ -49,16 +61,14 @@ module Haml
     end
   end
 
-  def test_run_works
-    automate_user_interaction = ""
-    6.times do                            # should be number of files we're testing on
-      automate_user_interaction << "O"    # overwrite file
-      50.times do                         # should be number of lines in file,
-                                          # this should do right now.
-        automate_user_interaction << "y"  # replace line
-      end
+  def test_yaml_file_in_config
+    with_highline(full_project_user_interaction) do
+      @workflow.run
     end
-    with_highline(automate_user_interaction ) do
+  end
+
+  def test_run_works
+    with_highline(full_project_user_interaction) do
       @workflow.run
     end
   end
