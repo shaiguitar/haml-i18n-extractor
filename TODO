@@ -12,10 +12,5 @@
 
 ## workflow todo's
 
-  cleanup workflow - keep around
-    just handle a rails project dir  move any prompting in workflow into prompter.
-  if the user says 'no' on a line, make sure to not replace it
-    no extra yaml keys...
-  make sure yaml keys are in one file and fall into config/locales properly.
+  make sure yaml keys are in one file
   give user more context on line changes (like grep -C 4)
-  also right now there is a bug where it asks for 'y' twice?
