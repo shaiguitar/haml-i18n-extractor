@@ -1,12 +1,7 @@
-require 'highline'
-require 'highline/import'
-
 module Haml
   module I18n
     class Extractor
       class Workflow
-
-        include Helpers::Highline
 
         def initialize(project_path)
           @prompter = Haml::I18n::Extractor::Prompter.new
