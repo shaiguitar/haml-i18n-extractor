@@ -69,7 +69,7 @@ module Haml
         should_be_replaced, text_to_replace, line_locale_hash = handle_line_replacing(orig_line, line_match, line_type, line_no)
         if should_be_replaced
           if prompt_per_line?
-            user_approves = Haml::I18n::Extractor::Prompter.new(orig_line,text_to_replace).ask_user
+            user_approves = Haml::I18n::Extractor::Prompter.new.ask_user(orig_line,text_to_replace)
           else
             user_approves = true
           end
