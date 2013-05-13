@@ -20,13 +20,13 @@ module Haml
 
         # {:en => {:view_name => {:key_name => :string_name } } }
         def yaml_hash
-          h = HashWithIndifferentAccess.recursive_init
+          yml = HashWithIndifferentAccess.recursive_init
           @locale_hash.map do |line_no, info|
             unless info[:keyname].nil?
-              h[i18n_scope][standardized_viewname(info[:path])][standarized_keyname(info[:keyname])] = info[:replaced_text]
+              yml[i18n_scope][standardized_viewname(info[:path])][standarized_keyname(info[:keyname])] = info[:replaced_text]
             end
           end
-          h
+          yml = hashify(yml)
         end
 
         def locale_file
@@ -50,6 +50,19 @@ module Haml
         end
 
         private
+
+        # {:foo => {:bar => {:baz => :mam}, :barrr => {:bazzz => :mammm} }}
+        def hashify(my_hash)
+          if my_hash.is_a?(HashWithIndifferentAccess)
+            result = {}
+            my_hash.each do |k, v|
+              result[k.to_s] = hashify(v)
+            end
+            result
+          else
+            my_hash
+          end
+        end
 
         def i18n_scope
           :en

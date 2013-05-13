@@ -3,6 +3,10 @@
 # @date now equals {month=>{day=>{hours=>{min=>{sec=>1}}}}}
 class Hash
   def self.recursive_init
-    new { |hash, key| hash[key] = recursive_init }
+    new do |hash, key|
+      unless key.nil?
+        hash[key] = recursive_init
+      end
+    end
   end
 end
