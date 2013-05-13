@@ -13,4 +13,8 @@
 ## workflow todo's
 
   make sure yaml keys are in one file
+
+  either way when yaml is written, it should just write itself to config/locales/en.yml
+  wether its one-off, or project mode.
+
   give user more context on line changes (like grep -C 4)

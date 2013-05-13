@@ -4,8 +4,8 @@ module Haml
       class Workflow
 
         def initialize(project_path)
-          @prompter = Haml::I18n::Extractor::Prompter.new
           @project_path = project_path
+          @prompter = Haml::I18n::Extractor::Prompter.new
           unless File.directory?(@project_path)
             raise Extractor::NotADirectory, "#{@project_path} needs to be a directory!"
           end
