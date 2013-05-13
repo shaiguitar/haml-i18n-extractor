@@ -20,13 +20,14 @@ module Haml
 
         # {:en => {:view_name => {:key_name => :string_name } } }
         def yaml_hash
-          h = HashWithIndifferentAccess.recursive_init
+          @yaml_hash ||= HashWithIndifferentAccess.recursive_init
           @locale_hash.map do |line_no, info|
             unless info[:keyname].nil?
-              h[i18n_scope][standardized_viewname(info[:path])][standarized_keyname(info[:keyname])] = info[:replaced_text]
+              @yaml_hash[i18n_scope][standardized_viewname(info[:path])][standarized_keyname(info[:keyname])] = info[:replaced_text]
             end
           end
-          h
+          raise 'recurse to_hash'
+          @yaml_hash.dup.to_hash
         end
 
         def locale_file
