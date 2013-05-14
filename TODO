@@ -10,6 +10,8 @@
 - add herbgobbler (ERB) and this to another more generalized repo for translating templates?
 - Refactor tests: split out what is integration vs unit, too much coupling.
 
+- Make dependencies for gem install haml-i18n-extractor work (highline and haml do not install with it?)
+
 ## workflow todo's
 
   make sure yaml keys are in one file
