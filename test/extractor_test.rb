@@ -74,6 +74,7 @@ module Haml
 
     test "it writes the locale info to an out file when run" do
       Dir.glob("*yml").map {|p| FileUtils.rm(p) } # HAX, TODO: handle with yaml files correctly (config/en.yml)
+      Dir.glob("config/locales/*yml").map {|p| FileUtils.rm(p) } # HAX, TODO: handle with yaml files correctly (config/en.yml)
       assert_equal File.exists?(@ex1.yaml_tool.locale_file), false
       @ex1.run
       assert_equal File.exists?(@ex1.yaml_tool.locale_file), true

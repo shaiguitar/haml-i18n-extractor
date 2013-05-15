@@ -10,11 +10,13 @@ module Haml
 
         attr_accessor :locales_dir, :locale_hash
 
+        # this requires passing an absolute path.
+        # meaning run from a given rails root...
+        # ok? change?
         def initialize(locales_dir = nil)
-          if locales_dir
-            @locales_dir = locales_dir
-          else
-            @locales_dir = File.expand_path("./config/locales/")
+          @locales_dir = locales_dir ? locales_dir : "./config/locales/"
+          if ! File.exists?(@locales_dir)
+            FileUtils.mkdir_p(@locales_dir)
           end
         end
 
@@ -30,21 +32,12 @@ module Haml
         end
 
         def locale_file
-          if @locale_hash
-            pth = @locale_hash.map{|_,h| h[:path] }.compact.first
-            if pth
-              full_path = Pathname.new(pth)
-              base_name = full_path.basename.to_s
-              if ! File.exist?(@locales_dir)
-                FileUtils.mkdir_p(@locales_dir)
-              end
-              File.expand_path(File.join( @locales_dir, standardized_viewname(full_path) + ".#{base_name}.yml"))
-            end
-          end || "haml-i18-extractor.yml"
+          File.join(@locales_dir, "#{i18n_scope}.yml")
         end
 
-        def write_file
-          f = File.open(locale_file, "w+")
+        def write_file(filename = nil)
+          f = filename.nil? ? locale_file : filename
+          f = File.open(f, "w+")
           f.puts yaml_hash.to_yaml
           f.flush
         end
@@ -54,7 +47,7 @@ module Haml
         # {:foo => {:bar => {:baz => :mam}, :barrr => {:bazzz => :mammm} }}
         def hashify(my_hash)
           if my_hash.is_a?(HashWithIndifferentAccess)
-            result = {}
+            result = Hash.new
             my_hash.each do |k, v|
               result[k.to_s] = hashify(v)
             end
