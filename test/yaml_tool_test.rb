@@ -71,7 +71,7 @@ module Haml
       @ex1.yaml_tool.write_file(locale_config_file)
       really_written = YAML.load(File.read(locale_config_file))
       assert_equal really_written['en']['viewname'], existing_yaml_hash['en']['viewname']
-      assert_equal really_written['en']['support'], existing_yaml_hash['en']['support']
+      assert_equal really_written['en']['support'], ex1_yaml_hash['en']['support']
     end
 
     test "it relies on the locale_hash having a certain format" do

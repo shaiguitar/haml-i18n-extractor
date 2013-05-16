@@ -36,9 +36,20 @@ module Haml
         end
 
         def write_file(filename = nil)
-          f = filename.nil? ? locale_file : filename
-          f = File.open(f, "w+")
-          f.puts yaml_hash.to_yaml
+          pth = filename.nil? ? locale_file : filename
+          if File.exist?(pth)
+            str = File.read(pth)
+            if str.blank?
+              existing_yaml_hash = {}
+            else
+              existing_yaml_hash = YAML.load(str)
+            end
+          else
+            existing_yaml_hash = {}
+          end
+          final_yaml_hash = existing_yaml_hash.deep_merge!(yaml_hash)
+          f = File.open(pth, "w+")
+          f.puts final_yaml_hash.to_yaml
           f.flush
         end
 
