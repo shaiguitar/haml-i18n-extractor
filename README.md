@@ -33,9 +33,12 @@ end
 
 `cd your-rails-app-to-translate && haml-i18n-extractor .`
 
-Check out the quite brief movie/swf file demo of this tool in `demo/` . You should be able to see it online here, considering your browser supports swf:
+## Demo
+
+Check out the quite brief movie/swf file demo of this lib's executable in `demo/` . You should be able to see it online here, considering your browser supports swf:
 
 [Demo](http://shairosenfeld.com/haml-i18n-extractor-demo.swf)
+
 
 ## Example output
 
