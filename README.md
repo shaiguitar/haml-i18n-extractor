@@ -2,18 +2,21 @@
 
 Extract strings likely to be translated from haml templates for I18n translation. Replace the text, create yaml files, do all things you thought macros would solve, but didn't end up really saving THAT much time. Automate that pain away.
 
-## Installation 
+## Installation
 
 `gem install haml-i18n-extractor`
 
-However I don't upload gems to rubygems in my spare time, so if you want the latest code edge style, you can also simply clone this repo and install the gem from the root of the repo:
+If you want the latest code aka edge, you can also simply clone this repo and install the gem from the root of the repo:
 
 `gem uninstall -x haml-i18n-extractor; rm *gem; gem build *gemspec; gem install --local *gem`
 
-
 ## Usage
 
-- You can use the lib directly:
+You can use this on a per-file basis, or on a typical rails project directory.
+
+## Per-file basis
+
+- You can use the lib directly in your code, as such:
 
 <pre>
 begin
@@ -24,26 +27,24 @@ rescue Haml::I18n::Extractor::InvalidSyntax
 end
 </pre>
 
-- You can also simply run the binary provided with the gem on a rails app:
+## Per-project basis
 
-`cd your-rails-app-to-translate && haml-i18n-extractor .` 
+- I've provided a binary with the app you can use; Simply run the binary provided with the gem on a rails app:
 
-The workflow is an interactive one using highline which will allow you to choose if you want to:
+`cd your-rails-app-to-translate && haml-i18n-extractor .`
 
-1) overwrite the haml file.
-2) place a tmp haml file.
-3) pass, move on to the next haml file.
+Check out the quite brief movie/swf file demo of this tool in `demo/` . You should be able to see it online here, considering your browser supports swf:
 
-Then it will ask you on a line-per-line basis if you wish to replace that line or not. It's WIP, but it does work, so - Run the binary and see!
+[Demo](http://shairosenfeld.com/haml-i18n-extractor-demo.swf)
 
 ## Example output
 
-This should be a before and after picture of using this lib, whether directly in rubyland or using the executable:
+This should be a before and after picture of using this lib, whether directly in ruby or using the executable tool:
 
 - Before running (old haml):
 
 <pre>
-  shai@comp ~/p/project ‹master*› » cat app/views/admin/notifications/index.html.haml
+  shai@comp ~/p/project master $ cat app/views/admin/notifications/index.html.haml
   %h1 Consumer Notifications
 
   .nav= will_paginate(@consumer_notifications)
@@ -68,12 +69,12 @@ This should be a before and after picture of using this lib, whether directly in
 
 - After running (new haml, new yaml):
 
-Note how some of the strings are replaced, and the ones that shouldn't, aren't. Yup. Beautiful, right?
+Note how some of the strings are replaced, and the ones that shouldn't, aren't. Yup. Beautiful, for 2 and half seconds of work, right?
 
 Haml:
 
 <pre>
-  shai@comp ~/p/project ‹master*› » cat app/views/admin/notifications/index.html.i18n-extractor.haml 
+  shai@comp ~/p/project master $ cat app/views/admin/notifications/index.html.i18n-extractor.haml 
   %h1= t('.consumer_notifications')
 
   .nav= will_paginate(@consumer_notifications)
@@ -96,13 +97,13 @@ Haml:
   .nav= will_paginate(@consumer_notifications)
 </pre>
 
-Yaml: 
+Yaml:
 
 <pre>
-  shai@comp ~/p/project ‹master*› » cat notifications.index.html.haml.yml  
-  --- !ruby/hash:ActiveSupport::HashWithIndifferentAccess
-  en: !ruby/hash:ActiveSupport::HashWithIndifferentAccess
-    notifications: !ruby/hash:ActiveSupport::HashWithIndifferentAccess
+  shai@comp ~/p/project master $ cat config/locales/en.yml
+  ---
+  en:
+    notifications:
       consumer_notifications: Consumer Notifications
       type: Type
       identifier: Identifier
