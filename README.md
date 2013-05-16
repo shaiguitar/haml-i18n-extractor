@@ -33,9 +33,12 @@ end
 
 `cd your-rails-app-to-translate && haml-i18n-extractor .`
 
-Check out the quite brief movie/swf file demo of this tool in `demo/` . You should be able to see it online here, considering your browser supports swf:
+## Demo
+
+Check out the quite brief movie/swf file demo of this lib's executable in `demo/` . You should be able to see it online here, considering your browser supports swf:
 
 [Demo](http://shairosenfeld.com/haml-i18n-extractor-demo.swf)
+
 
 ## Example output
 
@@ -56,7 +59,6 @@ This should be a before and after picture of using this lib, whether directly in
         %th Data
         %th Success
         %th Reported To
-        %th.last &nbsp;
     - @consumer_notifications.each do |cn|
       %tr
         %td.type= cn.notification.type
@@ -86,7 +88,6 @@ Haml:
         %th= t('.data')
         %th= t('.success')
         %th= t('.reported_to')
-        %th.last= t('.nbsp;')
     - @consumer_notifications.each do |cn|
       %tr
         %td.type= cn.notification.type
@@ -110,7 +111,6 @@ Yaml:
       data: Data
       success: Success
       reported_to: Reported To
-      nbsp;: ! '&nbsp;'
 </pre>
 
 ## Feedback
