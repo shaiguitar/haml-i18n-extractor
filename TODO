@@ -9,7 +9,8 @@
 - admin/bla should be namespaced such as: en.admin.bla vs just en.bla in the yml file?
 - add herbgobbler (ERB) and this to another more generalized repo for translating templates?
 - Refactor tests: split out what is integration vs unit, too much coupling.
+-  concept of project directory of whereever we expect that to be?
 
 - prompting shoudl not have surrounding quotes, it's confusing.
-
--  concept of project directory of whereever we expect that to be?
+- do not display files for prompting that have nothing to translate
+- add 'idempotent' to readme
