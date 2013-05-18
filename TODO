@@ -14,3 +14,4 @@
 - prompting shoudl not have surrounding quotes, it's confusing.
 - do not display files for prompting that have nothing to translate
 - add 'idempotent' to readme
+- y/n/[t]ag/[e]dit: comment for person to go edit later...? #mkb ... edit for editing in place, using text_replacer
