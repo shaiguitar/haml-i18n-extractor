@@ -2,21 +2,17 @@
 
 Extract strings likely to be translated from haml templates for I18n translation. Replace the text, create yaml files, do all things you thought macros would solve, but didn't end up really saving THAT much time. Automate that pain away.
 
-## Installation
+# Idempotent
 
-`gem install haml-i18n-extractor`
-
-If you want the latest code aka edge, you can also simply clone this repo and install the gem from the root of the repo:
-
-`gem uninstall -x haml-i18n-extractor; rm *gem; gem build *gemspec; gem install --local *gem`
+It's idempotent, which means you can run this library/executable against the same haml file after you've already translated the keys, and it won't try to retranslate already translated text. Pretty cool.
 
 ## Usage
 
-You can use this on a per-file basis, or on a typical rails project directory.
+You can use the binary which is an interactive prompting mode included in this library, or just use the code directly. See below for more examples.
 
-## Per-file basis
+## Examples
 
-- You can use the lib directly in your code, as such:
+- Per file basis. You can use the lib directly in your code, as such:
 
 <pre>
 begin
@@ -27,13 +23,11 @@ rescue Haml::I18n::Extractor::InvalidSyntax
 end
 </pre>
 
-## Per-project basis
-
-- I've provided a binary with the app you can use; Simply run the binary provided with the gem on a rails app:
+- Per-project basis, with the binary. See demo below for usage of the binary.
 
 `cd your-rails-app-to-translate && haml-i18n-extractor .`
 
-## Demo
+## Demo using interactive mode
 
 Check out the quite brief movie/swf file demo of this lib's executable in `demo/` . You should be able to see it online here, considering your browser supports swf:
 
@@ -42,7 +36,7 @@ Check out the quite brief movie/swf file demo of this lib's executable in `demo/
 
 ## Example output
 
-This should be a before and after picture of using this lib, whether directly in ruby or using the executable tool:
+This should be a before and after picture of using this lib, whether using the interactive mode or plain ruby.
 
 - Before running (old haml):
 
@@ -112,6 +106,15 @@ Yaml:
       success: Success
       reported_to: Reported To
 </pre>
+
+
+## Installation
+
+`gem install haml-i18n-extractor`
+
+If you want the latest code aka edge, you can also simply clone this repo and install the gem from the root of the repo:
+
+`gem uninstall -x haml-i18n-extractor; rm *gem; gem build *gemspec; gem install --local *gem`
 
 ## Feedback
 
