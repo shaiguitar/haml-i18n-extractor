@@ -118,7 +118,8 @@ If you want the latest code aka edge, you can also simply clone this repo and in
 
 ## Feedback
 
-Can use github issues to address any concern you have, or simply email me, with the contact info here: [http://shairosenfeld.com/](http://shairosenfeld.com/)
+Can use github issues to address any concern you have, or simply email me, with the contact info here: [http://shairosenfeld.com/](http://shairosenfeld.com/). 
+You may find me on freenode #haml-i18n-extractor although I don't check it that often. Also on twitter you can find me with the same username as my GH one.
 
 ## Contributing
 
