@@ -9,7 +9,7 @@ module Haml
         # limit the number of chars
         LIMIT_KEY_NAME = 30
         # do not pollute the key space it will make it invalid yaml
-        NOT_ALLOWED_IN_KEYNAME =  %w( ~ ` ! @ # $ % ^ & * - ( ) , )
+        NOT_ALLOWED_IN_KEYNAME =  %w( ~ ` ! @ # $ % ^ & * - ( ) , ? { } )
         
         def initialize(full_line, text_to_replace,line_type)
           @full_line = full_line
