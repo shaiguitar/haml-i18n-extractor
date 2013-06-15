@@ -1,35 +1,15 @@
-## general todo's
+* Improvements
 
-- Remove the ex1.output ex1.i18n-extractor duplication. (or move to tmp dir):
-    Move to test/tmp a-la the way workflow is working.
-- Ensure that yaml file gets written to the right directory, and does a deep merge.
+- Remove the ex1.output ex1.i18n-extractor duplication. (or move to tmp dir): Move to test/tmp a-la the way workflow is working.
 - Add {} to disallowed characters
 - Add yaml fixtures and compare those
-- handled email suffixes (foo.en.html.haml etc)
 - admin/bla should be namespaced such as: en.admin.bla vs just en.bla in the yml file?
-- add herbgobbler (ERB) and this to another more generalized repo for translating templates?
 - Refactor tests: split out what is integration vs unit, too much coupling.
+- Prompter.new should just be a singleton.
+- rm hax_shit, move to setup/teardown, shutdown/startup
+- rm the :overwrite, :dump stuff to UserAction?
 
-## workflow todo's
+ * Ideas
 
-  make sure yaml keys are in one file
-
-  either way when yaml is written, it should just write itself to config/locales/en.yml
-  wether its one-off, or project mode. and that's something yaml_tool should do.
-  merge itself in.
-  concept of project directory of whereever we expect that to be?
-
-  give user more context on line changes (like grep -C 4)
-  agreegate yaml:
-
-<ruby>
-
-  require 'yaml'
-  require 'pp'
-  ActiveSupport::HashWithIndifferentAccess = HashWithIndifferentAccess # hack when it writes out the yaml, it should not be with_indifferent_access
-  all_yaml =  Dir.glob('*yml').collect{|x| File.read(x) }
-  locale_hash = Hash.new
-  all_yaml.map{|y| YAML.load(y) }.map{|x| locale_hash.deep_merge!(x)}
-  pp locale_hash; "file.write it"
-
-</ruby>
+- handled email suffixes (foo.en.html.haml etc)
+- add herbgobbler (ERB) and this to another more generalized repo for translating templates?

@@ -33,6 +33,7 @@ Check out the quite brief movie/swf file demo of this lib's executable in `demo/
 
 [Demo](http://shairosenfeld.com/haml-i18n-extractor-demo.swf)
 
+One thing missing there just added is the "tag" functionality, which enables you to tag a line you want to review for later, if you are unsure you want to replace it. It will create a list of /file/path:42 tags for you to go and revisit later.
 
 ## Example output
 

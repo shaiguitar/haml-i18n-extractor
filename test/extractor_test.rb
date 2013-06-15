@@ -52,6 +52,23 @@ module Haml
       assert_equal YAML.load(File.read(h.yaml_tool.locale_file)), {}
     end
 
+    test "with a prompt_per_line option user can tag a line for later review" do
+      hax_shit
+      if File.exist?(Haml::I18n::Extractor::TaggingTool::DB)
+        assert_equal File.readlines(Haml::I18n::Extractor::TaggingTool::DB), []
+      end
+      h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :prompt_per_line => true)
+      user_input = "D" # dump
+      File.readlines(file_path("ex1.haml")).size.times do
+        user_input << "t" # tag the lines
+      end
+      with_highline(user_input) do
+        h.run
+      end
+      assert_equal File.readlines(Haml::I18n::Extractor::TaggingTool::DB).size, 7 # 7 replaceable lines in ex1
+    end
+
+
     test "can not initialize if the haml is not valid syntax" do
       begin
         Haml::I18n::Extractor.new(file_path("bad.haml"))
@@ -76,6 +93,9 @@ module Haml
     def hax_shit
       Dir.glob("*yml").map {|p| FileUtils.rm(p) } # HAX, TODO: handle with yaml files correctly (config/en.yml)
       Dir.glob("config/locales/*yml").map {|p| FileUtils.rm(p) } # HAX, TODO: handle with yaml files correctly (config/en.yml)
+      if File.exists?(Haml::I18n::Extractor::TaggingTool::DB)
+        FileUtils.rm_rf(Haml::I18n::Extractor::TaggingTool::DB) # HAX, TODO: setup/teardown
+      end
     end
 
     test "it writes the locale info to an out file when run" do

@@ -38,26 +38,8 @@ module Haml
 
   def test_outputs_stats
     with_highline do
-      @workflow.output_stats
+      @workflow.start_message
       assert @output.string.match(/Found 4 haml files/), "Outputs stats"
-    end
-  end
-
-  def test_asks_to_process_file_yes
-    with_highline("O") do
-      assert_equal @workflow.process_file?(@workflow.files.first), :overwrite
-    end
-  end
-
-  def test_asks_to_process_file_no
-    with_highline("N") do
-      assert_equal @workflow.process_file?(@workflow.files.first), nil
-    end
-  end
-  
-  def test_asks_to_process_file_dump
-    with_highline("D") do
-      assert_equal @workflow.process_file?(@workflow.files.first), :dump
     end
   end
 

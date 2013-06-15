@@ -17,10 +17,10 @@ module Haml
           end
         end
 
-        def output_stats
+        def start_message
           file_count = files.size
           file_names = files.join("\n")
-          @prompter.output_stats(file_count, file_names)
+          @prompter.start_message(file_count, file_names)
         end
 
         def process_file?(file)
@@ -29,7 +29,7 @@ module Haml
         end
 
         def run
-          output_stats
+          start_message
           files.each do |haml_path|
             type = process_file?(haml_path)
             if type

@@ -21,10 +21,12 @@ module Haml
       def initialize(haml_path, opts = {})
         @type = opts[:type]
         @prompt_per_line = opts[:prompt_per_line]
+        @prompter = Haml::I18n::Extractor::Prompter.new
         @haml_reader = Haml::I18n::Extractor::HamlReader.new(haml_path)
         validate_haml(@haml_reader.body)
         @haml_writer = Haml::I18n::Extractor::HamlWriter.new(haml_path, {:type => @type})
         @yaml_tool = Haml::I18n::Extractor::YamlTool.new
+        @tagging_tool ||= Haml::I18n::Extractor::TaggingTool.new
         # hold all the processed lines
         @body = []
         # holds a line_no => {info_about_line_replacemnts_or_not}
@@ -51,7 +53,7 @@ module Haml
         assign_yaml
       end
 
-     def new_body
+      def new_body
         @haml_reader.lines.each_with_index do |orig_line, line_no|
           process_line(orig_line,line_no)
         end
@@ -67,20 +69,24 @@ module Haml
         orig_line, whitespace = handle_line_whitespace(orig_line)
         line_type, line_match = handle_line_finding(orig_line)
         should_be_replaced, text_to_replace, line_locale_hash = handle_line_replacing(orig_line, line_match, line_type, line_no)
+
+        user_action = Haml::I18n::Extractor::UserAction.new('y') # default if no prompting: just do it.
         if should_be_replaced
           if prompt_per_line?
-            user_approves = Haml::I18n::Extractor::Prompter.new.ask_user(orig_line,text_to_replace)
-          else
-            user_approves = true
+            user_action = @prompter.ask_user(orig_line,text_to_replace)
           end
         end
-        if user_approves
+
+        if user_action.tag?
+          @tagging_tool.write(line_locale_hash[:path], line_no)
+       elsif user_action.replace_line?
           append_to_locale_hash(line_no, line_locale_hash)
           add_to_body("#{whitespace}#{text_to_replace}")
-        else
+        elsif user_action.no_replace?
           append_to_locale_hash(line_no, DEFAULT_LINE_LOCALE_HASH)
           add_to_body("#{whitespace}#{orig_line}")
         end
+
         return should_be_replaced
       end
 
@@ -123,8 +129,8 @@ module Haml
       def validate_haml(haml)
         parser = Haml::Parser.new(haml, Haml::Options.new)
         parser.parse
-        rescue Haml::SyntaxError
-          raise InvalidSyntax, "invalid syntax for haml #{@haml_reader.path}"
+      rescue Haml::SyntaxError
+        raise InvalidSyntax, "invalid syntax for haml #{@haml_reader.path}"
       end
 
     end
