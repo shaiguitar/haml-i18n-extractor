@@ -17,12 +17,12 @@ module Haml
           say("\n")
           say(replaced_line.inspect)
           say("\n")
-          answer = ask(highlight('y/n?')) do |q|
+          answer = ask(highlight('y/n/e?')) do |q|
                      q.echo      = false
                      q.character = true
-                     q.validate  = /\A[yn]\Z/
+                     q.validate  = /\A[yne]\Z/
           end
-          answer == 'y'
+          Haml::I18n::Extractor::UserAction.new(answer)
         end
 
         def output_stats(file_count, file_names)

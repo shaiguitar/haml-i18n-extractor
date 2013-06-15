@@ -67,20 +67,24 @@ module Haml
         orig_line, whitespace = handle_line_whitespace(orig_line)
         line_type, line_match = handle_line_finding(orig_line)
         should_be_replaced, text_to_replace, line_locale_hash = handle_line_replacing(orig_line, line_match, line_type, line_no)
+
+        user_action = Haml::I18n::Extractor::UserAction.new('y') # default just do it.
         if should_be_replaced
           if prompt_per_line?
-            user_approves = Haml::I18n::Extractor::Prompter.new.ask_user(orig_line,text_to_replace)
-          else
-            user_approves = true
+            user_action = Haml::I18n::Extractor::Prompter.new.ask_user(orig_line,text_to_replace)
           end
         end
-        if user_approves
+
+        if user_action.edit?
+          raise "implement"
+        elsif user_action.replace_line?
           append_to_locale_hash(line_no, line_locale_hash)
           add_to_body("#{whitespace}#{text_to_replace}")
-        else
+        elsif user_action.no_replace?
           append_to_locale_hash(line_no, DEFAULT_LINE_LOCALE_HASH)
           add_to_body("#{whitespace}#{orig_line}")
         end
+
         return should_be_replaced
       end
 
