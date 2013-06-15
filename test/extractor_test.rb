@@ -52,6 +52,21 @@ module Haml
       assert_equal YAML.load(File.read(h.yaml_tool.locale_file)), {}
     end
 
+    test "with a prompt_per_line option user can edit manually" do
+      hax_shit
+      h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :prompt_per_line => true)
+      user_input = "D" # dump
+      (File.readlines(file_path("ex1.haml")).size - 1).times do
+        user_input << "e" # Edit "eeee"
+      end
+      with_highline(user_input) do
+        h.run
+      end
+      # no changes were made cause user was all like 'uhhh, no thxk'
+      assert_equal YAML.load(File.read(h.yaml_tool.locale_file)), {}
+    end
+
+
     test "can not initialize if the haml is not valid syntax" do
       begin
         Haml::I18n::Extractor.new(file_path("bad.haml"))

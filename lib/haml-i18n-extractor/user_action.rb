@@ -19,7 +19,6 @@ module Haml
           @input == 'n'
         end
 
-
       end
     end
   end

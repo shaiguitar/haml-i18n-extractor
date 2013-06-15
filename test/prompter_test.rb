@@ -1,7 +1,8 @@
 require 'test_helper'
 
 module Haml
-  class PrompterTest < MiniTest::Unit::TestCase
+  # misnomer, this is also testing UserAction
+  class PrompterAndUserActionTest < MiniTest::Unit::TestCase
 
     def test_asks_to_process_line_yes
       with_highline("y") do
@@ -21,6 +22,11 @@ module Haml
       end
     end
 
+    def test_get_replacement_line
+      with_highline("This is some user input") do
+        assert_equal Haml::I18n::Extractor::Prompter.new.get_replacement_line, "This is some user input"
+      end
+    end
 
 
  end

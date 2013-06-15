@@ -21,6 +21,7 @@ module Haml
       def initialize(haml_path, opts = {})
         @type = opts[:type]
         @prompt_per_line = opts[:prompt_per_line]
+        @prompter = Haml::I18n::Extractor::Prompter.new
         @haml_reader = Haml::I18n::Extractor::HamlReader.new(haml_path)
         validate_haml(@haml_reader.body)
         @haml_writer = Haml::I18n::Extractor::HamlWriter.new(haml_path, {:type => @type})
@@ -51,7 +52,7 @@ module Haml
         assign_yaml
       end
 
-     def new_body
+      def new_body
         @haml_reader.lines.each_with_index do |orig_line, line_no|
           process_line(orig_line,line_no)
         end
@@ -71,13 +72,17 @@ module Haml
         user_action = Haml::I18n::Extractor::UserAction.new('y') # default just do it.
         if should_be_replaced
           if prompt_per_line?
-            user_action = Haml::I18n::Extractor::Prompter.new.ask_user(orig_line,text_to_replace)
+            user_action = @prompter.ask_user(orig_line,text_to_replace)
           end
         end
 
         if user_action.edit?
-          raise "implement"
-        elsif user_action.replace_line?
+          key_name = @prompter.get_key_name
+          text_to_replace = @prompter.get_replacement_line
+          line_locale_hash.merge!({:keyname => key_name})
+          append_to_locale_hash(line_no, line_locale_hash)
+          add_to_body("#{whitespace}#{text_to_replace}")
+       elsif user_action.replace_line?
           append_to_locale_hash(line_no, line_locale_hash)
           add_to_body("#{whitespace}#{text_to_replace}")
         elsif user_action.no_replace?
@@ -127,8 +132,8 @@ module Haml
       def validate_haml(haml)
         parser = Haml::Parser.new(haml, Haml::Options.new)
         parser.parse
-        rescue Haml::SyntaxError
-          raise InvalidSyntax, "invalid syntax for haml #{@haml_reader.path}"
+      rescue Haml::SyntaxError
+        raise InvalidSyntax, "invalid syntax for haml #{@haml_reader.path}"
       end
 
     end
