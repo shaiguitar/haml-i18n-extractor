@@ -79,6 +79,7 @@ module Haml
 
         if user_action.tag?
           @tagging_tool.write(line_locale_hash[:path], line_no)
+          add_to_body("#{whitespace}#{orig_line}")
        elsif user_action.replace_line?
           append_to_locale_hash(line_no, line_locale_hash)
           add_to_body("#{whitespace}#{text_to_replace}")
