@@ -68,7 +68,7 @@ module Haml
         orig_line.chomp!
         orig_line, whitespace = handle_line_whitespace(orig_line)
         line_type, line_match = handle_line_finding(orig_line)
-        should_be_replaced, text_to_replace, line_locale_hash = handle_line_replacing(orig_line, line_match, line_type, line_no)
+        should_be_replaced, text_to_replace, line_locale_hash = gather_replacement_info(orig_line, line_match, line_type, line_no)
 
         user_action = Haml::I18n::Extractor::UserAction.new('y') # default if no prompting: just do it.
         if should_be_replaced
@@ -97,7 +97,7 @@ module Haml
 
       private
 
-      def handle_line_replacing(orig_line, line_match, line_type, line_no)
+      def gather_replacement_info(orig_line, line_match, line_type, line_no)
         if line_match && !line_match.empty?
           replacer = Haml::I18n::Extractor::TextReplacer.new(orig_line, line_match, line_type)
           hash = replacer.replace_hash.dup.merge!({:path => @haml_reader.path })
