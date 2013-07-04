@@ -17,10 +17,10 @@ module Haml
           say("\n")
           say(replaced_line.inspect)
           say("\n")
-          answer = ask(highlight('[y]es/[n]o/[t]ag?')) do |q|
+          answer = ask(highlight('[y]es/[n]o/[t]ag/[N]ext?')) do |q|
             q.echo      = false
             q.character = true
-            q.validate  = /\A[ynt]\Z/
+            q.validate  = /\A[yntN]\Z/
           end
           Haml::I18n::Extractor::UserAction.new(answer)
         end
@@ -78,6 +78,9 @@ module Haml
           return :dump if answer == 'D'
         end
 
+        def moving_to_next_file
+          say("Next received! Saved changes done so far, moving to the next file.\n")
+        end
       end
     end
   end

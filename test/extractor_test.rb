@@ -38,6 +38,19 @@ module Haml
       assert_equal File.read(h.haml_writer.path), File.read(file_path("ex1.haml"))
     end
 
+    test "with a prompt_per_line option takes user input N as next and stops processing file" do
+      h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :prompt_per_line => true)
+      user_input = "D" # dump
+      File.readlines(file_path("ex1.haml")).size.times do
+        user_input << "N" # just move on to next file
+      end
+      with_highline(user_input) do
+        h.run
+      end
+      # no changes were made cause user was all like 'uhhh, move to next file'
+      assert_equal File.read(h.haml_writer.path), File.read(file_path("ex1.haml"))
+    end
+
     test "with a prompt_per_line option takes user input into consideration for yaml" do
       hax_shit
       h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :prompt_per_line => true)

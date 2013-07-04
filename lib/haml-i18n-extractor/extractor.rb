@@ -9,6 +9,7 @@ module Haml
       class InvalidSyntax < StandardError ; end
       class NotADirectory < StandardError ; end
       class NotDefinedLineType < StandardError ; end
+      class AbortFile < StandardError ; end
 
       LINE_TYPES_ALL = [:text, :not_text, :loud, :silent, :element]
       LINE_TYPES_ADD_EVAL = [:text, :element]
@@ -54,8 +55,14 @@ module Haml
       end
 
       def new_body
-        @haml_reader.lines.each_with_index do |orig_line, line_no|
-          process_line(orig_line,line_no)
+        begin
+          @haml_reader.lines.each_with_index do |orig_line, line_no|
+            @current_line_no = line_no
+            process_line(orig_line,line_no)
+          end
+        rescue AbortFile
+          @prompter.moving_to_next_file
+          add_rest_of_file_to_body(@current_line_no)
         end
         @body.join("\n")
       end
@@ -80,6 +87,8 @@ module Haml
         if user_action.tag?
           @tagging_tool.write(line_locale_hash[:path], line_no)
           add_to_body("#{whitespace}#{orig_line}")
+        elsif user_action.next?
+          raise AbortFile, "stopping to process the rest of the file"
        elsif user_action.replace_line?
           append_to_locale_hash(line_no, line_locale_hash)
           add_to_body("#{whitespace}#{text_to_replace}")
@@ -96,6 +105,12 @@ module Haml
       end
 
       private
+
+      def add_rest_of_file_to_body(line_no)
+        @haml_reader.lines[line_no..@haml_reader.lines.size-1].map do |orig_ln|
+          add_to_body(orig_ln.chomp)
+        end
+      end
 
       def gather_replacement_info(orig_line, line_match, line_type, line_no)
         if line_match && !line_match.empty?

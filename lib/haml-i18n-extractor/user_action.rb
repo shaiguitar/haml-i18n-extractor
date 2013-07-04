@@ -32,9 +32,9 @@ module Haml
           #@input == 'D'
         #end
 
-        #def next?
-          #@input == 'N'
-        #end
+        def next?
+          @input == 'N'
+        end
 
       end
     end
