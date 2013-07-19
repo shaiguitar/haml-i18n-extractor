@@ -2,9 +2,9 @@
 
 Extract strings likely to be translated from haml templates for I18n translation. Replace the text, create yaml files, do all things you thought macros would solve, but didn't end up really saving THAT much time. Automate that pain away.
 
-# Idempotent
+# Use it over and over again
 
-It's idempotent, which means you can run this library/executable against the same haml file after you've already translated the keys, and it won't try to retranslate already translated text. Pretty cool.
+It doesn't translate already translated keys, or things it identfies that are not text. What this means is that you can run this library/executable against the same haml file(s) after you've already translated stuff, and it will only look at things you really need and not any prior stuff. Pretty great. Try it, and see.
 
 ## Usage
 
@@ -33,7 +33,12 @@ Check out the quite brief movie/swf file demo of this lib's executable in `demo/
 
 [Demo](http://shairosenfeld.com/haml-i18n-extractor-demo.swf)
 
-One thing missing there just added is the "tag" functionality, which enables you to tag a line you want to review for later, if you are unsure you want to replace it. It will create a list of /file/path:42 tags for you to go and revisit later.
+Things that have been added since recording demo:
+
+- A "tag" functionality, which enables you to tag a line you want to review for later, if you are unsure you want to replace it. It will create a list of /file/path:42 tags for you to go and revisit later.
+- You can use "Next" if you're in the middle of processing a file and go to the next file.
+
+Have any other ideas? Let me know or better yet, submit a pull request.
 
 ## Example output
 
