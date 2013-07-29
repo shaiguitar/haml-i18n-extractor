@@ -5,6 +5,7 @@ require 'haml-i18n-extractor'
 if ARGV.empty?
   puts "Usage: <haml-i18n-extractor> --version"
   puts "Usage: <haml-i18n-extractor> [path]"
+  puts "Usage: <haml-i18n-extractor> [filename] --no-prompt"
   abort
 end
 
@@ -13,5 +14,15 @@ if ARGV[0] == "--version"
   abort
 end
 
-workflow = Haml::I18n::Extractor::Workflow.new(File.expand_path(ARGV[0]))
-workflow.run
+pth = File.expand_path(ARGV[0])
+
+if File.directory?(pth)
+  workflow = Haml::I18n::Extractor::Workflow.new(pth)
+  workflow.run
+elsif File.exists?(pth) && ARGV[1] == "--no-prompt"
+  extractor = Haml::I18n::Extractor.new(pth, :type => :overwrite, :prompt_per_line => false)
+  extractor.run
+elsif File.exists?(pth)
+  extractor = Haml::I18n::Extractor.new(pth, :type => :overwrite, :prompt_per_line => true)
+  extractor.run
+end

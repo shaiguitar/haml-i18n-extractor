@@ -3,11 +3,14 @@
 - Remove the ex1.output ex1.i18n-extractor duplication. (or move to tmp dir): Move to test/tmp a-la the way workflow is working.
 - Add {} to disallowed characters
 - Add yaml fixtures and compare those
-- admin/bla should be namespaced such as: en.admin.bla vs just en.bla in the yml file?
 - Refactor tests: split out what is integration vs unit, too much coupling.
 - Prompter.new should just be a singleton.
 - rm hax_shit, move to setup/teardown, shutdown/startup
 - rm the :overwrite, :dump stuff to UserAction?
+
+* Issues
+
+- CLI options: Extractor.new accepts options. pass through workflow. First up: i18n_scope (issue#5)
 
  * Ideas
 
