@@ -5,6 +5,7 @@ module Haml
 
     def setup
       @temp_locale_dir = "./test/tmp/"
+      TestHelper.setup_project_directory!
     end
 
     def setup_locale_hash

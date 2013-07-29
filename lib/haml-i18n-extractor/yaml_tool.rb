@@ -22,10 +22,12 @@ module Haml
 
         # {:en => {:view_name => {:key_name => :string_name } } }
         def yaml_hash
-          yml = HashWithIndifferentAccess.recursive_init
+          yml = Hash.new
           @locale_hash.map do |line_no, info|
             unless info[:keyname].nil?
-              yml[i18n_scope][standardized_viewname(info[:path])][standarized_keyname(info[:keyname])] = info[:replaced_text]
+              keyspace = [i18n_scope,standardized_viewnames(info[:path]), standarized_keyname(info[:keyname]),
+                          info[:replaced_text]].flatten
+              yml.deep_merge!(nested_hash({},keyspace))
             end
           end
           yml = hashify(yml)
@@ -57,7 +59,7 @@ module Haml
 
         # {:foo => {:bar => {:baz => :mam}, :barrr => {:bazzz => :mammm} }}
         def hashify(my_hash)
-          if my_hash.is_a?(HashWithIndifferentAccess)
+          if my_hash.is_a?(Hash)
             result = Hash.new
             my_hash.each do |k, v|
               result[k.to_s] = hashify(v)
@@ -68,6 +70,17 @@ module Haml
           end
         end
 
+        # [1,2,3] => {1 => {2 => 3}}
+        def nested_hash(hash,array)
+          elem = array.shift
+          if array.size == 1
+            hash[elem] = array.last
+          else
+            hash[elem] = {}
+            nested_hash(hash[elem],array)
+          end
+          hash
+        end
         def i18n_scope
           :en
         end
@@ -78,12 +91,21 @@ module Haml
           $1
         end
 
-        # assuming rails format, app/views/users/index.html.haml return users
-        def standardized_viewname(pth)
-          Pathname.new(pth).dirname.to_s.split("/").last
+        # assuming rails format, app/views/users/index.html.haml return [users]
+        # app/views/admin/users/index.html.haml return [admin, users]
+        # app/views/admin/users/with_namespace/index.html.haml return [admin, users, with_namespace]
+        # otherwise, just grab the last one.
+        def standardized_viewnames(pth)
+          array_of_dirs = Pathname.new(pth).dirname.to_s.split("/")
+          index = array_of_dirs.index("views")
+          if index
+            array_of_dirs[index+1..-1]
+          else
+            [array_of_dirs.last]
+          end
         end
 
-     end
+      end
     end
   end
 end

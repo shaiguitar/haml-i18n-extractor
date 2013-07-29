@@ -94,11 +94,37 @@ module TestHelper
   TMPDIR = File.join(File.dirname(__FILE__) +  "/tmp/")
   PROJECT_DIR = File.join(TMPDIR, "workflow/")
 
+  def self.mock_full_project_user_interaction!
+    automate_user_interaction = ""
+    6.times do                            # should be number of files we're testing on
+      automate_user_interaction << "O"    # overwrite file
+      50.times do                         # should be number of lines in file,
+        # this should do right now.
+        automate_user_interaction << "y"  # replace line
+      end
+    end
+    @workflow = Haml::I18n::Extractor::Workflow.new(TestHelper::PROJECT_DIR)
+    with_highline(automate_user_interaction) do
+      @workflow.run
+    end
+    @workflow
+  end
+
+
+  def self.hax_shit
+    Dir.glob("*yml").map {|p| FileUtils.rm(p) } # HAX, TODO: handle with yaml files correctly (config/en.yml)
+    Dir.glob("config/locales/*yml").map {|p| FileUtils.rm(p) } # HAX, TODO: handle with yaml files correctly (config/en.yml)
+    if File.exists?(Haml::I18n::Extractor::TaggingTool::DB)
+      FileUtils.rm_rf(Haml::I18n::Extractor::TaggingTool::DB) # HAX, TODO: setup/teardown
+    end
+  end
+
   def self.setup_project_directory!
     # mimic a rails app.
     view1 = File.join(PROJECT_DIR, "app", "views", "view1")
     view2 = File.join(PROJECT_DIR, "app", "views", "view2")
-    [ view1, view2 ].map do |dir|
+    view3 = File.join(PROJECT_DIR, "app", "views", "namespace", "view3")
+    [ view1, view2, view3 ].map do |dir|
       FileUtils.mkdir_p(dir)
       ["thing.haml", "thang.haml"].map do |fn|
         haml_text=<<EOH
@@ -121,11 +147,11 @@ module TestHelper
       %td.data= cn.notification.data
       %td.success= cn.success
       %td.reported_to= cn.reported_to
-.nav= will_paginate(@consumer_notifications)     
+.nav= will_paginate(@consumer_notifications)
 EOH
-        File.open(File.join(dir, fn), "w") do |f|
-          f.write haml_text
-        end
+      File.open(File.join(dir, fn), "w") do |f|
+        f.write haml_text
+      end
       end
     end
     # config dir

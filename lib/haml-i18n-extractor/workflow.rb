@@ -3,7 +3,10 @@ module Haml
     class Extractor
       class Workflow
 
+        attr_reader :extractors
+
         def initialize(project_path)
+          @extractors = []
           @project_path = project_path
           @prompter = Haml::I18n::Extractor::Prompter.new
           unless File.directory?(@project_path)
@@ -56,8 +59,9 @@ module Haml
           options = {:type => type} # overwrite or dump haml
           options.merge!({:prompt_per_line => true}) # per-line prompts
           begin
-            @ex1 = Haml::I18n::Extractor.new(haml_path, options)
-            @ex1.run
+            @extractor = Haml::I18n::Extractor.new(haml_path, options)
+            @extractors << @extractor
+            @extractor.run
           rescue Haml::I18n::Extractor::InvalidSyntax
             @prompter.syntax_error(haml_path)
           end

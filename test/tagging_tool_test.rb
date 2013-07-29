@@ -11,6 +11,7 @@ module Haml
     end
 
     test "It uses a file which it uses to keep track of user tagged lines" do
+      TestHelper.hax_shit
       assert ! File.exists?(FILE), "no tagging file should exist"
       Haml::I18n::Extractor::TaggingTool.new
       assert File.exists?(FILE), "tagging file should be created on init"

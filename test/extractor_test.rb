@@ -52,7 +52,7 @@ module Haml
     end
 
     test "with a prompt_per_line option takes user input into consideration for yaml" do
-      hax_shit
+      TestHelper.hax_shit
       h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :prompt_per_line => true)
       user_input = "D" # dump
       File.readlines(file_path("ex1.haml")).size.times do
@@ -66,7 +66,7 @@ module Haml
     end
 
     test "with a prompt_per_line option user can tag a line for later review" do
-      hax_shit
+      TestHelper.hax_shit
       if File.exist?(Haml::I18n::Extractor::TaggingTool::DB)
         assert_equal File.readlines(Haml::I18n::Extractor::TaggingTool::DB), []
       end
@@ -103,16 +103,8 @@ module Haml
       assert_equal File.exists?(@ex1.haml_writer.path), true
     end
 
-    def hax_shit
-      Dir.glob("*yml").map {|p| FileUtils.rm(p) } # HAX, TODO: handle with yaml files correctly (config/en.yml)
-      Dir.glob("config/locales/*yml").map {|p| FileUtils.rm(p) } # HAX, TODO: handle with yaml files correctly (config/en.yml)
-      if File.exists?(Haml::I18n::Extractor::TaggingTool::DB)
-        FileUtils.rm_rf(Haml::I18n::Extractor::TaggingTool::DB) # HAX, TODO: setup/teardown
-      end
-    end
-
     test "it writes the locale info to an out file when run" do
-      hax_shit
+      TestHelper.hax_shit
       assert_equal File.exists?(@ex1.yaml_tool.locale_file), false
       @ex1.run
       assert_equal File.exists?(@ex1.yaml_tool.locale_file), true
