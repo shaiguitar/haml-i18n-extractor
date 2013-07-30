@@ -20,8 +20,9 @@ module Haml
       DEFAULT_LINE_LOCALE_HASH = { :modified_line => nil,:keyname => nil,:replaced_text => nil, :path => nil }
 
       def initialize(haml_path, opts = {})
-        @type = opts[:type]
-        @prompt_per_line = opts[:prompt_per_line]
+        @options = opts
+        @type = @options[:type]
+        @interactive = @options[:interactive]
         @prompter = Haml::I18n::Extractor::Prompter.new
         @haml_reader = Haml::I18n::Extractor::HamlReader.new(haml_path)
         validate_haml(@haml_reader.body)
@@ -79,7 +80,7 @@ module Haml
 
         user_action = Haml::I18n::Extractor::UserAction.new('y') # default if no prompting: just do it.
         if should_be_replaced
-          if prompt_per_line?
+          if interactive?
             user_action = @prompter.ask_user(orig_line,text_to_replace)
           end
         end
@@ -100,8 +101,8 @@ module Haml
         return should_be_replaced
       end
 
-      def prompt_per_line?
-        !!@prompt_per_line
+      def interactive?
+        !!@interactive
       end
 
       private

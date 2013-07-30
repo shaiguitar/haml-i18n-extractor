@@ -5,13 +5,18 @@ module Haml
 
         attr_reader :extractors
 
-        def initialize(project_path)
+        def initialize(project_path, options = {})
           @extractors = []
+          @passed_options = options
           @project_path = project_path
           @prompter = Haml::I18n::Extractor::Prompter.new
           unless File.directory?(@project_path)
             raise Extractor::NotADirectory, "#{@project_path} needs to be a directory!"
           end
+        end
+
+        def interactive?
+          !!@passed_options[:interactive]
         end
 
         def files
@@ -32,16 +37,22 @@ module Haml
         end
 
         def run
-          start_message
-          files.each do |haml_path|
-            type = process_file?(haml_path)
-            if type
-              process(haml_path, type)
-            else
-              @prompter.not_processing(haml_path)
+          if interactive?
+            start_message
+            files.each do |haml_path|
+              type = process_file?(haml_path)
+              if type
+                process(haml_path, type)
+              else
+                @prompter.not_processing(haml_path)
+              end
+            end
+            end_message
+          else
+            files.each do |haml_path|
+              process(haml_path, :overwrite)
             end
           end
-        end_message
         end
 
         private
@@ -57,7 +68,7 @@ module Haml
         def process(haml_path, type)
           @prompter.process(haml_path, type)
           options = {:type => type} # overwrite or dump haml
-          options.merge!({:prompt_per_line => true}) # per-line prompts
+          options.merge!({:interactive => @passed_options[:interactive]}) # per-line prompts
           begin
             @extractor = Haml::I18n::Extractor.new(haml_path, options)
             @extractors << @extractor

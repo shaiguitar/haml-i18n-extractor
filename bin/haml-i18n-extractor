@@ -2,27 +2,22 @@
 
 require 'haml-i18n-extractor'
 
-if ARGV.empty?
-  puts "Usage: <haml-i18n-extractor> --version"
-  puts "Usage: <haml-i18n-extractor> [path]"
-  puts "Usage: <haml-i18n-extractor> [filename] --no-prompt"
-  abort
+@prompter = Haml::I18n::Extractor::Prompter.new
+
+option_parser = Trollop::Parser.new do
+  version "Current version: #{Haml::I18n::Extractor::VERSION}"
+  opt :interactive, "interactive mode", :short => 'i'
+  opt :non_interactive, "non interactive mode", :short => 'n'
+  opt :path, "path", :type => String
 end
 
-if ARGV[0] == "--version"
-  puts Haml::I18n::Extractor::VERSION
-  abort
+opts = Trollop::with_standard_exception_handling option_parser do
+  raise Trollop::HelpNeeded if ARGV.empty?
+  option_parser.parse ARGV
 end
 
-pth = File.expand_path(ARGV[0])
-
-if File.directory?(pth)
-  workflow = Haml::I18n::Extractor::Workflow.new(pth)
-  workflow.run
-elsif File.exists?(pth) && ARGV[1] == "--no-prompt"
-  extractor = Haml::I18n::Extractor.new(pth, :type => :overwrite, :prompt_per_line => false)
-  extractor.run
-elsif File.exists?(pth)
-  extractor = Haml::I18n::Extractor.new(pth, :type => :overwrite, :prompt_per_line => true)
-  extractor.run
+begin
+  Haml::I18n::Extractor::CLI.new(opts).start
+rescue  Haml::I18n::Extractor::CLI::CliError
+  @prompter.puts("please try again")
 end

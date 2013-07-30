@@ -21,8 +21,10 @@ Gem::Specification.new do |gem|
   gem.add_dependency "haml"
   gem.add_dependency "activesupport"
   gem.add_dependency "highline"
+  gem.add_dependency "trollop", "1.16.2"
 
   gem.add_development_dependency 'rbench'
+  gem.add_development_dependency 'm'
   gem.add_development_dependency 'pry'
   gem.add_development_dependency 'minitest'
   gem.add_development_dependency 'nokogiri'

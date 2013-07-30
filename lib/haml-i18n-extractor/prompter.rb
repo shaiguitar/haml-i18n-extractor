@@ -8,6 +8,10 @@ module Haml
 
         include Helpers::Highline
 
+        def puts(txt)
+          say(txt)
+        end
+
         def ask_user(orig_line, replaced_line)
           say(highlight("Replace this line:"))
           say("\n")

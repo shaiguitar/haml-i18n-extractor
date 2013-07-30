@@ -18,15 +18,15 @@ module Haml
       assert_equal h.haml_writer.overwrite?, false
     end
 
-    test "with a prompt_per_line option which prompts the user-per line" do
-      h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :prompt_per_line => true)
-      assert_equal h.prompt_per_line?, true
+    test "with a interactive option which prompts the user-per line" do
+      h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :interactive => true)
+      assert_equal h.interactive?, true
       h = Haml::I18n::Extractor.new(file_path("ex1.haml"))
-      assert_equal h.prompt_per_line?, false
+      assert_equal h.interactive?, false
     end
 
-    test "with a prompt_per_line option takes user input into consideration for haml" do
-      h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :prompt_per_line => true)
+    test "with a interactive option takes user input into consideration for haml" do
+      h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :interactive => true)
       user_input = "D" # dump
       File.readlines(file_path("ex1.haml")).size.times do
         user_input << "n" # do not replace lines
@@ -38,8 +38,8 @@ module Haml
       assert_equal File.read(h.haml_writer.path), File.read(file_path("ex1.haml"))
     end
 
-    test "with a prompt_per_line option takes user input N as next and stops processing file" do
-      h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :prompt_per_line => true)
+    test "with a interactive option takes user input N as next and stops processing file" do
+      h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :interactive => true)
       user_input = "D" # dump
       File.readlines(file_path("ex1.haml")).size.times do
         user_input << "N" # just move on to next file
@@ -51,9 +51,9 @@ module Haml
       assert_equal File.read(h.haml_writer.path), File.read(file_path("ex1.haml"))
     end
 
-    test "with a prompt_per_line option takes user input into consideration for yaml" do
+    test "with a interactive option takes user input into consideration for yaml" do
       TestHelper.hax_shit
-      h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :prompt_per_line => true)
+      h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :interactive => true)
       user_input = "D" # dump
       File.readlines(file_path("ex1.haml")).size.times do
         user_input << "n" # do not replace lines
@@ -65,12 +65,12 @@ module Haml
       assert_equal YAML.load(File.read(h.yaml_tool.locale_file)), {}
     end
 
-    test "with a prompt_per_line option user can tag a line for later review" do
+    test "with a interactive option user can tag a line for later review" do
       TestHelper.hax_shit
       if File.exist?(Haml::I18n::Extractor::TaggingTool::DB)
         assert_equal File.readlines(Haml::I18n::Extractor::TaggingTool::DB), []
       end
-      h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :prompt_per_line => true)
+      h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :interactive => true)
       user_input = "D" # dump
       File.readlines(file_path("ex1.haml")).size.times do
         user_input << "t" # tag the lines
