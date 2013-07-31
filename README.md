@@ -33,10 +33,12 @@ Check out the quite brief movie/swf file demo of this lib's executable in `demo/
 
 [Demo](http://shairosenfeld.com/haml-i18n-extractor-demo.swf)
 
-Things that have been added since recording demo:
+The demo will probably be outdated at some point, but the main idea holds. Some of the stuff not in there:
 
 - A "tag" functionality, which enables you to tag a line you want to review for later, if you are unsure you want to replace it. It will create a list of /file/path:42 tags for you to go and revisit later.
 - You can use "Next" if you're in the middle of processing a file and go to the next file.
+- Option parsing.
+- Other stuff that will come up.
 
 Have any other ideas? Let me know or better yet, submit a pull request.
 
