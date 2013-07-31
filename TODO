@@ -10,7 +10,7 @@
 
 * Issues
 
-- CLI options: Extractor.new accepts options. pass through workflow. First up: i18n_scope (issue#5)
+- CLI options: Extractor.new accepts options. pass through workflow. First up: yaml_file (issue#5)
 - add a ~/.haml-i18n-extractor file/dir/config file etc. to keep preferences of interactive mode or not?
 
  * Ideas

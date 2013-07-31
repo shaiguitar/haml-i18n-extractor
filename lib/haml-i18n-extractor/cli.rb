@@ -17,11 +17,9 @@ class Haml::I18n::Extractor
         if File.directory?(pth)
           workflow = Haml::I18n::Extractor::Workflow.new(pth, @options)
           workflow.run
-        elsif File.exists?(pth) && @options[:interactive]
-          extractor = Haml::I18n::Extractor.new(pth, :type => :overwrite, :interactive => true)
-          extractor.run
-        elsif File.exists?(pth) && @options[:non_interactive]
-          extractor = Haml::I18n::Extractor.new(pth, :type => :overwrite, :interactive => false)
+        elsif File.exists?(pth)
+          @options.merge!(:type => :overwrite)
+          extractor = Haml::I18n::Extractor.new(pth, @options)
           extractor.run
         end
       end
@@ -30,7 +28,7 @@ class Haml::I18n::Extractor
     private
 
     def check_interactive_or_not_passed
-      if !@options[:interactive] && !@options[:non_interactive]
+      if (!@options[:interactive] && !@options[:non_interactive]) || (@options[:interactive] && @options[:non_interactive])
         @prompter.puts("You must choose either one of interactive mode or non interactive mode.")
         @prompter.puts("See haml-i18n-extractor --help")
         raise CliError

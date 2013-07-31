@@ -67,10 +67,9 @@ module Haml
 
         def process(haml_path, type)
           @prompter.process(haml_path, type)
-          options = {:type => type} # overwrite or dump haml
-          options.merge!({:interactive => @passed_options[:interactive]}) # per-line prompts
+          @passed_options.merge!({:type => type}) # overwrite or dump haml
           begin
-            @extractor = Haml::I18n::Extractor.new(haml_path, options)
+            @extractor = Haml::I18n::Extractor.new(haml_path, @passed_options)
             @extractors << @extractor
             @extractor.run
           rescue Haml::I18n::Extractor::InvalidSyntax

@@ -9,6 +9,7 @@ option_parser = Trollop::Parser.new do
   opt :interactive, "interactive mode", :short => 'i'
   opt :non_interactive, "non interactive mode", :short => 'n'
   opt :path, "path", :type => String
+  opt :yaml_file, "yaml file, defaults to en", :type => String
 end
 
 opts = Trollop::with_standard_exception_handling option_parser do

@@ -8,11 +8,8 @@ module Haml
     class Extractor
       class YamlTool
 
-        attr_accessor :locales_dir, :locale_hash
+        attr_accessor :locales_dir, :locale_hash, :yaml_file
 
-        # this requires passing an absolute path.
-        # meaning run from a given rails root...
-        # ok? change?
         def initialize(locales_dir = nil)
           @locales_dir = locales_dir ? locales_dir : "./config/locales/"
           if ! File.exists?(@locales_dir)
@@ -25,7 +22,7 @@ module Haml
           yml = Hash.new
           @locale_hash.map do |line_no, info|
             unless info[:keyname].nil?
-              keyspace = [i18n_scope,standardized_viewnames(info[:path]), standarized_keyname(info[:keyname]),
+              keyspace = [@yaml_file,standardized_viewnames(info[:path]), standarized_keyname(info[:keyname]),
                           info[:replaced_text]].flatten
               yml.deep_merge!(nested_hash({},keyspace))
             end
@@ -34,7 +31,7 @@ module Haml
         end
 
         def locale_file
-          File.join(@locales_dir, "#{i18n_scope}.yml")
+          File.join(@locales_dir, "#{@yaml_file}.yml")
         end
 
         def write_file(filename = nil)
@@ -80,9 +77,6 @@ module Haml
             nested_hash(hash[elem],array)
           end
           hash
-        end
-        def i18n_scope
-          :en
         end
 
         # comes in like "t('.some_place')", return .some_place

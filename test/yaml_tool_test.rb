@@ -75,6 +75,11 @@ module Haml
       assert_equal really_written['en']['support'], ex1_yaml_hash['en']['support']
     end
 
+    test "it can accept a different yml file" do
+      @ex1 = Haml::I18n::Extractor.new(file_path("ex1.haml"), {:yaml_file => "jp"})
+      assert_equal @ex1.yaml_tool.yaml_file, :jp
+    end
+
     test "it relies on the locale_hash having a certain format" do
       setup_locale_hash
       @ex1.yaml_tool.locale_hash.each do |line_no, info_for_line|
