@@ -25,7 +25,7 @@ end
 
 - Per-project basis, with the binary. See demo below for usage of the binary.
 
-`cd your-rails-app-to-translate && haml-i18n-extractor .`
+`cd your-rails-app-to-translate && haml-i18n-extractor --help`
 
 ## Demo using interactive mode
 
