@@ -62,7 +62,7 @@ module Haml
         h.run
       end
       # no changes were made cause user was all like 'uhhh, no thxk'
-      assert_equal YAML.load(File.read(h.yaml_tool.locale_file)), {}
+      assert_equal YAML.load(File.read(h.yaml_tool.yaml_file)), {}
     end
 
     test "with a interactive option user can tag a line for later review" do
@@ -105,10 +105,10 @@ module Haml
 
     test "it writes the locale info to an out file when run" do
       TestHelper.hax_shit
-      assert_equal File.exists?(@ex1.yaml_tool.locale_file), false
+      assert_equal File.exists?(@ex1.yaml_tool.yaml_file), false
       @ex1.run
-      assert_equal File.exists?(@ex1.yaml_tool.locale_file), true
-      assert_equal YAML.load(File.read(@ex1.yaml_tool.locale_file)), @ex1.yaml_tool.yaml_hash
+      assert_equal File.exists?(@ex1.yaml_tool.yaml_file), true
+      assert_equal YAML.load(File.read(@ex1.yaml_tool.yaml_file)), @ex1.yaml_tool.yaml_hash
     end
 
     test "sends a hash over of replacement info to its yaml tool when run" do

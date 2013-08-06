@@ -25,7 +25,7 @@ module Haml
       File.join(locale_config_dir, "en.yml")
     end
 
-    def setup_locale_file
+    def setup_yaml_file
       File.open(locale_config_file, "w+") do |f|
         f.write(existing_yaml_hash.to_yaml)
       end
@@ -56,19 +56,20 @@ module Haml
         }
     end
 
-    test "locale dir defaults to config/locales/" do
+    test "defaults for empty init" do
       yaml_tool = Haml::I18n::Extractor::YamlTool.new
-      assert_equal yaml_tool.locales_dir, "./config/locales/"
+      assert_equal yaml_tool.yaml_file, "./config/locales/en.yml"
+      assert_equal yaml_tool.i18n_scope, :en
     end
 
-    test "you can set the locale_dir" do
-      yaml_tool = Haml::I18n::Extractor::YamlTool.new(@temp_locale_dir)
-      assert_equal yaml_tool.locales_dir, @temp_locale_dir
+    test "you can pass a yaml_file" do
+      yaml_tool = Haml::I18n::Extractor::YamlTool.new(nil, @temp_locale_dir)
+      assert_equal yaml_tool.yaml_file, @temp_locale_dir
     end
 
     test "it can merge with an existing yml file" do
       setup_locale_hash
-      setup_locale_file
+      setup_yaml_file
       @ex1.yaml_tool.write_file(locale_config_file)
       really_written = YAML.load(File.read(locale_config_file))
       assert_equal really_written['en']['viewname'], existing_yaml_hash['en']['viewname']
@@ -76,8 +77,28 @@ module Haml
     end
 
     test "it can accept a different yml file" do
-      @ex1 = Haml::I18n::Extractor.new(file_path("ex1.haml"), {:yaml_file => "jp"})
-      assert_equal @ex1.yaml_tool.yaml_file, :jp
+      @ex1 = Haml::I18n::Extractor.new(file_path("ex1.haml"), {:yaml_file => "/tmp/foo.yml"})
+      assert_equal @ex1.yaml_tool.yaml_file, "/tmp/foo.yml"
+    end
+
+    test "it knows about i18n scope" do
+      @ex1 = Haml::I18n::Extractor.new(file_path("ex1.haml"), {:i18n_scope => "he"})
+      assert_equal @ex1.yaml_tool.i18n_scope, :he
+    end
+
+    test "it knows about i18n scope, defaults to :en" do
+      @ex1 = Haml::I18n::Extractor.new(file_path("ex1.haml"))
+      assert_equal @ex1.yaml_tool.i18n_scope, :en
+    end
+
+    test "it will assume yaml_file according to i18n_scope if no yaml_file is passed" do
+      yaml_tool = Haml::I18n::Extractor::YamlTool.new("he", nil)
+      assert_equal yaml_tool.yaml_file, "./config/locales/he.yml"
+    end
+
+    test "it will not assume yaml_file according to i18n_scope if yaml_file is passed" do
+      yaml_tool = Haml::I18n::Extractor::YamlTool.new("he", "/tmp/foo.yml")
+      assert_equal yaml_tool.yaml_file, "/tmp/foo.yml"
     end
 
     test "it relies on the locale_hash having a certain format" do
