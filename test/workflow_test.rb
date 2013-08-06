@@ -23,13 +23,13 @@ module Haml
     end
 
     test "it_finds_all_haml_files" do
-      assert_equal @workflow.files.size, 6
+      assert_equal @workflow.files.size, 9
     end
 
     test "outputs_stats" do
       with_highline do
         @workflow.start_message
-        assert @output.string.match(/Found 6 haml files/), "Outputs stats"
+        assert @output.string.match(/Found \d haml files/), "Outputs stats"
       end
     end
 

@@ -126,7 +126,7 @@ module TestHelper
     view3 = File.join(PROJECT_DIR, "app", "views", "namespace", "view3")
     [ view1, view2, view3 ].map do |dir|
       FileUtils.mkdir_p(dir)
-      ["thing.haml", "thang.haml"].map do |fn|
+      ["thing.haml", "thang.haml", "_partial.html.haml"].map do |fn|
         haml_text=<<EOH
 %h1 Notifications
 

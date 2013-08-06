@@ -91,6 +91,7 @@ module Haml
           pathname = Pathname.new(pth)
           array_of_dirs = pathname.dirname.to_s.split("/")
           view_name = pathname.basename.to_s.gsub(/.html.haml$/,"").gsub(/.haml$/,"")
+          view_name.gsub!(/^_/, "")
           index = array_of_dirs.index("views")
           if index
             array_of_dirs[index+1..-1] << view_name

@@ -33,10 +33,10 @@ module Haml
 
     def existing_yaml_hash
       {"en" => {
-          "viewname" => {
-            "translate_key" => "Translate Key"
-          }
+        "viewname" => {
+          "translate_key" => "Translate Key"
         }
+      }
       }
     end
 
@@ -44,15 +44,15 @@ module Haml
       {"en"=>
        {"support" =>
         {"ex1" =>
-          {"some_place"=>"Some place",
-           "admin"=>"Admin",
-           "admin_dashboard"=>"Admin Dashboard",
-           "stacks"=>"Stacks",
-           "alerts"=>"t('.alerts')",
-           "accounts"=>"Accounts",
-           "what_is_supposed_to_be_is_supp"=>
-          "What is@ supposed to be, is supposed to be! ~"
-          }
+         {"some_place"=>"Some place",
+          "admin"=>"Admin",
+          "admin_dashboard"=>"Admin Dashboard",
+          "stacks"=>"Stacks",
+          "alerts"=>"t('.alerts')",
+          "accounts"=>"Accounts",
+          "what_is_supposed_to_be_is_supp"=>
+         "What is@ supposed to be, is supposed to be! ~"
+         }
         }
        }
       }

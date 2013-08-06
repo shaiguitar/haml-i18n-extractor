@@ -3,6 +3,7 @@ module Haml
 
     def setup
       TestHelper.setup_project_directory!
+      @workflow = TestHelper.mock_full_project_user_interaction!
     end
 
     def teardown
@@ -10,9 +11,13 @@ module Haml
     end
 
     test "it can handle namespaced views" do
-      workflow = TestHelper.mock_full_project_user_interaction!
-      namespaced_extractor = workflow.extractors.select{|ex| ex.haml_writer.path.match /namespace/ }.last
+      namespaced_extractor = @workflow.extractors.select{|ex| ex.haml_writer.path.match /namespace/ }.last
       assert namespaced_extractor.yaml_tool.yaml_hash["en"]["namespace"], "namespace key works"
+    end
+
+    test "it can handle partial views" do
+      partial_extractor = @workflow.extractors.select{|ex| ex.haml_writer.path.match /_partial/ }.last
+      assert partial_extractor.yaml_tool.yaml_hash["en"]["view2"]["partial"], "partial filenames in yaml are w/out leading _"
     end
 
   end
