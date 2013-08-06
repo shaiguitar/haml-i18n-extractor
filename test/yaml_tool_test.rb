@@ -42,7 +42,8 @@ module Haml
 
     def ex1_yaml_hash
       {"en"=>
-        {"support"=>
+       {"support" =>
+        {"ex1" =>
           {"some_place"=>"Some place",
            "admin"=>"Admin",
            "admin_dashboard"=>"Admin Dashboard",
@@ -50,10 +51,11 @@ module Haml
            "alerts"=>"t('.alerts')",
            "accounts"=>"Accounts",
            "what_is_supposed_to_be_is_supp"=>
-            "What is@ supposed to be, is supposed to be! ~"
-            }
+          "What is@ supposed to be, is supposed to be! ~"
           }
         }
+       }
+      }
     end
 
     test "defaults for empty init" do

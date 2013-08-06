@@ -85,15 +85,17 @@ module Haml
 
         # assuming rails format, app/views/users/index.html.haml return [users]
         # app/views/admin/users/index.html.haml return [admin, users]
-        # app/views/admin/users/with_namespace/index.html.haml return [admin, users, with_namespace]
+        # app/views/admin/users/with_namespace/index.html.haml return [admin, users, with_namespace, index]
         # otherwise, just grab the last one.
         def standardized_viewnames(pth)
-          array_of_dirs = Pathname.new(pth).dirname.to_s.split("/")
+          pathname = Pathname.new(pth)
+          array_of_dirs = pathname.dirname.to_s.split("/")
+          view_name = pathname.basename.to_s.gsub(/.html.haml$/,"").gsub(/.haml$/,"")
           index = array_of_dirs.index("views")
           if index
-            array_of_dirs[index+1..-1]
+            array_of_dirs[index+1..-1] << view_name
           else
-            [array_of_dirs.last]
+            [array_of_dirs.last] << view_name
           end
         end
 
