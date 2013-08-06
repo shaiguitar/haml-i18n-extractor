@@ -7,20 +7,24 @@ require 'haml-i18n-extractor'
 option_parser = Trollop::Parser.new do
   banner <<-EOB
 
-  haml-i18n-extractor -p <path> [--interactive|--non-interactive] [--other-options]
+  haml-i18n-extractor <path> [--interactive|--non-interactive] [--other-options]
 
   See options list:
 EOB
   version "Current version: #{Haml::I18n::Extractor::VERSION}"
-  opt :path, "path", :type => String
   opt :interactive, "interactive mode", :short => 'i'
   opt :non_interactive, "non interactive mode", :short => 'n'
-  opt :yaml_file, "yaml file, defaults to en", :type => String
+  opt :yaml_file, "yaml file, defaults to en", :type => String, :short => 'y'
 end
 
 opts = Trollop::with_standard_exception_handling option_parser do
   raise Trollop::HelpNeeded if ARGV.empty?
   option_parser.parse ARGV
+end
+
+path_to_extract = File.expand_path(ARGV[0])
+if File.exist?(path_to_extract)
+  opts[:path] = path_to_extract
 end
 
 begin
