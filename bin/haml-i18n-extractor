@@ -14,7 +14,8 @@ EOB
   version "Current version: #{Haml::I18n::Extractor::VERSION}"
   opt :interactive, "interactive mode", :short => 'i'
   opt :non_interactive, "non interactive mode", :short => 'n'
-  opt :yaml_file, "yaml file, defaults to en", :type => String, :short => 'y'
+  opt :yaml_file, "yaml file path, defaults to config/locales/en.yml", :type => String, :short => 'y'
+  opt :i18n_scope, "top level i18n scope, defaults to :en", :type => String, :short => 's'
 end
 
 opts = Trollop::with_standard_exception_handling option_parser do

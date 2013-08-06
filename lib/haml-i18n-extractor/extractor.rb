@@ -27,8 +27,7 @@ module Haml
         @haml_reader = Haml::I18n::Extractor::HamlReader.new(haml_path)
         validate_haml(@haml_reader.body)
         @haml_writer = Haml::I18n::Extractor::HamlWriter.new(haml_path, {:type => @type})
-        @yaml_tool = Haml::I18n::Extractor::YamlTool.new
-        @yaml_tool.yaml_file = (@options[:yaml_file] || :en).to_sym
+        @yaml_tool = Haml::I18n::Extractor::YamlTool.new(@options[:i18n_scope], @options[:yaml_file])
         @tagging_tool ||= Haml::I18n::Extractor::TaggingTool.new
         # hold all the processed lines
         @body = []

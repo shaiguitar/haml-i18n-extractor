@@ -8,12 +8,14 @@ module Haml
     class Extractor
       class YamlTool
 
-        attr_accessor :locales_dir, :locale_hash, :yaml_file
+        attr_accessor :locale_hash, :yaml_file, :i18n_scope
 
-        def initialize(locales_dir = nil)
-          @locales_dir = locales_dir ? locales_dir : "./config/locales/"
-          if ! File.exists?(@locales_dir)
-            FileUtils.mkdir_p(@locales_dir)
+        def initialize(i18n_scope = nil, yaml_file = nil)
+          @i18n_scope = i18n_scope && i18n_scope.to_sym || :en
+          @yaml_file = yaml_file || "./config/locales/#{@i18n_scope}.yml"
+          locales_dir = Pathname.new(@yaml_file).dirname
+          if ! File.exists?(locales_dir)
+            FileUtils.mkdir_p(locales_dir)
           end
         end
 
@@ -22,7 +24,7 @@ module Haml
           yml = Hash.new
           @locale_hash.map do |line_no, info|
             unless info[:keyname].nil?
-              keyspace = [@yaml_file,standardized_viewnames(info[:path]), standarized_keyname(info[:keyname]),
+              keyspace = [@i18n_scope,standardized_viewnames(info[:path]), standarized_keyname(info[:keyname]),
                           info[:replaced_text]].flatten
               yml.deep_merge!(nested_hash({},keyspace))
             end
@@ -30,12 +32,8 @@ module Haml
           yml = hashify(yml)
         end
 
-        def locale_file
-          File.join(@locales_dir, "#{@yaml_file}.yml")
-        end
-
         def write_file(filename = nil)
-          pth = filename.nil? ? locale_file : filename
+          pth = filename.nil? ? @yaml_file : filename
           if File.exist?(pth)
             str = File.read(pth)
             if str.empty?
