@@ -4,23 +4,9 @@ require 'haml-i18n-extractor'
 
 @prompter = Haml::I18n::Extractor::Prompter.new
 
-option_parser = Trollop::Parser.new do
-  banner <<-EOB
-
-  haml-i18n-extractor <path> [--interactive|--non-interactive] [--other-options]
-
-  See options list:
-EOB
-  version "Current version: #{Haml::I18n::Extractor::VERSION}"
-  opt :interactive, "interactive mode", :short => 'i'
-  opt :non_interactive, "non interactive mode", :short => 'n'
-  opt :yaml_file, "yaml file path, defaults to config/locales/en.yml", :type => String, :short => 'y'
-  opt :i18n_scope, "top level i18n scope, defaults to :en", :type => String, :short => 's'
-end
-
-opts = Trollop::with_standard_exception_handling option_parser do
+opts = Trollop::with_standard_exception_handling Haml::I18n::Extractor::CLI.option_parser do
   raise Trollop::HelpNeeded if ARGV.empty?
-  option_parser.parse ARGV
+  Haml::I18n::Extractor::CLI.option_parser.parse ARGV
 end
 
 path_to_extract = File.expand_path(ARGV[0])
@@ -31,5 +17,5 @@ end
 begin
   Haml::I18n::Extractor::CLI.new(opts).start
 rescue  Haml::I18n::Extractor::CLI::CliError
-  @prompter.puts("please try again")
+  Haml::I18n::Extractor::CLI.show_help!
 end
