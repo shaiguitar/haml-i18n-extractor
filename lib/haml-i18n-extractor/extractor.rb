@@ -38,8 +38,8 @@ module Haml
       def run
         assign_replacements
         validate_haml(@haml_writer.body)
-        @haml_writer.write_file
         @yaml_tool.write_file
+        @haml_writer.write_file
       end
 
       def assign_new_body
