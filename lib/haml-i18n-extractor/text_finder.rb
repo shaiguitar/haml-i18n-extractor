@@ -1,5 +1,7 @@
 require 'haml'
 require 'haml/parser'
+require 'treetop'
+
 module Haml
   module I18n
     class Extractor
@@ -26,8 +28,10 @@ module Haml
         def initialize(haml)
           @haml = haml
           @parser = Haml::Parser.new(haml, Haml::Options.new)
+          Treetop.load "lib/haml-i18n-extractor/parsers/silent_script"
+          @t_silent = SilentScriptParser.new
         end
-        
+
         def line
           if @haml == ""
             return Haml::Parser::Line.new("", "", "", 0, @parser, false)
@@ -40,7 +44,7 @@ module Haml
           end.first
           haml_line
         end
-        
+
         def find
           text_match = process_by_regex.last
         end
@@ -60,12 +64,16 @@ module Haml
             [:text, line.full.strip]
           end
         end
-  
+
         private
 
         def parse_silent_script
-          line.full.match(/-[\s\t]*#{SIMPLE_STRING_REGEX}/)
-          [:silent, $1.to_s]
+          treetop_result = @t_silent.parse(line.full)
+          if treetop_result
+            [:silent, treetop_result.string.text_value ]
+          else
+            [:silent, ""]
+          end
         end
   
         def parse_loud_script

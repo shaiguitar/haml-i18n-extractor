@@ -1,0 +1,8 @@
+grammar LoudScript
+  rule nothing 
+    .* {
+      raise 'do not do this'
+    }
+  end
+end
+
