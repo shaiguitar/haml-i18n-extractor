@@ -21,3 +21,4 @@ tmp
 test/support/ex1.i18n-extractor.haml
 config
 .tags.haml-i18n-extractor
+coverage/

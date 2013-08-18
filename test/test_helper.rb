@@ -1,3 +1,9 @@
+if ENV['SIMPLECOV']
+  require 'simplecov'
+  SimpleCov.start
+  puts 'required simple cov!'
+end
+
 #######################################################################
 ##    copied over from haml for this to just work. TODO Cleanup.     ##
 ##                      mini  test stuff                             ##

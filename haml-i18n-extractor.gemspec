@@ -31,5 +31,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'actionpack'
   gem.add_development_dependency 'rails'
-
+  gem.add_development_dependency 'simplecov'
 end
