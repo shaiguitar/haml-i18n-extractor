@@ -1,7 +1,6 @@
 if ENV['SIMPLECOV']
   require 'simplecov'
   SimpleCov.start
-  puts 'required simple cov!'
 end
 
 #######################################################################

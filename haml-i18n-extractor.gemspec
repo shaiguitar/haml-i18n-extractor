@@ -22,6 +22,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "activesupport"
   gem.add_dependency "highline"
   gem.add_dependency "trollop", "1.16.2"
+  gem.add_dependency "treetop", "1.4.14"
 
   gem.add_development_dependency 'rbench'
   gem.add_development_dependency 'm'

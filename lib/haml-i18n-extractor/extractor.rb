@@ -129,7 +129,7 @@ module Haml
       end
 
       def handle_line_finding(orig_line)
-        Haml::I18n::Extractor::TextFinder.new(orig_line).process_by_regex
+        Haml::I18n::Extractor::TextFinder.new(orig_line).process_by_treetop
       end
 
       def handle_line_whitespace(orig_line)

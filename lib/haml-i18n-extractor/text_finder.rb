@@ -28,8 +28,8 @@ module Haml
         def initialize(haml)
           @haml = haml
           @parser = Haml::Parser.new(haml, Haml::Options.new)
-          Treetop.load "lib/haml-i18n-extractor/parsers/silent_script"
-          @t_silent = SilentScriptParser.new
+          Treetop.load "lib/haml-i18n-extractor/parsers/haml_i18n_extractor"
+          @t_parser = HamlI18nExtractorParser.new
         end
 
         def line
@@ -46,20 +46,18 @@ module Haml
         end
 
         def find
-          text_match = process_by_regex.last
+          text_match = process_by_treetop.last
         end
 
         # returns [ line_type, text_found ]
-        def process_by_regex
+        def process_by_treetop
           case line.full[0]
           when *THINGS_THAT_ARE_NOT_POTENTIAL_TEXT
             [:not_text, ""]
-          when Haml::Parser::SILENT_SCRIPT
-            parse_silent_script
-          when Haml::Parser::ELEMENT
-            parse_element
-          when Haml::Parser::SCRIPT
-            parse_loud_script
+          when Haml::Parser::SILENT_SCRIPT, Haml::Parser::ELEMENT, Haml::Parser::SCRIPT
+            treetop_result = @t_parser.parse(line.full)
+            # :silent, :loud, :element
+            [ haml_type_map[treetop_result.haml_type.text_value], treetop_result.silent ]
           else
             [:text, line.full.strip]
           end
@@ -67,35 +65,14 @@ module Haml
 
         private
 
-        def parse_silent_script
-          treetop_result = @t_silent.parse(line.full)
-          if treetop_result
-            [:silent, treetop_result.string.text_value ]
-          else
-            [:silent, ""]
-          end
+        def haml_type_map
+          {
+            Haml::Parser::SILENT_SCRIPT => :silent,
+            Haml::Parser::ELEMENT=> :element,
+            Haml::Parser::SCRIPT => :loud
+          }
         end
-  
-        def parse_loud_script
-          line.full.match(/=[\s\t]*#{LINK_TO_REGEX}/)
-          return [:loud, $1.to_s] if text = $1
-          line.full.match(/=[\s\t]*#{SIMPLE_STRING_REGEX}/)
-          return [:loud, $1.to_s]
-        end
-  
-        def parse_element
-          line.full.match(ELEMENT_REGEX)
-          elem_with_class_and_ids = $1
-          attributes_ruby_style = $2
-          is_loud_script = $3
-          text = $4.to_s
-          if is_loud_script
-            self.class.new("= #{text}").process_by_regex # treat like a loud script.
-          else
-            [:element, text.strip]
-          end
-        end
-  
+
       end
     end
   end

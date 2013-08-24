@@ -113,7 +113,7 @@ module Haml
 
     def process_haml(haml)
       text_finder = Haml::I18n::Extractor::TextFinder.new(haml)
-      text_finder.process_by_regex
+      text_finder.process_by_treetop
     end
 
     def find_type(haml)

@@ -1,0 +1,29 @@
+# a Treetop Grammar to parse email lists
+ 
+grammar EmailList
+  rule full_email_address
+    '"' email_name '"' comma_or_space_and_comma bracketed_email
+  end
+
+  rule email_name
+    [^"]*
+  end
+
+  rule comma_or_space_and_comma
+    whatever_spaces ',' whatever_spaces
+  end
+
+  rule whatever_spaces
+    [ ]*
+  end
+
+  rule bracketed_email
+    '<' email_addr '>'
+  end
+
+  rule email_addr
+    [A-Za-z0-9.]+ '@' [A-Za-z0-9.]+
+  end
+
+end
+

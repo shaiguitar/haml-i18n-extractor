@@ -1,0 +1,52 @@
+grammar HamlI18nExtractor
+  rule just_a_string
+    optional_spaces haml_type optional_spaces haml_text {
+      def silent
+        haml_type.silent
+      end
+    }
+  end
+
+  # slient_script, loud_script, element
+  rule haml_type
+    silent_script / dom_element / loud_script {
+
+      def root(node)
+        unless node.parent.nil?
+          node = root(node.parent)
+        end
+        node
+      end
+
+      def silent
+        root(self).haml_type.silent_script
+      end
+    }
+  end
+
+  rule haml_text
+    .* {
+    def value(env)
+      env
+    end
+  }
+end
+
+  rule silent_script
+    '-'
+  end
+
+  rule dom_element
+    '%'
+  end
+
+  rule loud_script
+    '='
+  end
+
+  rule optional_spaces
+    [\t\s]*
+  end
+
+end
+
