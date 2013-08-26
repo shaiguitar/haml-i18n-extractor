@@ -58,7 +58,7 @@ module Haml
     end
     
     test "it does not allow weird characters in the keyname" do
-      weird_line = "this = (is `ch@racter ~ ma?dne{}ss!"
+      weird_line = "this = (is \"' `ch@racter ~ ma?dne{}ss!"
       replacer = Haml::I18n::Extractor::TextReplacer.new(weird_line, weird_line, :text)
       assert_equal replacer.replace_hash, { :modified_line => "= t('.this_is_chracter_madness')", 
                                             :keyname => "t('.this_is_chracter_madness')", :replaced_text => weird_line }
