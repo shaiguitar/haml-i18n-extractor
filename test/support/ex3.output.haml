@@ -1,0 +1,13 @@
+%h1
+  = link_to t('.link_to_id_customercontrolmenu'), id: 'customer-control-menu', role: 'button', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
+    = t('.here')
+  = link_to t('.real_text_here'), id: 'customer-control-menu', role: 'button', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
+    = t('.there')
+
+  %span.creator{:title= => "This user is an t('.owner') of this account"} t('.owner')
+  %span.title&= user.name
+  %strong \#{@account.name}
+
+  %table(style="width:400px")
+    %td= t('.td')
+    %td \#{@account.send(attr) || '(none)'}

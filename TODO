@@ -6,6 +6,7 @@
 - Refactor tests: split out what is integration vs unit, too much coupling.
 - Prompter.new should just be a singleton.
 - rm hax_shit, move to setup/teardown, shutdown/startup
+- make directories now that are more abstractions? finder/ -> finder,exceptionfinder,etc...replacer/ -> parser too, & stuffz?
 - rm the :overwrite, :dump stuff to UserAction?
 
 * Issues
@@ -17,3 +18,30 @@
 
 - handled email suffixes (foo.en.html.haml etc)
 - add herbgobbler (ERB) and this to another more generalized repo for translating templates?
+
+ * Refactor
+
+https://github.com/shaiguitar/haml-i18n-extractor/issues/2
+
+  Now we are able to have internal access to Haml::Parser internals, we can deal with...
+
+    Html Comments?!
+    Filters?!
+      use with_filter.haml...
+
+    ExceptionText needs to be responsible for knowing if needed to interpolate?
+
+    (BUG: duplicate texts in one line...)
+    Basically, need to make a list of texts that the finder needs to match w/out a full haml element, etc, just raw text
+      IF no match, keep behavior.
+      IF match no_interpolation?, check if duplicate, find correct index.
+      IF match with_interpolation?, find interpolation index, check if whole thing duplicate, find correct index.
+
+      it then passes back to orchestrator info as well:
+        text_it_should_translate
+        indexes of what to replace, where etc?
+        line_type
+        is_interpolated?
+        ?
+
+      ?

@@ -5,10 +5,11 @@ module Haml
   class HamlReaderTest < MiniTest::Unit::TestCase
 
     TEMP_FILE_PATH = "/tmp/foo_haml_extractor_test"
+    LINE_COUNT = 10
 
     def setup
       FileUtils.rm_rf(TEMP_FILE_PATH)
-      10.times do |index|
+      LINE_COUNT.times do |index|
         File.open(TEMP_FILE_PATH, "a+") do |f|
           f.puts "line #{index}"
         end
@@ -22,7 +23,11 @@ module Haml
     end
 
     test "has an array of lines in that file" do
-      assert_equal @reader.lines.size, 10
+      assert_equal @reader.lines.size, LINE_COUNT
+    end
+
+    test "has metadata about each line" do
+      assert_equal @reader.metadata.size, LINE_COUNT
     end
 
   end

@@ -1,0 +1,31 @@
+= render :partial => "layouts/adminnav", :locals => {:account => nil }
+.row
+  .admin.span12
+    %h1
+      Billing Month
+      = @billing_month.display_name
+
+    %h3
+      All Invoices Billable?
+      %span{:style => (@billable_invoices == @active_invoices) ? "color: #090" : "color: #900"}
+        = "#{@billable_invoices} out of #{@active_invoices}"
+    %h3
+      24 hours past end of billing month?
+      %span{:style => (@billing_month.past_cutoff) ? "color: #090" : "color: #900"}
+        = @billing_month.past_cutoff
+
+    - if @billing_month.open?
+      - if @billing_month.past_cutoff && (@billable_invoices == @active_invoices)
+        = form_for @billing_month, :url => close_admin_billing_month_url(@billing_month), :method => "POST" do |f|
+          = f.submit "Close This Month (cannot be undone)", :class => 'btn btn-primary'
+      - else
+        %p
+          Billing Month cannot be closed yet.
+      %p
+        Closing the billing month will mark all the invoices as "Posted".
+      %p
+        After closing you will need to do a payment run to charge all the affected customers for the amounts due in posted invoices.
+    - elsif @billing_month.closing?
+      Month is currently closing (reload to check if it's done)
+    - elsif @billing_month.closed?
+      Month is closed

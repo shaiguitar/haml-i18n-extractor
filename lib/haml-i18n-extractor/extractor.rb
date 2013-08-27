@@ -11,11 +11,12 @@ module Haml
       class NotDefinedLineType < StandardError ; end
       class AbortFile < StandardError ; end
 
-      LINE_TYPES_ALL = [:text, :not_text, :loud, :silent, :element]
-      LINE_TYPES_ADD_EVAL = [:text, :element]
+      LINE_TYPES_ALL = [:plain, :script, :silent_script, :haml_comment, :tag, :comment, :doctype, :filter, :root]
+      LINE_TYPES_ADD_EVAL = [:plain, :tag]
 
       attr_reader :haml_reader, :haml_writer
       attr_reader :locale_hash, :yaml_tool, :type
+      attr_reader :current_line
 
       DEFAULT_LINE_LOCALE_HASH = { :modified_line => nil,:keyname => nil,:replaced_text => nil, :path => nil }
 
@@ -57,15 +58,16 @@ module Haml
 
       def new_body
         begin
-          @haml_reader.lines.each_with_index do |orig_line, line_no|
-            @current_line_no = line_no
-            process_line(orig_line,line_no)
+          @current_line = 1
+          @haml_reader.lines.each do |orig_line|
+            process_line(orig_line, @current_line)
+            @current_line += 1
           end
         rescue AbortFile
           @prompter.moving_to_next_file
-          add_rest_of_file_to_body(@current_line_no)
+          add_rest_of_file_to_body(@current_line)
         end
-        @body.join("\n")
+        @body.join("\n") + "\n"
       end
 
       # this is the bulk of it:
@@ -75,7 +77,7 @@ module Haml
       def process_line(orig_line, line_no)
         orig_line.chomp!
         orig_line, whitespace = handle_line_whitespace(orig_line)
-        line_type, line_match = handle_line_finding(orig_line)
+        line_type, line_match = handle_line_finding(orig_line, line_no)
         should_be_replaced, text_to_replace, line_locale_hash = gather_replacement_info(orig_line, line_match, line_type, line_no)
 
         user_action = Haml::I18n::Extractor::UserAction.new('y') # default if no prompting: just do it.
@@ -108,14 +110,14 @@ module Haml
       private
 
       def add_rest_of_file_to_body(line_no)
-        @haml_reader.lines[line_no..@haml_reader.lines.size-1].map do |orig_ln|
+        @haml_reader.lines[line_no-1..@haml_reader.lines.size-1].map do |orig_ln|
           add_to_body(orig_ln.chomp)
         end
       end
 
       def gather_replacement_info(orig_line, line_match, line_type, line_no)
         if line_match && !line_match.empty?
-          replacer = Haml::I18n::Extractor::TextReplacer.new(orig_line, line_match, line_type)
+          replacer = Haml::I18n::Extractor::TextReplacer.new(orig_line, line_match, line_type, line_metadata(line_no))
           hash = replacer.replace_hash.dup.merge!({:path => @haml_reader.path })
           [ true, hash[:modified_line], hash ]
         else
@@ -128,8 +130,12 @@ module Haml
         @locale_hash[line_no] = hash
       end
 
-      def handle_line_finding(orig_line)
-        Haml::I18n::Extractor::TextFinder.new(orig_line).process_by_regex
+      def handle_line_finding(orig_line,lineno)
+        Haml::I18n::Extractor::TextFinder.new(orig_line,line_metadata(lineno)).process_by_regex
+      end
+
+      def line_metadata(lineno)
+        @haml_reader.metadata[lineno]
       end
 
       def handle_line_whitespace(orig_line)

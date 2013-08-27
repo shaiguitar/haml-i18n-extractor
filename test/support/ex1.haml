@@ -24,5 +24,9 @@
                 %li
                   %a{:href => url_for([:admin, :accounts])}
                     %span Accounts
+        = link_to pending_account_invoices_path(account) do
+          this_linkez
         - if true
           What is@ supposed to be, is supposed to be! ~
+        %td=link_to("Details", admin_usage_import_url(usage_import.usage_report))
+        "raNdom"

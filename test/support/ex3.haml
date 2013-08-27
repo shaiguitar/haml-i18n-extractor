@@ -1,0 +1,13 @@
+%h1
+  = link_to '#', id: 'customer-control-menu', role: 'button', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
+    Here
+  = link_to 'real text here', id: 'customer-control-menu', role: 'button', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
+    There
+
+  %span.creator{:title => "This user is an owner of this account"} owner
+  %span.title&= user.name
+  %strong \#{@account.name}
+
+  %table(style="width:400px")
+    %td (?)
+    %td \#{@account.send(attr) || '(none)'}

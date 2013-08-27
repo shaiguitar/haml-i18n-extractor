@@ -18,6 +18,6 @@ tmp
 
 # hacks, these should not appear where thye are.
 *.yml
-test/support/ex1.i18n-extractor.haml
+test/support/*i18n-extractor.haml
 config
 .tags.haml-i18n-extractor

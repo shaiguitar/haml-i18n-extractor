@@ -41,21 +41,7 @@ module Haml
     end
 
     def ex1_yaml_hash
-      {"en"=>
-       {"support" =>
-        {"ex1" =>
-         {"some_place"=>"Some place",
-          "admin"=>"Admin",
-          "admin_dashboard"=>"Admin Dashboard",
-          "stacks"=>"Stacks",
-          "alerts"=>"t('.alerts')",
-          "accounts"=>"Accounts",
-          "what_is_supposed_to_be_is_supp"=>
-         "What is@ supposed to be, is supposed to be! ~"
-         }
-        }
-       }
-      }
+      YAML.load File.read(file_path("ex1.yml"))
     end
 
     test "defaults for empty init" do
