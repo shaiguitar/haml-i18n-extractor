@@ -17,3 +17,5 @@
 
 - handled email suffixes (foo.en.html.haml etc)
 - add herbgobbler (ERB) and this to another more generalized repo for translating templates?
+Encoding.default_internal = Encoding::UTF_8
+Encoding.default_external = Encoding::UTF_8
