@@ -7,3 +7,25 @@ html comments what
   var bar = foo;
 More
 And More
+.class This is text
+- if true
+  :javascript
+    var cheaterButton = $("<a href='#'>Cheat</a>");
+    $('form').prepend(cheaterButton);
+    cheaterButton.click(function(){
+      $('[name="field_creditCardType"]').first().click();
+      $('[name="field_creditCardNumber"]').val("4111111111111111");
+      $('[name="field_creditCardExpirationMonth"]').val("01");
+      $('[name="field_creditCardExpirationYear"]').val("2015");
+      $('[name="field_cardSecurityCode"]').val("111");
+      $('[name="field_creditCardHolderName"]').val("Foo Bar");
+      $('[name="field_creditCardCountry"]').val("USA");
+      $('[name="field_creditCardAddress1"]').val("123 Abc St");
+      $('[name="field_creditCardAddress2"]').val("Apt 456");
+      $('[name="field_creditCardCity"]').val("San Francisco");
+      $('[name="field_creditCardState"]').val("CA");
+      $('[name="field_creditCardPostalCode"]').val("94107");
+      $('[name="field_phone"]').val("1234567890");
+      $('[name="field_email"]').val("foo@example.com");
+      return false;
+    });

@@ -25,10 +25,6 @@ https://github.com/shaiguitar/haml-i18n-extractor/issues/2
 
   Now we are able to have internal access to Haml::Parser internals, we can deal with...
 
-    Html Comments?!
-    Filters?!
-      use with_filter.haml...
-
     ExceptionText needs to be responsible for knowing if needed to interpolate?
 
     (BUG: duplicate texts in one line...)
