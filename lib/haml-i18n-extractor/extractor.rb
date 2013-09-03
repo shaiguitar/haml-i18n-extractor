@@ -6,6 +6,11 @@ module Haml
         ENV['DEBUG']
       end
 
+      # helpful for debugging
+      def self.extractors
+        @extractors ||= []
+      end
+
       class InvalidSyntax < StandardError ; end
       class NotADirectory < StandardError ; end
       class NotDefinedLineType < StandardError ; end
@@ -34,6 +39,8 @@ module Haml
         @body = []
         # holds a line_no => {info_about_line_replacemnts_or_not}
         @locale_hash = {}
+
+        self.class.extractors << self
       end
 
       def run

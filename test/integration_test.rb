@@ -11,12 +11,12 @@ module Haml
     end
 
     test "it can handle namespaced views" do
-      namespaced_extractor = @workflow.extractors.select{|ex| ex.haml_writer.path.match /namespace/ }.last
+      namespaced_extractor = Haml::I18n::Extractor.extractors.select{|ex| ex.haml_writer.path.match /namespace/ }.last
       assert namespaced_extractor.yaml_tool.yaml_hash["en"]["namespace"], "namespace key works"
     end
 
     test "it can handle partial views" do
-      partial_extractor = @workflow.extractors.select{|ex| ex.haml_writer.path.match /_partial/ }.last
+      partial_extractor = Haml::I18n::Extractor.extractors.select{|ex| ex.haml_writer.path.match /_partial/ }.last
       assert partial_extractor.yaml_tool.yaml_hash["en"]["view2"]["partial"], "partial filenames in yaml are w/out leading _"
     end
 

@@ -3,10 +3,7 @@ module Haml
     class Extractor
       class Workflow
 
-        attr_reader :extractors
-
         def initialize(project_path, options = {})
-          @extractors = []
           @passed_options = options
           @project_path = project_path
           @prompter = Haml::I18n::Extractor::Prompter.new
@@ -70,7 +67,7 @@ module Haml
           @passed_options.merge!({:type => type}) # overwrite or dump haml
           begin
             @extractor = Haml::I18n::Extractor.new(haml_path, @passed_options)
-            @extractors << @extractor
+            Extractor.extractors << @extractor
             @extractor.run
           rescue Haml::I18n::Extractor::InvalidSyntax
             @prompter.syntax_error(haml_path)

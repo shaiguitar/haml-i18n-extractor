@@ -4,9 +4,9 @@ module Haml
   class StringFinderTest < MiniTest::Unit::TestCase
 
     # empty line
-    test "empty line does not explode" do
-      assert_equal find_text(""), ""
-      assert_equal find_type(""), :plain
+    test "empty lines, filters, matches with no @metadata" do
+      assert_equal find_text(""), nil
+      assert_equal find_type(""), nil
     end
 
     # regular text mode
