@@ -10,10 +10,6 @@ module Haml
           @metadata = line_metadata
         end
 
-        def find
-          text_match = process_by_regex.last
-        end
-
         # returns [ line_type, text_found ]
         def process_by_regex
           if Haml::I18n::Extractor.debug?
@@ -22,15 +18,18 @@ module Haml
             puts @metadata && @metadata[:type]
             puts @orig_line
           end
-
-          #return [:plain, ""] if @metadata.nil? # a linebreak in a haml file, empty.
+          # if any of the handler methods return nil the extractor just outputs orig_line and keeps on going.
+          # if there's an empty string that should do the trick to ( ExceptionFinder can return no match that way )
           @metadata && send("#{@metadata[:type]}", @metadata)
         end
 
         private
 
+        #FIXME move all these matches into a helper of some sort.
+
         def plain(line)
           txt = line[:value][:text]
+          return nil if txt.match(/<!--/) || txt.match(/-->\s*$/) # ignore html comments
           [:plain, txt]
         end
 
@@ -60,16 +59,11 @@ module Haml
           end
         end
 
-        def filter(line)
-          #$stderr.puts('=' * 80)
-          #$stderr.puts(line.inspect)
-          #$stderr.puts("have not handled filters!")
-          #$stderr.puts("please remind me to fix this")
-          #$stderr.puts('=' * 80)
-        end
-
+        # returns nil, so extractor just keeps the orig_line and keeps on going.
+        #
         # move to method missing and LINE_TYPES_IGNORE?
         # LINE_TYPES_IGNORE = [:silent_script, :haml_comment, :comment, :doctype, :root]
+        def filter(line); end
         def silent_script(line); end
         def haml_comment(line); end
         def comment(line); end
