@@ -3,7 +3,7 @@ module Haml
     class Extractor
 
       def self.debug?
-        ENV['DEBUG']
+        ENV['DEBUG_EXTRACTOR']
       end
 
       # helpful for debugging
