@@ -8,7 +8,7 @@ It doesn't translate already translated keys, or things it identfies that are no
 
 ## Usage
 
-You can use the binary which is an interactive prompting mode included in this library, or just use the code directly. See below for more examples.
+You can use the binary which has an interactive (prompting) and non-interactive mode included in this library. You should be able to use the code directly as a lib too.
 
 ## Examples
 
@@ -29,22 +29,13 @@ end
 
 ## Demo using interactive mode
 
-Check out the quite brief movie/swf file demo of this lib's executable in `demo/` . You should be able to see it online here, considering your browser supports swf:
+The demo is pretty outdated at this point. I would take it off the readme, but heck, I'm lazy. If you want a brief bad version of some of the stuff it does, since that video is pretty old, see it here (your browser needs to support swf):
 
 [Demo](http://shairosenfeld.com/haml-i18n-extractor-demo.swf)
 
-The demo will probably be outdated at some point, but the main idea holds. Some of the stuff not in there:
-
-- A "tag" functionality, which enables you to tag a line you want to review for later, if you are unsure you want to replace it. It will create a list of /file/path:42 tags for you to go and revisit later.
-- You can use "Next" if you're in the middle of processing a file and go to the next file.
-- Option parsing.
-- Other stuff that will come up.
-
-Have any other ideas? Let me know or better yet, submit a pull request.
-
 ## Example output
 
-This should be a before and after picture of using this lib, whether using the interactive mode or plain ruby.
+This should be a before and after picture of using this lib, whether using the non-interactive/interactive mode. There are more examples in the tests where you can see more use cases being translated.
 
 - Before running (old haml):
 
@@ -127,7 +118,12 @@ If you want the latest code aka edge, you can also simply clone this repo and in
 ## Feedback
 
 Can use github issues to address any concern you have, or simply email me, with the contact info here: [http://shairosenfeld.com/](http://shairosenfeld.com/). 
-You may find me on freenode #haml-i18n-extractor although I don't check it that often. Also on twitter you can find me with the same username as my GH one.
+
+You can also find me on twitter with the same username as my GH one.
+
+## Have an idea or an issue?
+
+Open an [issue](https://github.com/shaiguitar/haml-i18n-extractor/issues/new). Feeling like giving back? Contribute!
 
 ## Contributing
 
