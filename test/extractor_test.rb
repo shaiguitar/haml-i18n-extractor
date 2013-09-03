@@ -98,6 +98,11 @@ module Haml
     end
 
     # really integration tests...movez.
+    test "it can replace a string body and have expected output ex4" do
+      expected_output = File.read(file_path("ex4.output.haml"))
+      assert_equal Haml::I18n::Extractor.new(file_path("ex4.haml")).new_body, expected_output
+    end
+
     test "it can replace a string body and have expected output ex3" do
       expected_output = File.read(file_path("ex3.output.haml"))
       assert_equal Haml::I18n::Extractor.new(file_path("ex3.haml")).new_body, expected_output

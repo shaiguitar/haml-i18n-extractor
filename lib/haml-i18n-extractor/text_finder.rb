@@ -16,11 +16,14 @@ module Haml
 
         # returns [ line_type, text_found ]
         def process_by_regex
-          return [:plain, ""] if @metadata.nil? # a linebreak in a haml file, empty.
-          if ENV['DEBUG']
+          if Haml::I18n::Extractor.debug?
+            binding.pry
+            puts '!!!'
             puts @metadata[:type]
             puts @orig_line
           end
+
+          return [:plain, ""] if @metadata.nil? # a linebreak in a haml file, empty.
           @metadata && send("#{@metadata[:type]}", @metadata)
         end
 
