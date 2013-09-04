@@ -5,31 +5,29 @@ module Haml
     class Extractor
       class TextFinder
 
+        include Helpers::StringHelpers
+
+        # if any of the private handler methods return nil the extractor just outputs orig_line and keeps on going.
+        # if there's an empty string that should do the trick to ( ExceptionFinder can return no match that way )
         def initialize(orig_line,line_metadata)
           @orig_line = orig_line
           @metadata = line_metadata
         end
 
-        # returns [ line_type, text_found ]
         def process_by_regex
+          # [ line_type, text_found ]
           if Haml::I18n::Extractor.debug?
-            binding.pry
-            puts '!!!'
             puts @metadata && @metadata[:type]
             puts @orig_line
           end
-          # if any of the handler methods return nil the extractor just outputs orig_line and keeps on going.
-          # if there's an empty string that should do the trick to ( ExceptionFinder can return no match that way )
           @metadata && send("#{@metadata[:type]}", @metadata)
         end
 
         private
 
-        #FIXME move all these matches into a helper of some sort.
-
         def plain(line)
           txt = line[:value][:text]
-          return nil if txt.match(/<!--/) || txt.match(/-->\s*$/) # ignore html comments
+          return nil if html_comment?(txt)
           [:plain, txt]
         end
 
@@ -37,7 +35,7 @@ module Haml
           txt = line[:value][:value]
           if txt
             has_script_in_tag = line[:value][:parse] # %element= foo
-            has_exception = txt.match(/link_to/) || txt.match(/^\s*['"]/) # %element= 'foo'
+            has_exception = link_to?(txt)
             if has_script_in_tag && !has_exception
               [:tag, ""]
             else
@@ -50,9 +48,7 @@ module Haml
 
         def script(line)
           txt = line[:value][:text]
-          scanner = StringScanner.new(txt)
-          scanner.scan(/\s+/)
-          if scanner.scan(/['"]/) || scanner.scan(/link_to/)
+          if could_match_script?(txt)
             [:script, ExceptionFinder.new(txt).find]
           else
             [:script, ""]
