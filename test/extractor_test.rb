@@ -97,29 +97,6 @@ module Haml
       end
     end
 
-    # really integration tests...movez.
-    test "it can replace a string body and have expected output ex4" do
-      expected_output = File.read(file_path("ex4.output.haml"))
-      assert_equal Haml::I18n::Extractor.new(file_path("ex4.haml")).new_body, expected_output
-    end
-
-    test "it can replace a string body and have expected output ex3" do
-      expected_output = File.read(file_path("ex3.output.haml"))
-      assert_equal Haml::I18n::Extractor.new(file_path("ex3.haml")).new_body, expected_output
-    end
-
-    test "it can replace a string body and have expected output ex2" do
-      expected_output = File.read(file_path("ex2.output.haml"))
-      assert_equal Haml::I18n::Extractor.new(file_path("ex2.haml")).new_body, expected_output
-    end
-
-
-    test "it can replace a string body and have expected output ex1" do
-      expected_output = File.read(file_path("ex1.output.haml"))
-      assert_equal @ex1.new_body, expected_output
-    end
-
-
     test "it writes the haml to an out file if valid haml output" do
       FileUtils.rm_rf(@ex1.haml_writer.path)
       assert_equal File.exists?(@ex1.haml_writer.path), false
