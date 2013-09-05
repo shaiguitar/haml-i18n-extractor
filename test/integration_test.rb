@@ -1,3 +1,5 @@
+require 'test_helper'
+
 module Haml
   class IntegrationTest < MiniTest::Unit::TestCase
 

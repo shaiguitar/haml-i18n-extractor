@@ -23,7 +23,8 @@ module Haml
         end
 
         def replace_hash
-          @replace_hash ||= { :modified_line => modified_line, :keyname => keyname, :replaced_text => @text_to_replace }
+          t_name = keyname(@text_to_replace, @orig_line)
+          @replace_hash ||= { :modified_line => modified_line, :keyname => t_name, :replaced_text => @text_to_replace }
         end
 
         # the new full line, including a `t()` replacement instead of the `text_to_replace` portion.
@@ -37,24 +38,35 @@ module Haml
 
         private
 
-        def keyname
-          text_to_replace = @text_to_replace.dup
+        def keyname(to_replace, orig_line)
+          text_to_replace = to_replace.dup
           if has_been_translated?(text_to_replace)
             text_to_replace
           else
-            name = to_keyname(text_to_replace)
-            name = to_keyname(@orig_line.dup) if name.empty?
-            "t('.#{name}')"
+            name = normalize_name(text_to_replace)
+            name = normalize_name(orig_line.dup) if name.empty?
+            with_translate_method(name)
           end
+        end
+
+        def with_translate_method(name)
+          "t('.#{name}')"
         end
 
         # adds the = to the right place in the string ... = t() stuff.
         def apply_ruby_evaling(str)
           if LINE_TYPES_ADD_EVAL.include?(@line_type)
             if @line_type == :tag
-              str.match /^([^\s\t]*)(.*)$/
-              elem, keyname = $1, $2
-              str.gsub!($2, "= #{$2.strip}") unless already_evaled?(elem)
+              #str.match /^([^\s\t]*)(.*)$/
+              t_name = keyname(@text_to_replace, @orig_line)
+              match_keyname = Regexp.new('[\s\t]*' + Regexp.escape(t_name))
+              str.match(/(.*?)(#{match_keyname})/)
+              elem = $1
+              #binding.pry if str.match /color/
+              #str.gsub!(keyname, "= #{keyname.strip}")
+              if elem
+                str.gsub!(Regexp.new(Regexp.escape(elem)), "#{elem}=") unless already_evaled?(elem)
+              end
             elsif @line_type == :plain
               str.gsub!(str, "= "+str)
             end
@@ -73,14 +85,15 @@ module Haml
 
         def remove_surrounding_quotes(str)
           # if there are quotes surrounding the string, we want them removed as well...
-          unless str.gsub!('"' + @text_to_replace + '"', keyname)
-            unless str.gsub!("'" + @text_to_replace + "'", keyname)
-              str.gsub!(@text_to_replace, keyname)
+          t_name = keyname(@text_to_replace, @orig_line)
+          unless str.gsub!('"' + @text_to_replace + '"', t_name )
+            unless str.gsub!("'" + @text_to_replace + "'", t_name)
+              str.gsub!(@text_to_replace, t_name)
             end
           end
         end
 
-        def to_keyname(str)
+        def normalize_name(str)
           NOT_ALLOWED_IN_KEYNAME.each{ |rm_me| str.gsub!(rm_me, "") }
           str = str.gsub(/\s+/, " ").strip
           str.downcase.tr(' ', '_')[0..LIMIT_KEY_NAME-1]

@@ -18,6 +18,7 @@ module Haml
           # [ line_type, text_found ]
           if Haml::I18n::Extractor.debug?
             puts @metadata && @metadata[:type]
+            puts @metadata.inspect
             puts @orig_line
           end
           @metadata && send("#{@metadata[:type]}", @metadata)
