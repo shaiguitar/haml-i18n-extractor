@@ -53,17 +53,14 @@ module Haml
           "t('.#{name}')"
         end
 
-        # adds the = to the right place in the string ... = t() stuff.
+        # adds the = to the right place in the string ... = t()
         def apply_ruby_evaling(str)
           if LINE_TYPES_ADD_EVAL.include?(@line_type)
             if @line_type == :tag
-              #str.match /^([^\s\t]*)(.*)$/
               t_name = keyname(@text_to_replace, @orig_line)
               match_keyname = Regexp.new('[\s\t]*' + Regexp.escape(t_name))
               str.match(/(.*?)(#{match_keyname})/)
               elem = $1
-              #binding.pry if str.match /color/
-              #str.gsub!(keyname, "= #{keyname.strip}")
               if elem
                 str.gsub!(Regexp.new(Regexp.escape(elem)), "#{elem}=") unless already_evaled?(elem)
               end
