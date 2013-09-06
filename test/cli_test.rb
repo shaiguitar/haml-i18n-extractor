@@ -3,7 +3,7 @@ require 'test_helper'
 module Haml
   class CLITest < MiniTest::Unit::TestCase
 
-    test "it needs an explicit interactive or non-interactive option" do
+    def test_it_needs_an_explicit_interactive_or_noninteractive_option
       opts = {:non_interactive => nil, :interactive => nil}
       with_highline do
         begin
@@ -14,7 +14,7 @@ module Haml
       end
     end
 
-    test "with a interactive option it needs a path" do
+    def test_with_a_interactive_option_it_needs_a_path
       opts = {:non_interactive => nil, :path => nil}
        with_highline do
          begin

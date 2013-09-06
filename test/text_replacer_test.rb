@@ -3,11 +3,11 @@ require 'test_helper'
 module Haml
   class TextReplacerTest < MiniTest::Unit::TestCase
     
-    test "it initializes with the line it is going to replace and the match to replace" do
+    def test_it_initializes_with_the_line_it_is_going_to_replace_and_the_match_to_replace
       Haml::I18n::Extractor::TextReplacer.new("this is whatever", "this is whatever", :plain)
     end
 
-    test "but it raises if passed a wrong line type" do
+    def test_but_it_raises_if_passed_a_wrong_line_type
       begin
         replacer = Haml::I18n::Extractor::TextReplacer.new("regular text", "regular text", :this_is_not_defined)
         assert false, 'should raise'
@@ -17,31 +17,31 @@ module Haml
     end
 
     # some text replacement examples
-    test "it can replace the body of haml with t() characters" do
+    def test_it_can_replace_the_body_of_haml_with_t_characters
       replacer = Haml::I18n::Extractor::TextReplacer.new("this is whatever", "this is whatever", :plain)
       assert_equal replacer.replace_hash, { :modified_line => "= t('.this_is_whatever')", 
                                           :keyname => "t('.this_is_whatever')", :replaced_text => "this is whatever"  }
     end
 
-    test "it can replace the body of haml with t() characters example" do
+    def test_it_can_replace_the_body_of_haml_with_t_characters_example
       replacer = Haml::I18n::Extractor::TextReplacer.new("%span Admin Dashboard", "Admin Dashboard", :tag)
       assert_equal replacer.replace_hash, { :modified_line => "%span= t('.admin_dashboard')",
                                            :keyname => "t('.admin_dashboard')", :replaced_text => "Admin Dashboard" }
     end
 
-    test "it won't replace already replaced t() characters if they are not ruby evaled" do
+    def test_it_wont_replace_already_replaced_t_characters_if_they_are_not_ruby_evaled
       replacer = Haml::I18n::Extractor::TextReplacer.new("%span t('.admin_dashboard')", "t('.admin_dashboard')", :tag)
       assert_equal replacer.replace_hash, { :modified_line => "%span t('.admin_dashboard')",
                                            :keyname => "t('.admin_dashboard')", :replaced_text => "t('.admin_dashboard')" }
     end
 
-    test "it won't replace already replaced t() characters that are ruby evaled" do
+    def test_it_wont_replace_already_replaced_t_characters_that_are_ruby_evaled
       replacer = Haml::I18n::Extractor::TextReplacer.new("%span= t('.admin_dashboard')", "t('.admin_dashboard')", :script)
       assert_equal replacer.replace_hash, { :modified_line => "%span= t('.admin_dashboard')",
                                            :keyname => "t('.admin_dashboard')", :replaced_text => "t('.admin_dashboard')" }
     end
 
-    test "it can replace the body of haml with t() characters example for link_to and removes surrounding quotes as well" do
+    def test_it_can_replace_the_body_of_haml_with_t_characters_example_for_link_to_and_removes_surrounding_quotes_as_well
       replacer = Haml::I18n::Extractor::TextReplacer.new(%{%p#brand= link_to 'Some Place', '/'}, "Some Place", :script)
       assert_equal replacer.replace_hash, { :modified_line => %{%p#brand= link_to t('.some_place'), '/'} , 
                                             :keyname => "t('.some_place')", :replaced_text => "Some Place" }
@@ -52,12 +52,12 @@ module Haml
     end
 
     # keyname restrictions
-    test "it limits the characters of the t namespace it provides to LIMIT_KEY_NAME" do
+    def test_it_limits_the_characters_of_the_t_namespace_it_provides_to_limit_key_name
       replacer = Haml::I18n::Extractor::TextReplacer.new("this is whatever" * 80, "this is whatever" * 80, :plain)
       assert_equal replacer.replace_hash[:modified_line].size, Haml::I18n::Extractor::TextReplacer::LIMIT_KEY_NAME + 8 # = t('.')
     end
 
-    test "it does not allow weird characters in the keyname" do
+    def test_it_does_not_allow_weird_characters_in_the_keyname
       weird_line = "thi:s = (is \"' `ch@racter ~ ma?dne{}ss!"
       replacer = Haml::I18n::Extractor::TextReplacer.new(weird_line, weird_line, :plain)
       assert_equal replacer.replace_hash, { :modified_line => "= t('.this_is_chracter_madness')", 

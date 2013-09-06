@@ -18,7 +18,7 @@ module Haml
       FileUtils.rm_rf(ORIG_TEMP_FILE_PATH)
     end
 
-    test "it can dump the file and that is the default" do
+    def test_it_can_dump_the_file_and_that_is_the_default
       @writer = Haml::I18n::Extractor::HamlWriter.new(ORIG_TEMP_FILE_PATH)
       @writer.body = "This is what it is"
       @writer.write_file
@@ -26,7 +26,7 @@ module Haml
       assert_equal File.read(@writer.path), "This is what it is\n"
     end
 
-    test "it can overwrite the file" do
+    def test_it_can_overwrite_the_file
       @writer = Haml::I18n::Extractor::HamlWriter.new(ORIG_TEMP_FILE_PATH, {:type => :overwrite})
       @writer.body = "This is what it is"
       @writer.write_file

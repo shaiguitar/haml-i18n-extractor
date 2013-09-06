@@ -17,16 +17,16 @@ module Haml
       @reader = Haml::I18n::Extractor::HamlReader.new(TEMP_FILE_PATH)
     end
 
-    test "has a body and a path" do
+    def test_has_a_body_and_a_path
       assert_equal @reader.path, TEMP_FILE_PATH
       assert_equal @reader.body, File.read(TEMP_FILE_PATH)
     end
 
-    test "has an array of lines in that file" do
+    def test_has_an_array_of_lines_in_that_file
       assert_equal @reader.lines.size, LINE_COUNT
     end
 
-    test "has metadata about each line" do
+    def test_has_metadata_about_each_line
       assert_equal @reader.metadata.size, LINE_COUNT
     end
 

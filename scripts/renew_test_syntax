@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby 
+
+# git co .; for f in test/*.rb; do mkdir -p /tmp/test; cp $f /tmp/$f; scripts/renew_test_syntax /tmp/$f > $f ; done; b rake
+def replace(str)
+  str.match(/^(\s*)test/)
+  whitespace = $1
+  str = str.strip.downcase.gsub(/ do$/,"")
+  not_allowed = %w([ } = # > ' " % : - { ] . / \ @ , ( ) )
+  not_allowed.each {|c|
+    str = str.gsub(Regexp.new(Regexp.escape(c)),"")
+  }
+  str = str.gsub(" ","_")
+  str = str.gsub(/^(\s*)/,"#{whitespace}def ")
+  str
+end
+
+new_body = File.readlines(ARGV[0]).map{|l| l.match(/test.*do$/) ? replace(l) : l }
+puts new_body

@@ -4,19 +4,19 @@ module Haml
   # misnomer, this is also testing UserAction
   class PrompterAndUserActionTest < MiniTest::Unit::TestCase
 
-    test "asks_to_process_line_yes" do
+    def test_asks_to_process_line_yes
       with_highline("y") do
         assert_equal Haml::I18n::Extractor::Prompter.new.ask_user("orig", "replace").replace_line?, true
       end
     end
 
-    test "asks_to_process_line_no" do
+    def test_asks_to_process_line_no
       with_highline("n") do
         assert_equal Haml::I18n::Extractor::Prompter.new.ask_user("orig", "replace").no_replace?, true
       end
     end
 
-    test "test_asks_to_process_line_tag" do
+    def test_test_asks_to_process_line_tag
       with_highline("t") do
         assert_equal Haml::I18n::Extractor::Prompter.new.ask_user("orig", "replace").tag?, true
       end

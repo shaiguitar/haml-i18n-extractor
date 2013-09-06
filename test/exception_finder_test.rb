@@ -22,14 +22,14 @@ module Haml
       %{link_to(pending_account_invoices_path(account),"http://random")} => ""
     }
 
-    test "it finds text pretty simply" do
+    def test_it_finds_text_pretty_simply
       MATCHES.each do |k,v|
         #puts "handling #{k}"
         assert_equal find(k), v
       end
     end
 
-    test "it actually needs to do something intellegent with intperolated values..." do
+    def test_it_actually_needs_to_do_something_intellegent_with_intperolated_values
       # @FIXME
       #raise "raw text matching needs to be responsible for knowing if needed to interpolate?"
     end

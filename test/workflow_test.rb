@@ -12,7 +12,7 @@ module Haml
       TestHelper.teardown_project_directory!
     end
 
-    test "it_should_work_on_a_directory_mkay" do
+    def test_it_should_work_on_a_directory_mkay
       begin
         filename = "#{TestHelper::PROJECT_DIR}app/views/bar/thang.haml"
         bad_worfklow = Haml::I18n::Extractor::Workflow.new(filename)
@@ -22,18 +22,18 @@ module Haml
       end
     end
 
-    test "it_finds_all_haml_files" do
+    def test_it_finds_all_haml_files
       assert_equal @workflow.files.size, 9
     end
 
-    test "outputs_stats" do
+    def test_outputs_stats
       with_highline do
         @workflow.start_message
         assert @output.string.match(/Found \d haml files/), "Outputs stats"
       end
     end
 
-    test "yaml_file_in_config" do
+    def test_yaml_file_in_config
       TestHelper.mock_full_project_user_interaction!
     end
 

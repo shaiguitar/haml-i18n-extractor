@@ -8,30 +8,30 @@ module Haml
       @ex1 = Haml::I18n::Extractor.new(file_path("ex1.haml"))
     end
 
-    test "it can process the haml and replace it with other text" do
+    def test_it_can_process_the_haml_and_replace_it_with_other_text
       @ex1.run
     end
 
-    test "it should be able to process filters with the haml_parser now..." do
+    def test_it_should_be_able_to_process_filters_with_the_haml_parser_now
       #@FIXME
       #raise 'implment me...check the finder#filters method and make sure you process the whole file at once so the parser gets it...'
     end
 
-    test "with a type of overwrite or dump affecting haml writer" do
+    def test_with_a_type_of_overwrite_or_dump_affecting_haml_writer
       h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :type => :overwrite)
       assert_equal h.haml_writer.overwrite?, true
       h = Haml::I18n::Extractor.new(file_path("ex1.haml"))
       assert_equal h.haml_writer.overwrite?, false
     end
 
-    test "with a interactive option which prompts the user-per line" do
+    def test_with_a_interactive_option_which_prompts_the_userper_line
       h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :interactive => true)
       assert_equal h.interactive?, true
       h = Haml::I18n::Extractor.new(file_path("ex1.haml"))
       assert_equal h.interactive?, false
     end
 
-    test "with a interactive option takes user input into consideration for haml" do
+    def test_with_a_interactive_option_takes_user_input_into_consideration_for_haml
       h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :interactive => true)
       user_input = "D" # dump
       File.readlines(file_path("ex1.haml")).size.times do
@@ -44,7 +44,7 @@ module Haml
       assert_equal File.read(h.haml_writer.path), File.read(file_path("ex1.haml"))
     end
 
-    test "with a interactive option takes user input N as next and stops processing file" do
+    def test_with_a_interactive_option_takes_user_input_n_as_next_and_stops_processing_file
       h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :interactive => true)
       user_input = "D" # dump
       File.readlines(file_path("ex1.haml")).size.times do
@@ -57,7 +57,7 @@ module Haml
       assert_equal File.read(h.haml_writer.path), File.read(file_path("ex1.haml"))
     end
 
-    test "with a interactive option takes user input into consideration for yaml" do
+    def test_with_a_interactive_option_takes_user_input_into_consideration_for_yaml
       TestHelper.hax_shit
       h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :interactive => true)
       user_input = "D" # dump
@@ -71,7 +71,7 @@ module Haml
       assert_equal YAML.load(File.read(h.yaml_tool.yaml_file)), {}
     end
 
-    test "with a interactive option user can tag a line for later review" do
+    def test_with_a_interactive_option_user_can_tag_a_line_for_later_review
       TestHelper.hax_shit
       if File.exist?(Haml::I18n::Extractor::TaggingTool::DB)
         assert_equal File.readlines(Haml::I18n::Extractor::TaggingTool::DB), []
@@ -88,7 +88,7 @@ module Haml
     end
 
 
-    test "can not initialize if the haml is not valid syntax" do
+    def test_can_not_initialize_if_the_haml_is_not_valid_syntax
       begin
         Haml::I18n::Extractor.new(file_path("bad.haml"))
         assert false, "should not get here"
@@ -97,14 +97,14 @@ module Haml
       end
     end
 
-    test "it writes the haml to an out file if valid haml output" do
+    def test_it_writes_the_haml_to_an_out_file_if_valid_haml_output
       FileUtils.rm_rf(@ex1.haml_writer.path)
       assert_equal File.exists?(@ex1.haml_writer.path), false
       @ex1.run
       assert_equal File.exists?(@ex1.haml_writer.path), true
     end
 
-    test "it writes the locale info to an out file when run" do
+    def test_it_writes_the_locale_info_to_an_out_file_when_run
       TestHelper.hax_shit
       assert_equal File.exists?(@ex1.yaml_tool.yaml_file), false
       @ex1.run
@@ -112,7 +112,7 @@ module Haml
       assert_equal YAML.load(File.read(@ex1.yaml_tool.yaml_file)), @ex1.yaml_tool.yaml_hash
     end
 
-    test "sends a hash over of replacement info to its yaml tool when run" do
+    def test_sends_a_hash_over_of_replacement_info_to_its_yaml_tool_when_run
       @ex1 = Haml::I18n::Extractor.new(file_path("ex1.haml"))
       assert_equal @ex1.yaml_tool.locale_hash, nil
       @ex1.run
@@ -120,7 +120,7 @@ module Haml
       assert_equal @ex1.yaml_tool.locale_hash.size, @ex1.haml_reader.lines.size
     end
 
-    test "it fails before it writes to an out file if it is not valid" do
+    def test_it_fails_before_it_writes_to_an_out_file_if_it_is_not_valid
       begin
         @ex1 = Haml::I18n::Extractor.new(file_path("ex1.haml"))
         @ex1.stub(:assign_new_body, nil) do #nop

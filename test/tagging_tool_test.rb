@@ -10,14 +10,14 @@ module Haml
       FileUtils.rm_rf(FILE)
     end
 
-    test "It uses a file which it uses to keep track of user tagged lines" do
+    def test_it_uses_a_file_which_it_uses_to_keep_track_of_user_tagged_lines
       TestHelper.hax_shit
       assert ! File.exists?(FILE), "no tagging file should exist"
       Haml::I18n::Extractor::TaggingTool.new
       assert File.exists?(FILE), "tagging file should be created on init"
     end
 
-    test "It can write in a format" do
+    def test_it_can_write_in_a_format
       tag_tool = Haml::I18n::Extractor::TaggingTool.new
       tag_tool.write("/foo/bar/baz.txt", 49)
       assert File.readlines(FILE).include?("/foo/bar/baz.txt:49\n"), "should write info"
