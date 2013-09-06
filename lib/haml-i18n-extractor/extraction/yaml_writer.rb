@@ -10,6 +10,8 @@ module Haml
 
         attr_accessor :info_for_yaml, :yaml_file, :i18n_scope
 
+        include Helpers::StringHelpers
+
         def initialize(i18n_scope = nil, yaml_file = nil)
           @i18n_scope = i18n_scope && i18n_scope.to_sym || :en
           @yaml_file = yaml_file || "./config/locales/#{@i18n_scope}.yml"
@@ -24,9 +26,9 @@ module Haml
         def yaml_hash
           yml = Hash.new
           @info_for_yaml.map do |line_no, info|
-            unless info[:keyname].nil?
-              keyspace = [@i18n_scope,standardized_viewnames(info[:path]), standarized_keyname(info[:keyname]),
-                          info[:replaced_text]].flatten
+            unless info[:t_name].nil?
+              keyspace = [@i18n_scope,standardized_viewnames(info[:path]), info[:t_name],
+                          normalize_interpolation(info[:replaced_text])].flatten
               yml.deep_merge!(nested_hash({},keyspace))
             end
           end
@@ -76,12 +78,6 @@ module Haml
             nested_hash(hash[elem],array)
           end
           hash
-        end
-
-        # comes in like "t('.some_place')", return .some_place
-        def standarized_keyname(name)
-          name.match(/t\('\.(.*)'\)/)
-          $1
         end
 
         # assuming rails format, app/views/users/index.html.haml return [users]

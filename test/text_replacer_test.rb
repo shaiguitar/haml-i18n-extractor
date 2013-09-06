@@ -22,48 +22,48 @@ module Haml
     def test_it_can_replace_the_body_of_haml_with_t_characters
       replacer = Haml::I18n::Extractor::TextReplacer.new("this is whatever", "this is whatever", :plain, "/path/to/doesntmatter.haml")
       assert_equal replacer.replace_hash, { :modified_line => "= t('.this_is_whatever')", 
-                                          :keyname => "t('.this_is_whatever')", :replaced_text => "this is whatever", :path => "/path/to/doesntmatter.haml"  }
+                                          :t_name => "this_is_whatever", :replaced_text => "this is whatever", :path => "/path/to/doesntmatter.haml"  }
     end
 
     def test_it_can_replace_the_body_of_haml_with_t_characters_example
       replacer = Haml::I18n::Extractor::TextReplacer.new("%span Admin Dashboard", "Admin Dashboard", :tag, "/path/to/doesntmatter.haml")
       assert_equal replacer.replace_hash, { :modified_line => "%span= t('.admin_dashboard')",
-                                           :keyname => "t('.admin_dashboard')", :replaced_text => "Admin Dashboard", :path => "/path/to/doesntmatter.haml" }
+                                           :t_name => "admin_dashboard", :replaced_text => "Admin Dashboard", :path => "/path/to/doesntmatter.haml" }
     end
 
     def test_it_wont_replace_already_replaced_t_characters_if_they_are_not_ruby_evaled
       replacer = Haml::I18n::Extractor::TextReplacer.new("%span t('.admin_dashboard')", "t('.admin_dashboard')", :tag, "/path/to/doesntmatter.haml")
       assert_equal replacer.replace_hash, { :modified_line => "%span t('.admin_dashboard')",
-                                           :keyname => "t('.admin_dashboard')", :replaced_text => "t('.admin_dashboard')", :path => "/path/to/doesntmatter.haml" }
+                                           :t_name => "admin_dashboard", :replaced_text => "t('.admin_dashboard')", :path => "/path/to/doesntmatter.haml" }
     end
 
     def test_it_wont_replace_already_replaced_t_characters_that_are_ruby_evaled
       replacer = Haml::I18n::Extractor::TextReplacer.new("%span= t('.admin_dashboard')", "t('.admin_dashboard')", :script, "/path/to/doesntmatter.haml")
       assert_equal replacer.replace_hash, { :modified_line => "%span= t('.admin_dashboard')",
-                                           :keyname => "t('.admin_dashboard')", :replaced_text => "t('.admin_dashboard')", :path => "/path/to/doesntmatter.haml" }
+                                           :t_name => "admin_dashboard", :replaced_text => "t('.admin_dashboard')", :path => "/path/to/doesntmatter.haml" }
     end
 
     def test_it_can_replace_the_body_of_haml_with_t_characters_example_for_link_to_and_removes_surrounding_quotes_as_well
       replacer = Haml::I18n::Extractor::TextReplacer.new(%{%p#brand= link_to 'Some Place', '/'}, "Some Place", :script, "/path/to/doesntmatter.haml")
       assert_equal replacer.replace_hash, { :modified_line => %{%p#brand= link_to t('.some_place'), '/'} , 
-                                            :keyname => "t('.some_place')", :replaced_text => "Some Place", :path => "/path/to/doesntmatter.haml" }
+                                            :t_name => "some_place", :replaced_text => "Some Place", :path => "/path/to/doesntmatter.haml" }
 
       replacer = Haml::I18n::Extractor::TextReplacer.new(%{%p#brand= link_to "Some Place", "/"}, "Some Place", :script, "/path/to/doesntmatter.haml")
       assert_equal replacer.replace_hash, { :modified_line => %{%p#brand= link_to t('.some_place'), "/"} ,
-                                            :keyname => "t('.some_place')", :replaced_text => "Some Place", :path => "/path/to/doesntmatter.haml" }
+                                            :t_name => "some_place", :replaced_text => "Some Place", :path => "/path/to/doesntmatter.haml" }
     end
 
     # keyname restrictions
     def test_it_limits_the_characters_of_the_t_namespace_it_provides_to_limit_key_name
       replacer = Haml::I18n::Extractor::TextReplacer.new("this is whatever" * 80, "this is whatever" * 80, :plain, "/path/to/doesntmatter.haml")
-      assert_equal replacer.replace_hash[:modified_line].size, Haml::I18n::Extractor::TextReplacer::LIMIT_KEY_NAME + 8 # = t('.')
+      assert_equal replacer.replace_hash[:modified_line].size, Haml::I18n::Extractor::Helpers::StringHelpers::LIMIT_KEY_NAME + 8 # = t('.')
     end
 
     def test_it_does_not_allow_weird_characters_in_the_keyname
       weird_line = "thi:s = (is \"' `ch@racter ~ ma?dne{}ss!"
       replacer = Haml::I18n::Extractor::TextReplacer.new(weird_line, weird_line, :plain, "/path/to/doesntmatter.haml")
       assert_equal replacer.replace_hash, { :modified_line => "= t('.this_is_chracter_madness')", 
-                                            :keyname => "t('.this_is_chracter_madness')", :replaced_text => weird_line, :path => "/path/to/doesntmatter.haml" }
+                                            :t_name => "this_is_chracter_madness", :replaced_text => weird_line, :path => "/path/to/doesntmatter.haml" }
     end
 
   end

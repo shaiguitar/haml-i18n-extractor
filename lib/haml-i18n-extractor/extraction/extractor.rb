@@ -101,10 +101,10 @@ module Haml
         elsif user_action.next?
           raise AbortFile, "stopping to process the rest of the file"
        elsif user_action.replace_line?
-          append_to_info_for_yaml(line_no, replacer_result.info)
+          add_to_yaml_info(line_no, replacer_result.info)
           add_to_body("#{whitespace}#{text_to_replace}")
         elsif user_action.no_replace?
-          append_to_info_for_yaml(line_no, Haml::I18n::Extractor::TextReplacer::ReplacerResult.new(nil,nil,nil,false,nil).info)
+          add_to_yaml_info(line_no, Haml::I18n::Extractor::ReplacerResult.new(nil,nil,nil,false,nil).info)
           add_to_body("#{whitespace}#{orig_line}")
         end
 
@@ -127,11 +127,11 @@ module Haml
         if line_match && !line_match.empty?
           Haml::I18n::Extractor::TextReplacer.new(orig_line, line_match, line_type, @haml_reader.path, line_metadata(line_no)).result
         else
-          Haml::I18n::Extractor::TextReplacer::ReplacerResult.new(orig_line, nil,line_match, false, "")
+          Haml::I18n::Extractor::ReplacerResult.new(orig_line, nil,line_match, false, "")
         end
       end
 
-      def append_to_info_for_yaml(line_no, hash)
+      def add_to_yaml_info(line_no, hash)
         @info_for_yaml[line_no] = hash
       end
 
@@ -166,8 +166,11 @@ module Haml
       def validate_haml(haml)
         parser = Haml::Parser.new(haml, Haml::Options.new)
         parser.parse
-      rescue Haml::SyntaxError
-        raise InvalidSyntax, "invalid syntax for haml #{@haml_reader.path}"
+      rescue Haml::SyntaxError => e
+        message = "invalid syntax for haml #{@haml_reader.path}\n"
+        message << "original error:\n"
+        message << e.message
+        raise InvalidSyntax, message
       end
 
     end

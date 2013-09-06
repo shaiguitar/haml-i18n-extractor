@@ -23,6 +23,12 @@
 
 https://github.com/shaiguitar/haml-i18n-extractor/issues/2
 
+  Refactor out text_replacer? it's pretty simple. we can:
+    return a result class like Finder
+    and refactor the main modified_line method so it's not dumb?!
+  Change naive implementation!
+  right now it gets full_line, replace_this. just does a simple gsub.
+
   Now we are able to have internal access to Haml::Parser internals, we can deal with...
 
     ExceptionText needs to be responsible for knowing if needed to interpolate?

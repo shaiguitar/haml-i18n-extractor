@@ -3,13 +3,11 @@ module Haml
     class Extractor
       class TextReplacer
 
+        include Helpers::StringHelpers
+
         attr_reader :full_line, :text_to_replace, :line_type
 
-        T_REGEX = /t\('\..*'\)/
-        # limit the number of chars
-        LIMIT_KEY_NAME = 30
-        # do not pollute the key space it will make it invalid yaml
-        NOT_ALLOWED_IN_KEYNAME =  %w( ~ ` ! @ # $ % ^ & * - ( ) , ? { } = ' " : )
+        T_REGEX = /t\('\.(.*?)'\)/
 
         def initialize(full_line, text_to_replace,line_type, path, metadata = {})
           @path = path
@@ -23,51 +21,48 @@ module Haml
           end
         end
 
-        class ReplacerResult
-          attr_accessor :modified_line, :keyname, :replaced_text, :should_be_replaced, :path
-
-          def initialize(modified_line, keyname, replaced_text, should_be_replaced, path)
-            @modified_line = modified_line
-            @keyname = keyname
-            @replaced_text = replaced_text
-            @should_be_replaced = should_be_replaced
-            @path = path
-          end
-
-          def info
-            { :modified_line => @modified_line, :keyname => @keyname, :replaced_text => @replaced_text, :path => @path}
-          end
-        end
-
         def result
-          t_name = keyname(@text_to_replace, @orig_line)
-          @result ||= ReplacerResult.new(modified_line, t_name, @text_to_replace, true, @path)
+          @result ||= Haml::I18n::Extractor::ReplacerResult.new(modified_line, t_name, @text_to_replace, true, @path)
         end
 
         def replace_hash
+          #legacy
           result.info
+        end
+
+        def interpolation_helper
+          Haml::I18n::Extractor::InterpolationHelper.new(@text_to_replace, t_name)
         end
 
         # the new full line, including a `t()` replacement instead of the `text_to_replace` portion.
         def modified_line
+          return @full_line if has_been_translated?(@full_line)
           full_line = @full_line.dup
-          return @full_line if has_been_translated?(full_line)
-          remove_surrounding_quotes(full_line)
+          #puts t_method.inspect if Haml::I18n::Extractor.debug?
+          keyname = interpolated?(full_line) ? interpolation_helper.keyname_with_vars : t_method
+          gsub_replacement!(full_line, @text_to_replace, @orig_line, keyname)
           apply_ruby_evaling(full_line)
           full_line
         end
-
+ 
         private
 
-        def keyname(to_replace, orig_line)
+        # the_key_to_use ( for example in t('.the_key_to_use')
+        def t_name(to_replace = @text_to_replace, orig_line = @orig_line)
           text_to_replace = to_replace.dup
           if has_been_translated?(text_to_replace)
-            text_to_replace
+            text_to_replace.match T_REGEX
+            name = $1
           else
-            name = normalize_name(text_to_replace)
-            name = normalize_name(orig_line.dup) if name.empty?
-            with_translate_method(name)
+            name = normalized_name(text_to_replace.dup)
+            name = normalized_name(orig_line.dup) if name.empty?
           end
+          name
+        end
+
+        # t('.the_key_to_use')
+        def t_method
+          with_translate_method(t_name)
         end
 
         def with_translate_method(name)
@@ -78,8 +73,7 @@ module Haml
         def apply_ruby_evaling(str)
           if LINE_TYPES_ADD_EVAL.include?(@line_type)
             if @line_type == :tag
-              t_name = keyname(@text_to_replace, @orig_line)
-              match_keyname = Regexp.new('[\s\t]*' + Regexp.escape(t_name))
+              match_keyname = Regexp.new('[\s\t]*' + Regexp.escape(t_method))
               str.match(/(.*?)(#{match_keyname})/)
               elem = $1
               if elem
@@ -101,20 +95,13 @@ module Haml
           str.match T_REGEX
         end
 
-        def remove_surrounding_quotes(str)
+        def gsub_replacement!(str, text_to_replace, orig_line, keyname_method )
           # if there are quotes surrounding the string, we want them removed as well...
-          t_name = keyname(@text_to_replace, @orig_line)
-          unless str.gsub!('"' + @text_to_replace + '"', t_name )
-            unless str.gsub!("'" + @text_to_replace + "'", t_name)
-              str.gsub!(@text_to_replace, t_name)
+          unless str.gsub!('"' + text_to_replace + '"', keyname_method )
+            unless str.gsub!("'" + text_to_replace + "'", keyname_method)
+              str.gsub!(text_to_replace, keyname_method)
             end
           end
-        end
-
-        def normalize_name(str)
-          NOT_ALLOWED_IN_KEYNAME.each{ |rm_me| str.gsub!(rm_me, "") }
-          str = str.gsub(/\s+/, " ").strip
-          str.downcase.tr(' ', '_')[0..LIMIT_KEY_NAME-1]
         end
 
       end

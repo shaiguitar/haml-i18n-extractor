@@ -44,6 +44,16 @@ module Haml
       YAML.load File.read(file_path("ex1.yml"))
     end
 
+    def ex5_yaml_hash
+      YAML.load File.read(file_path("ex5.yml"))
+    end
+
+    def test_it_can_deal_with_interpolated_vars
+      @ex5 = Haml::I18n::Extractor.new(file_path("ex5.haml"))
+      @ex5.run
+      assert_equal @ex5.yaml_writer.yaml_hash, ex5_yaml_hash
+    end
+
     def test_defaults_for_empty_init
       yaml_writer = Haml::I18n::Extractor::YamlWriter.new
       assert_equal yaml_writer.yaml_file, "./config/locales/en.yml"
@@ -93,7 +103,7 @@ module Haml
       setup_info_for_yaml
       @ex1.yaml_writer.info_for_yaml.each do |line_no, info_for_line|
         assert info_for_line.has_key?(:modified_line), "hash info has :modified_line key"
-        assert info_for_line.has_key?(:keyname), "hash info has :keyname key"
+        assert info_for_line.has_key?(:t_name), "hash info has :t_name key"
         assert info_for_line.has_key?(:replaced_text), "hash info has :replaced_text key"
         # FIXME: since the scope right now is we're running this per file this will be the same, but keeping this right now.
         assert info_for_line.has_key?(:path), "hash info has :path key"
