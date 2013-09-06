@@ -20,7 +20,7 @@ module Haml
       LINE_TYPES_ADD_EVAL = [:plain, :tag]
 
       attr_reader :haml_reader, :haml_writer
-      attr_reader :locale_hash, :yaml_tool, :type
+      attr_reader :locale_hash, :yaml_writer, :type
       attr_reader :current_line
 
       DEFAULT_LINE_LOCALE_HASH = { :modified_line => nil,:keyname => nil,:replaced_text => nil, :path => nil }
@@ -33,7 +33,7 @@ module Haml
         @haml_reader = Haml::I18n::Extractor::HamlReader.new(haml_path)
         validate_haml(@haml_reader.body)
         @haml_writer = Haml::I18n::Extractor::HamlWriter.new(haml_path, {:type => @type})
-        @yaml_tool = Haml::I18n::Extractor::YamlTool.new(@options[:i18n_scope], @options[:yaml_file])
+        @yaml_writer = Haml::I18n::Extractor::YamlWriter.new(@options[:i18n_scope], @options[:yaml_file])
         @tagging_tool ||= Haml::I18n::Extractor::TaggingTool.new
         # hold all the processed lines
         @body = []
@@ -46,7 +46,7 @@ module Haml
       def run
         assign_replacements
         validate_haml(@haml_writer.body)
-        @yaml_tool.write_file
+        @yaml_writer.write_file
         @haml_writer.write_file
       end
 
@@ -55,7 +55,7 @@ module Haml
       end
 
       def assign_yaml
-        @yaml_tool.locale_hash = @locale_hash
+        @yaml_writer.locale_hash = @locale_hash
       end
 
       def assign_replacements

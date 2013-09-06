@@ -10,7 +10,7 @@ require "haml-i18n-extractor/extraction/haml_reader"
 require "haml-i18n-extractor/extraction/tagging_tool"
 require "haml-i18n-extractor/extraction/text_replacer"
 require "haml-i18n-extractor/extraction/haml_writer"
-require "haml-i18n-extractor/extraction/yaml_tool"
+require "haml-i18n-extractor/extraction/yaml_writer"
 require "haml-i18n-extractor/extraction/extractor"
 
 

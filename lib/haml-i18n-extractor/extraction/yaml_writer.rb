@@ -6,7 +6,7 @@ require 'active_support/hash_with_indifferent_access'
 module Haml
   module I18n
     class Extractor
-      class YamlTool
+      class YamlWriter
 
         attr_accessor :locale_hash, :yaml_file, :i18n_scope
 

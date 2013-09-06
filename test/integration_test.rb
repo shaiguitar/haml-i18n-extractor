@@ -14,12 +14,12 @@ module Haml
 
     def test_it_can_handle_namespaced_views
       namespaced_extractor = Haml::I18n::Extractor.extractors.select{|ex| ex.haml_writer.path.match /namespace/ }.last
-      assert namespaced_extractor.yaml_tool.yaml_hash["en"]["namespace"], "namespace key works"
+      assert namespaced_extractor.yaml_writer.yaml_hash["en"]["namespace"], "namespace key works"
     end
 
     def test_it_can_handle_partial_views
       partial_extractor = Haml::I18n::Extractor.extractors.select{|ex| ex.haml_writer.path.match /_partial/ }.last
-      assert partial_extractor.yaml_tool.yaml_hash["en"]["view2"]["partial"], "partial filenames in yaml are w/out leading _"
+      assert partial_extractor.yaml_writer.yaml_hash["en"]["view2"]["partial"], "partial filenames in yaml are w/out leading _"
     end
 
     ## EXAMPLES

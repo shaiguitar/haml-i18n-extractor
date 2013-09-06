@@ -68,7 +68,7 @@ module Haml
         h.run
       end
       # no changes were made cause user was all like 'uhhh, no thxk'
-      assert_equal YAML.load(File.read(h.yaml_tool.yaml_file)), {}
+      assert_equal YAML.load(File.read(h.yaml_writer.yaml_file)), {}
     end
 
     def test_with_a_interactive_option_user_can_tag_a_line_for_later_review
@@ -106,18 +106,18 @@ module Haml
 
     def test_it_writes_the_locale_info_to_an_out_file_when_run
       TestHelper.hax_shit
-      assert_equal File.exists?(@ex1.yaml_tool.yaml_file), false
+      assert_equal File.exists?(@ex1.yaml_writer.yaml_file), false
       @ex1.run
-      assert_equal File.exists?(@ex1.yaml_tool.yaml_file), true
-      assert_equal YAML.load(File.read(@ex1.yaml_tool.yaml_file)), @ex1.yaml_tool.yaml_hash
+      assert_equal File.exists?(@ex1.yaml_writer.yaml_file), true
+      assert_equal YAML.load(File.read(@ex1.yaml_writer.yaml_file)), @ex1.yaml_writer.yaml_hash
     end
 
-    def test_sends_a_hash_over_of_replacement_info_to_its_yaml_tool_when_run
+    def test_sends_a_hash_over_of_replacement_info_to_its_yaml_writer_when_run
       @ex1 = Haml::I18n::Extractor.new(file_path("ex1.haml"))
-      assert_equal @ex1.yaml_tool.locale_hash, nil
+      assert_equal @ex1.yaml_writer.locale_hash, nil
       @ex1.run
-      assert @ex1.yaml_tool.locale_hash.is_a?(Hash), "its is hash of info about the files lines"
-      assert_equal @ex1.yaml_tool.locale_hash.size, @ex1.haml_reader.lines.size
+      assert @ex1.yaml_writer.locale_hash.is_a?(Hash), "its is hash of info about the files lines"
+      assert_equal @ex1.yaml_writer.locale_hash.size, @ex1.haml_reader.lines.size
     end
 
     def test_it_fails_before_it_writes_to_an_out_file_if_it_is_not_valid
