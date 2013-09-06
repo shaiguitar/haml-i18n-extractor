@@ -45,7 +45,7 @@ module Haml
         def end_message
           say("\n\n\n")
           say(highlight("Now run a git diff or such and see what changed!"))
-          say(highlight("Check #{Haml::I18n::Extractor::TaggingTool::DB} if you have tagged any lines."))
+          say(highlight("Check #{Haml::I18n::Extractor::TaggingWriter::DB} if you have tagged any lines."))
           say("PS: If you have any feedback or ideas how this would be better, feel free to open an issue on github. See README for more info.")
         end
 

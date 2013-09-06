@@ -73,8 +73,8 @@ module Haml
 
     def test_with_a_interactive_option_user_can_tag_a_line_for_later_review
       TestHelper.hax_shit
-      if File.exist?(Haml::I18n::Extractor::TaggingTool::DB)
-        assert_equal File.readlines(Haml::I18n::Extractor::TaggingTool::DB), []
+      if File.exist?(Haml::I18n::Extractor::TaggingWriter::DB)
+        assert_equal File.readlines(Haml::I18n::Extractor::TaggingWriter::DB), []
       end
       h = Haml::I18n::Extractor.new(file_path("ex1.haml"), :interactive => true)
       user_input = "D" # dump
@@ -84,7 +84,7 @@ module Haml
       with_highline(user_input) do
         h.run
       end
-      assert (File.readlines(Haml::I18n::Extractor::TaggingTool::DB).size != 0), "tag lines get added to file"
+      assert (File.readlines(Haml::I18n::Extractor::TaggingWriter::DB).size != 0), "tag lines get added to file"
     end
 
 

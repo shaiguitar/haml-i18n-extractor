@@ -1,7 +1,7 @@
 module Haml
   module I18n
     class Extractor
-      class TaggingTool
+      class TaggingWriter
 
         DB = ".tags.haml-i18n-extractor"
         def initialize

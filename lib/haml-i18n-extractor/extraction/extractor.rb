@@ -34,7 +34,7 @@ module Haml
         validate_haml(@haml_reader.body)
         @haml_writer = Haml::I18n::Extractor::HamlWriter.new(haml_path, {:type => @type})
         @yaml_writer = Haml::I18n::Extractor::YamlWriter.new(@options[:i18n_scope], @options[:yaml_file])
-        @tagging_tool ||= Haml::I18n::Extractor::TaggingTool.new
+        @tagging_writer ||= Haml::I18n::Extractor::TaggingWriter.new
         # hold all the processed lines
         @body = []
         # holds a line_no => {info_about_line_replacemnts_or_not}
@@ -97,7 +97,7 @@ module Haml
         end
 
         if user_action.tag?
-          @tagging_tool.write(line_locale_hash[:path], line_no)
+          @tagging_writer.write(line_locale_hash[:path], line_no)
           add_to_body("#{whitespace}#{orig_line}")
         elsif user_action.next?
           raise AbortFile, "stopping to process the rest of the file"
