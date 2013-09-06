@@ -117,12 +117,14 @@ module Haml
     end
 
     def find_type(haml)
-      type, text = process_haml(haml)
+      result = process_haml(haml)
+      type, text =  [result.type, result.match]
       type
     end
 
     def find_text(haml)
-      type, text = process_haml(haml)
+      result = process_haml(haml)
+      type, text =  [result.type, result.match]
       text
     end
 

@@ -84,7 +84,9 @@ module Haml
       def process_line(orig_line, line_no)
         orig_line.chomp!
         orig_line, whitespace = handle_line_whitespace(orig_line)
-        line_type, line_match = handle_line_finding(orig_line, line_no)
+        finder_result = handle_line_finding(orig_line, line_no)
+        line_type = finder_result.type
+        line_match = finder_result.match
         should_be_replaced, text_to_replace, line_locale_hash = gather_replacement_info(orig_line, line_match, line_type, line_no)
 
         user_action = Haml::I18n::Extractor::UserAction.new('y') # default if no prompting: just do it.

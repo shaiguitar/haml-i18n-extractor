@@ -16,20 +16,26 @@ module Haml
 
         def process_by_regex
           # [ line_type, text_found ]
-          if Haml::I18n::Extractor.debug?
-            puts @metadata && @metadata[:type]
-            puts @metadata.inspect
-            puts @orig_line
-          end
-          @metadata && send("#{@metadata[:type]}", @metadata)
+          output_debug if Haml::I18n::Extractor.debug?
+          result = @metadata && send("#{@metadata[:type]}", @metadata)
+          result = FinderResult.new(nil,nil,nil) if result.nil?
+          result
         end
 
+        class FinderResult < Struct.new(:type, :match, :is_interpolated); end
+
         private
+
+        def output_debug
+          puts @metadata && @metadata[:type]
+          puts @metadata.inspect
+          puts @orig_line
+        end
 
         def plain(line)
           txt = line[:value][:text]
           return nil if html_comment?(txt)
-          [:plain, txt]
+          FinderResult.new(:plain, txt, false)
         end
 
         def tag(line)
@@ -38,21 +44,21 @@ module Haml
             has_script_in_tag = line[:value][:parse] # %element= foo
             has_exception = link_to?(txt)
             if has_script_in_tag && !has_exception
-              [:tag, ""]
+              FinderResult.new(:tag, "", false)
             else
-              [:tag, ExceptionFinder.new(txt).find]
+              FinderResult.new(:tag, ExceptionFinder.new(txt).find, false)
             end
           else
-            [:tag, ""]
+            FinderResult.new(:tag, "", false)
           end
         end
 
         def script(line)
           txt = line[:value][:text]
           if could_match_script?(txt)
-            [:script, ExceptionFinder.new(txt).find]
+            FinderResult.new(:script, ExceptionFinder.new(txt).find, false)
           else
-            [:script, ""]
+            FinderResult.new(:script, "", false)
           end
         end
 
