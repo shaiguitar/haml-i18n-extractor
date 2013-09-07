@@ -5,7 +5,7 @@ module Haml
 
     def setup
       TestHelper.setup_project_directory! # tests here rely on this setup...
-      @workflow = TestHelper.mock_full_project_user_interaction! 
+      @workflow = TestHelper.mock_full_project_user_interaction!
     end
 
     def teardown

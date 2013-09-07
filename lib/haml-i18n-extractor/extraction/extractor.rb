@@ -20,10 +20,8 @@ module Haml
       LINE_TYPES_ADD_EVAL = [:plain, :tag]
 
       attr_reader :haml_reader, :haml_writer
-      attr_reader :locale_hash, :yaml_writer, :type
+      attr_reader :info_for_yaml, :yaml_writer, :type
       attr_reader :current_line
-
-      DEFAULT_LINE_LOCALE_HASH = { :modified_line => nil,:keyname => nil,:replaced_text => nil, :path => nil }
 
       def initialize(haml_path, opts = {})
         @options = opts
@@ -38,7 +36,7 @@ module Haml
         # hold all the processed lines
         @body = []
         # holds a line_no => {info_about_line_replacemnts_or_not}
-        @locale_hash = {}
+        @info_for_yaml = {}
 
         self.class.extractors << self
       end
@@ -55,7 +53,7 @@ module Haml
       end
 
       def assign_yaml
-        @yaml_writer.locale_hash = @locale_hash
+        @yaml_writer.info_for_yaml = @info_for_yaml
       end
 
       def assign_replacements
@@ -78,18 +76,19 @@ module Haml
       end
 
       # this is the bulk of it:
-      # where we end up setting body info and locale_hash.
+      # where we end up setting body info and info_for_yaml.
       # not _write_, just set that info in memory in correspoding locations.
       # refactor more?
       def process_line(orig_line, line_no)
         orig_line.chomp!
         orig_line, whitespace = handle_line_whitespace(orig_line)
-        finder_result = handle_line_finding(orig_line, line_no)
-        line_type = finder_result.type
-        line_match = finder_result.match
-        should_be_replaced, text_to_replace, line_locale_hash = gather_replacement_info(orig_line, line_match, line_type, line_no)
+        finder_result = finding_result(orig_line, line_no)
+        replacer_result = replacement_result(orig_line, finder_result.match, finder_result.type, line_no)
+        should_be_replaced = replacer_result.should_be_replaced
+        text_to_replace = replacer_result.modified_line
 
-        user_action = Haml::I18n::Extractor::UserAction.new('y') # default if no prompting: just do it.
+        user_action = should_be_replaced ? user_action_yes : user_action_no
+
         if should_be_replaced
           if interactive?
             user_action = @prompter.ask_user(orig_line,text_to_replace)
@@ -97,15 +96,15 @@ module Haml
         end
 
         if user_action.tag?
-          @tagging_writer.write(line_locale_hash[:path], line_no)
+          @tagging_writer.write(@haml_reader.path, line_no)
           add_to_body("#{whitespace}#{orig_line}")
         elsif user_action.next?
           raise AbortFile, "stopping to process the rest of the file"
        elsif user_action.replace_line?
-          append_to_locale_hash(line_no, line_locale_hash)
+          append_to_info_for_yaml(line_no, replacer_result.info)
           add_to_body("#{whitespace}#{text_to_replace}")
         elsif user_action.no_replace?
-          append_to_locale_hash(line_no, DEFAULT_LINE_LOCALE_HASH)
+          append_to_info_for_yaml(line_no, Haml::I18n::Extractor::TextReplacer::ReplacerResult.new(nil,nil,nil,false,nil).info)
           add_to_body("#{whitespace}#{orig_line}")
         end
 
@@ -124,22 +123,19 @@ module Haml
         end
       end
 
-      def gather_replacement_info(orig_line, line_match, line_type, line_no)
+      def replacement_result(orig_line, line_match, line_type, line_no)
         if line_match && !line_match.empty?
-          replacer = Haml::I18n::Extractor::TextReplacer.new(orig_line, line_match, line_type, line_metadata(line_no))
-          hash = replacer.replace_hash.dup.merge!({:path => @haml_reader.path })
-          [ true, hash[:modified_line], hash ]
+          Haml::I18n::Extractor::TextReplacer.new(orig_line, line_match, line_type, @haml_reader.path, line_metadata(line_no)).result
         else
-          hash = DEFAULT_LINE_LOCALE_HASH
-          [ false, orig_line, hash ]
+          Haml::I18n::Extractor::TextReplacer::ReplacerResult.new(orig_line, nil,line_match, false, "")
         end
       end
 
-      def append_to_locale_hash(line_no, hash)
-        @locale_hash[line_no] = hash
+      def append_to_info_for_yaml(line_no, hash)
+        @info_for_yaml[line_no] = hash
       end
 
-      def handle_line_finding(orig_line,lineno)
+      def finding_result(orig_line,lineno)
         Haml::I18n::Extractor::TextFinder.new(orig_line,line_metadata(lineno)).process_by_regex
       end
 
@@ -157,6 +153,15 @@ module Haml
       def add_to_body(ln)
         @body << ln
       end
+
+      def user_action_yes
+        Haml::I18n::Extractor::UserAction.new('y') # default if no prompting: just do it.
+      end
+
+      def user_action_no
+        Haml::I18n::Extractor::UserAction.new('n') # don't replace
+      end
+
 
       def validate_haml(haml)
         parser = Haml::Parser.new(haml, Haml::Options.new)

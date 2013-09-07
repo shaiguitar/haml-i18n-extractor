@@ -8,7 +8,7 @@ module Haml
     class Extractor
       class YamlWriter
 
-        attr_accessor :locale_hash, :yaml_file, :i18n_scope
+        attr_accessor :info_for_yaml, :yaml_file, :i18n_scope
 
         def initialize(i18n_scope = nil, yaml_file = nil)
           @i18n_scope = i18n_scope && i18n_scope.to_sym || :en
@@ -19,10 +19,11 @@ module Haml
           end
         end
 
+        # converts the blob of info passed into it into i18n yaml like
         # {:en => {:view_name => {:key_name => :string_name } } }
         def yaml_hash
           yml = Hash.new
-          @locale_hash.map do |line_no, info|
+          @info_for_yaml.map do |line_no, info|
             unless info[:keyname].nil?
               keyspace = [@i18n_scope,standardized_viewnames(info[:path]), standarized_keyname(info[:keyname]),
                           info[:replaced_text]].flatten

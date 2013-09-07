@@ -11,7 +11,8 @@ module Haml
         # do not pollute the key space it will make it invalid yaml
         NOT_ALLOWED_IN_KEYNAME =  %w( ~ ` ! @ # $ % ^ & * - ( ) , ? { } = ' " : )
 
-        def initialize(full_line, text_to_replace,line_type, metadata = {})
+        def initialize(full_line, text_to_replace,line_type, path, metadata = {})
+          @path = path
           @orig_line = @full_line = full_line
           @text_to_replace = text_to_replace
           @metadata = metadata
@@ -22,9 +23,29 @@ module Haml
           end
         end
 
-        def replace_hash
+        class ReplacerResult
+          attr_accessor :modified_line, :keyname, :replaced_text, :should_be_replaced, :path
+
+          def initialize(modified_line, keyname, replaced_text, should_be_replaced, path)
+            @modified_line = modified_line
+            @keyname = keyname
+            @replaced_text = replaced_text
+            @should_be_replaced = should_be_replaced
+            @path = path
+          end
+
+          def info
+            { :modified_line => @modified_line, :keyname => @keyname, :replaced_text => @replaced_text, :path => @path}
+          end
+        end
+
+        def result
           t_name = keyname(@text_to_replace, @orig_line)
-          @replace_hash ||= { :modified_line => modified_line, :keyname => t_name, :replaced_text => @text_to_replace }
+          @result ||= ReplacerResult.new(modified_line, t_name, @text_to_replace, true, @path)
+        end
+
+        def replace_hash
+          result.info
         end
 
         # the new full line, including a `t()` replacement instead of the `text_to_replace` portion.

@@ -8,7 +8,7 @@ module Haml
       TestHelper.setup_project_directory!
     end
 
-    def setup_locale_hash
+    def setup_info_for_yaml
       @ex1 = Haml::I18n::Extractor.new(file_path("ex1.haml"))
       @ex1.run
     end
@@ -56,7 +56,7 @@ module Haml
     end
 
     def test_it_can_merge_with_an_existing_yml_file
-      setup_locale_hash
+      setup_info_for_yaml
       setup_yaml_file
       @ex1.yaml_writer.write_file(locale_config_file)
       really_written = YAML.load(File.read(locale_config_file))
@@ -89,9 +89,9 @@ module Haml
       assert_equal yaml_writer.yaml_file, "/tmp/foo.yml"
     end
 
-    def test_it_relies_on_the_locale_hash_having_a_certain_format
-      setup_locale_hash
-      @ex1.yaml_writer.locale_hash.each do |line_no, info_for_line|
+    def test_it_relies_on_the_info_for_yaml_having_a_certain_format
+      setup_info_for_yaml
+      @ex1.yaml_writer.info_for_yaml.each do |line_no, info_for_line|
         assert info_for_line.has_key?(:modified_line), "hash info has :modified_line key"
         assert info_for_line.has_key?(:keyname), "hash info has :keyname key"
         assert info_for_line.has_key?(:replaced_text), "hash info has :replaced_text key"
@@ -101,7 +101,7 @@ module Haml
     end
 
     def test_constructs_a_yaml_hash_according_to_the_view_in_rails_mode
-      setup_locale_hash
+      setup_info_for_yaml
       yaml_writer = @ex1.yaml_writer
       assert_equal yaml_writer.yaml_hash, ex1_yaml_hash
     end

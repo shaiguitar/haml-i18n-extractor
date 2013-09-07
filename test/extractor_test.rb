@@ -114,10 +114,10 @@ module Haml
 
     def test_sends_a_hash_over_of_replacement_info_to_its_yaml_writer_when_run
       @ex1 = Haml::I18n::Extractor.new(file_path("ex1.haml"))
-      assert_equal @ex1.yaml_writer.locale_hash, nil
+      assert_equal @ex1.yaml_writer.info_for_yaml, nil
       @ex1.run
-      assert @ex1.yaml_writer.locale_hash.is_a?(Hash), "its is hash of info about the files lines"
-      assert_equal @ex1.yaml_writer.locale_hash.size, @ex1.haml_reader.lines.size
+      assert @ex1.yaml_writer.info_for_yaml.is_a?(Hash), "its is hash of info about the files lines"
+      assert_equal @ex1.yaml_writer.info_for_yaml.size, @ex1.haml_reader.lines.size
     end
 
     def test_it_fails_before_it_writes_to_an_out_file_if_it_is_not_valid
