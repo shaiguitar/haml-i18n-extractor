@@ -1,0 +1,15 @@
+---
+en:
+  support:
+    ex1:
+      some_place: Some place
+      admin: Admin
+      admin_dashboard: Admin Dashboard
+      stacks: Stacks
+      alerts: t('.alerts')
+      accounts: Accounts
+      this_linkez: this_linkez
+      what_is_supposed_to_be_is_supp: What is@ supposed to be, is supposed to be!
+        ~
+      details: Details
+      random: ! '"raNdom"'

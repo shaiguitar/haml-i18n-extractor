@@ -6,6 +6,8 @@ module Haml
 
     ORIG_TEMP_FILE_PATH = File.join(TestHelper::TMPDIR, "foo_haml_extractor_test.haml")
 
+    FileUtils.mkdir_p(TestHelper::TMPDIR)
+
     def setup
       File.open(ORIG_TEMP_FILE_PATH, "w") do |f|
         10.times do |i|

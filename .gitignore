@@ -17,7 +17,7 @@ test/version_tmp
 tmp
 
 # hacks, these should not appear where thye are.
-*.yml
+./*.yml
 test/support/*i18n-extractor.haml
 config
 .tags.haml-i18n-extractor
