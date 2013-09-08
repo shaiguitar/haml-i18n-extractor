@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module Haml
-  class CLITest < MiniTest::Unit::TestCase
+  class CLITest < Minitest::Test
 
     def test_it_needs_an_explicit_interactive_or_noninteractive_option
       opts = {:non_interactive => nil, :interactive => nil}

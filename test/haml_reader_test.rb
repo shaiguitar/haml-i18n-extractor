@@ -2,7 +2,7 @@ require 'test_helper'
 require 'fileutils'
 
 module Haml
-  class HamlReaderTest < MiniTest::Unit::TestCase
+  class HamlReaderTest < Minitest::Test
 
     TEMP_FILE_PATH = "/tmp/foo_haml_extractor_test"
     LINE_COUNT = 10

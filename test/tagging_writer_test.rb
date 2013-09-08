@@ -2,7 +2,7 @@ require 'test_helper'
 require 'fileutils'
 
 module Haml
-  class TaggingWriterTest < MiniTest::Unit::TestCase
+  class TaggingWriterTest < Minitest::Test
 
     FILE = Haml::I18n::Extractor::TaggingWriter::DB
 

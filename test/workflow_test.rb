@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module Haml
-  class WorkflowTest < MiniTest::Unit::TestCase
+  class WorkflowTest < Minitest::Test
 
     def setup
       TestHelper.setup_project_directory! # tests here rely on this setup...

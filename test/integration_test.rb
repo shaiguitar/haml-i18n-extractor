@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module Haml
-  class IntegrationTest < MiniTest::Unit::TestCase
+  class IntegrationTest < Minitest::Test
 
     def setup
       TestHelper.setup_project_directory!

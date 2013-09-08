@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module Haml
-  class ExceptionFinderTest < MiniTest::Unit::TestCase
+  class ExceptionFinderTest < Minitest::Test
 
     MATCHES =  {
       %{TEXT} => "TEXT",

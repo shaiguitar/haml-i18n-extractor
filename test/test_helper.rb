@@ -21,7 +21,7 @@ module Declarative
   end
 end
 
-class MiniTest::Unit::TestCase
+class Minitest::Test
 
   extend Declarative
 

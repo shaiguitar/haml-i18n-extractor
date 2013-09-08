@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module Haml
-  class HamlParserTest < MiniTest::Unit::TestCase
+  class HamlParserTest < Minitest::Test
 
     def setup
       @body = "- if true\n  bar"

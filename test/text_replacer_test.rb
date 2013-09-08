@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module Haml
-  class TextReplacerTest < MiniTest::Unit::TestCase
+  class TextReplacerTest < Minitest::Test
     
     def test_it_initializes_with_the_line_it_is_going_to_replace_and_the_match_to_replace
       Haml::I18n::Extractor::TextReplacer.new("this is whatever", "this is whatever", :plain, "/path/to/doesntmatter.haml")
