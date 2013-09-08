@@ -60,7 +60,7 @@ module Haml
     end
 
     def test_it_does_not_allow_weird_characters_in_the_keyname
-      weird_line = "thi:s = (is \"' `ch@racter ~ ma?dne{}ss!"
+      weird_line = "thi:s = (is \"' `ch@ract.er ~ ma?dne{}ss!"
       replacer = Haml::I18n::Extractor::TextReplacer.new(weird_line, weird_line, :plain, "/path/to/doesntmatter.haml")
       assert_equal replacer.replace_hash, { :modified_line => "= t('.this_is_chracter_madness')", 
                                             :t_name => "this_is_chracter_madness", :replaced_text => weird_line, :path => "/path/to/doesntmatter.haml" }
