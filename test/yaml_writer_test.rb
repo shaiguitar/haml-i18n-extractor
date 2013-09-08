@@ -48,10 +48,20 @@ module Haml
       YAML.load File.read(file_path("ex5.yml"))
     end
 
+    def ex6_yaml_hash
+      YAML.load File.read(file_path("ex6.yml"))
+    end
+
     def test_it_can_deal_with_interpolated_vars
       @ex5 = Haml::I18n::Extractor.new(file_path("ex5.haml"))
       @ex5.run
       assert_equal @ex5.yaml_writer.yaml_hash, ex5_yaml_hash
+    end
+
+    def test_it_can_deal_with_utf8_characters
+      @ex6 = Haml::I18n::Extractor.new(file_path("ex6.haml"))
+      @ex6.run
+      assert_equal @ex6.yaml_writer.yaml_hash, ex6_yaml_hash
     end
 
     def test_defaults_for_empty_init

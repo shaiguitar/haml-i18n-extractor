@@ -23,6 +23,11 @@ module Haml
     end
 
     ## EXAMPLES
+    #
+    def test_it_can_replace_a_string_body_and_have_expected_output_ex6
+      expected_output = File.read(file_path("ex6.output.haml"))
+      assert_equal Haml::I18n::Extractor.new(file_path("ex6.haml")).new_body, expected_output
+    end
 
     def test_it_can_replace_a_string_body_and_have_expected_output_ex5
       expected_output = File.read(file_path("ex5.output.haml"))

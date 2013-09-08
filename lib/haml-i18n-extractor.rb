@@ -1,3 +1,6 @@
+Encoding.default_internal = Encoding::UTF_8 if Encoding.respond_to?(:default_internal)
+Encoding.default_external = Encoding::UTF_8 if Encoding.respond_to?(:default_external)
+
 require "trollop"
 
 require "haml-i18n-extractor/version"
