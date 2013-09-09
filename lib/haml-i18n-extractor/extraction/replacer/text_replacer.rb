@@ -39,8 +39,8 @@ module Haml
           full_line = @full_line.dup
           #puts t_method.inspect if Haml::I18n::Extractor.debug?
           keyname = interpolated?(full_line) ? interpolation_helper.keyname_with_vars : t_method
-          gsub_replacement!(full_line, @text_to_replace, @orig_line, keyname)
-          apply_ruby_evaling(full_line)
+          gsub_replacement!(full_line, @text_to_replace, keyname)
+          apply_ruby_evaling!(full_line)
           full_line
         end
  
@@ -71,7 +71,7 @@ module Haml
         end
 
         # adds the = to the right place in the string ... = t()
-        def apply_ruby_evaling(str)
+        def apply_ruby_evaling!(str)
           if LINE_TYPES_ADD_EVAL.include?(@line_type)
             if @line_type == :tag
               match_keyname = Regexp.new('[\s\t]*' + Regexp.escape(t_method))
@@ -96,7 +96,19 @@ module Haml
           str.match T_REGEX
         end
 
-        def gsub_replacement!(str, text_to_replace, orig_line, keyname_method )
+        def gsub_replacement!(str, text_to_replace, keyname_method)
+          #if Extractor.debug?
+            #puts str.inspect
+            #puts text_to_replace.inspect
+            #puts keyname_method
+          #end
+
+          #text_to_replace.gsub!("\#{", "\\\#{")
+          if interpolated?(full_line) && text_to_replace.match(/^['"](.*)['"]$/)
+            text_to_replace = $1
+          end
+
+          #binding.pry if str.match(/some_var/)
           # if there are quotes surrounding the string, we want them removed as well...
           unless str.gsub!('"' + text_to_replace + '"', keyname_method )
             unless str.gsub!("'" + text_to_replace + "'", keyname_method)
