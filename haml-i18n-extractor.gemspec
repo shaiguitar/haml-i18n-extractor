@@ -26,6 +26,8 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rbench'
   gem.add_development_dependency 'm'
   gem.add_development_dependency 'pry'
+  gem.add_development_dependency 'pry-remote'
+  gem.add_development_dependency 'pry-nav'
   gem.add_development_dependency 'minitest'
   gem.add_development_dependency 'nokogiri'
   gem.add_development_dependency 'rake'

@@ -17,7 +17,7 @@ module Haml
       class AbortFile < StandardError ; end
 
       LINE_TYPES_ALL = [:plain, :script, :silent_script, :haml_comment, :tag, :comment, :doctype, :filter, :root]
-      LINE_TYPES_ADD_EVAL = [:plain, :tag]
+      LINE_TYPES_ADD_EVAL = [:plain, :tag, :script]
 
       attr_reader :haml_reader, :haml_writer
       attr_reader :info_for_yaml, :yaml_writer, :type

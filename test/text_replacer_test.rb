@@ -43,16 +43,6 @@ module Haml
                                            :t_name => "admin_dashboard", :replaced_text => "t('.admin_dashboard')", :path => "/path/to/doesntmatter.haml" }
     end
 
-    def test_it_can_replace_the_body_of_haml_with_t_characters_example_for_link_to_and_removes_surrounding_quotes_as_well
-      replacer = Haml::I18n::Extractor::TextReplacer.new(%{%p#brand= link_to 'Some Place', '/'}, "Some Place", :script, "/path/to/doesntmatter.haml")
-      assert_equal replacer.replace_hash, { :modified_line => %{%p#brand= link_to t('.some_place'), '/'} , 
-                                            :t_name => "some_place", :replaced_text => "Some Place", :path => "/path/to/doesntmatter.haml" }
-
-      replacer = Haml::I18n::Extractor::TextReplacer.new(%{%p#brand= link_to "Some Place", "/"}, "Some Place", :script, "/path/to/doesntmatter.haml")
-      assert_equal replacer.replace_hash, { :modified_line => %{%p#brand= link_to t('.some_place'), "/"} ,
-                                            :t_name => "some_place", :replaced_text => "Some Place", :path => "/path/to/doesntmatter.haml" }
-    end
-
     # keyname restrictions
     def test_it_limits_the_characters_of_the_t_namespace_it_provides_to_limit_key_name
       replacer = Haml::I18n::Extractor::TextReplacer.new("this is whatever" * 80, "this is whatever" * 80, :plain, "/path/to/doesntmatter.haml")

@@ -7,3 +7,4 @@ en:
         interpolated!"'
       this_may_be_the_dup: ! ' "this may %{be} the %{dup}"'
       adnamefirst: ! '%{adnamefirst}'
+      no_quotes_some_var_with_text: ! '"No quotes %{some_var} with text"'

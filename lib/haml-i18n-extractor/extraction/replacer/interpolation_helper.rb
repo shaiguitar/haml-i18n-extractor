@@ -20,7 +20,7 @@ module Haml
 
         def interpolated_vars
           interpolations.map{|v|
-            ":#{normalized_name(v.dup)} => #{v}"
+            ":#{normalized_name(v.dup)} => (#{v})"
           }.join(", ")
         end
 

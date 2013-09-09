@@ -6,8 +6,10 @@
 
   %span.creator{:title => "This user is an= t('.owner') of this account"} t('.owner')
   %span.title&= user.name
-  %strong \#{@account.name}
+  %strong= t('.accountname', :accountname => (@account.name))
 
   %table(style="width:400px")
     %td= t('.td')
-    %td \#{@account.send(attr) || '(none)'}
+    %td= t('.accountsendattr_none', :accountsendattr_none => (@account.send(attr) || '(none)'))
+
+%p#brand= link_to t('.some_place'), '/'

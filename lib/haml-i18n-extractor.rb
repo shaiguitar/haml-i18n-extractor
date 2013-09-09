@@ -1,5 +1,7 @@
-Encoding.default_internal = Encoding::UTF_8 if Encoding.respond_to?(:default_internal)
-Encoding.default_external = Encoding::UTF_8 if Encoding.respond_to?(:default_external)
+if defined?(Encoding)
+  Encoding.default_internal = Encoding::UTF_8 if Encoding.respond_to?(:default_internal)
+  Encoding.default_external = Encoding::UTF_8 if Encoding.respond_to?(:default_external)
+end
 
 require "trollop"
 

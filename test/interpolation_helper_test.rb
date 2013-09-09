@@ -15,7 +15,7 @@ module Haml
       replace = "this may \#{be} the \#{dup}"
       t_name = "this_may_be_the_dup"
       helper = Haml::I18n::Extractor::InterpolationHelper.new(replace, t_name)
-      assert helper.keyname_with_vars == "t('.this_may_be_the_dup', :be => be, :dup => dup)",
+      assert helper.keyname_with_vars == "t('.this_may_be_the_dup', :be => (be), :dup => (dup))",
         "returns custom t() with vars"
     end
 
@@ -26,7 +26,7 @@ module Haml
       assert helper.interpolations == ["is_this_hard?"], "can catch the interpolations"
       x = helper.keyname_with_vars
       #puts x.inspect
-      assert x == "t('.is_this_hard_what', :is_this_hard => is_this_hard?)",
+      assert x == "t('.is_this_hard_what', :is_this_hard => (is_this_hard?))",
         "returns custom t() with vars"
     end
 
