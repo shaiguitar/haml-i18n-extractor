@@ -6,7 +6,7 @@ module Haml
         module StringHelpers
 
           # do not pollute the key space it will make it invalid yaml
-          NOT_ALLOWED_IN_KEYNAME =  %w( ~ ` ! @ # $ % ^ & * - ( ) , ? { } = ' " : \ / . )
+          NOT_ALLOWED_IN_KEYNAME =  %w( ~ ` ! @ # $ % ^ & * - ( ) , ? { } = ' " : ; \ / . )
           # limit the number of chars
           LIMIT_KEY_NAME = 30
 
