@@ -7,7 +7,6 @@ module Haml
 
         attr_reader :full_line, :text_to_replace, :line_type
 
-        T_REGEX = /t\('\.(.*?)'\)/
 
         def initialize(full_line, text_to_replace,line_type, path, metadata = {})
           @path = path
@@ -47,12 +46,14 @@ module Haml
  
         private
 
+        T_REGEX = /t\('\.(.*?)'\)/
+
         # the_key_to_use ( for example in t('.the_key_to_use')
         def t_name(to_replace = @text_to_replace, orig_line = @orig_line)
           text_to_replace = to_replace.dup
           if has_been_translated?(text_to_replace)
             text_to_replace.match T_REGEX
-            name = $1
+            name = normalized_name($1.dup)
           else
             name = normalized_name(text_to_replace.dup)
             name = normalized_name(orig_line.dup) if name.empty?
