@@ -40,70 +40,111 @@ This should be a before and after picture of using this lib, whether using the n
 - Before running (old haml):
 
 <pre>
-  shai@comp ~/p/project master $ cat app/views/admin/notifications/index.html.haml
-  %h1 Consumer Notifications
 
-  .nav= will_paginate(@consumer_notifications)
-  %table.themed{cellspacing: 0}
-    %thead
-      %tr
-        %th.first Type
-        %th Identifier
-        %th Data
-        %th Success
-        %th Reported To
-    - @consumer_notifications.each do |cn|
-      %tr
-        %td.type= cn.notification.type
-        %td.identifier= cn.notification.identifier
-        %td.data= cn.notification.data
-        %td.success= cn.success
-        %td.reported_to= cn.reported_to
-  .nav= will_paginate(@consumer_notifications)
+shai@comp $ cat /tmp/foo.haml
+
+= render :partial => "layouts/adminnav", :locals => {:account => nil }
+.row
+  .admin.span12
+    %h1
+      Billing Month
+      = @billing_month.display_name
+
+    %h3
+      All Invoices Billable?
+      %span{:style => (@billable_invoices == @active_invoices) ? "color: #090" : "color: #900"}
+        = "#{@billable_invoices} out of #{@active_invoices}"
+    %h3
+      24 hours past end of billing month?
+      %span{:style => (@billing_month.past_cutoff) ? "color: #090" : "color: #900"}
+        = @billing_month.past_cutoff
+
+    - if @billing_month.open?
+      - if @billing_month.past_cutoff && (@billable_invoices == @active_invoices)
+        = form_for @billing_month, :url => close_admin_billing_month_url(@billing_month), :method => "POST" do |f|
+          = f.submit "Close This Month (cannot be undone)", :class => 'btn btn-primary'
+      - else
+        %p
+          Billing Month cannot be closed yet.
+      %p
+        Closing the billing month will mark all the invoices as "Posted".
+      %p
+        After closing you will need to do a payment run to charge all the affected customers for the amounts due in posted invoices.
+    - elsif @billing_month.closing?
+      Month is currently closing (reload to check if it's done)
+    - elsif @billing_month.closed?
+      Month is closed
 </pre>
 
 - After running (new haml, new yaml):
 
+running this:
+
+`shai@comp /tmp $ haml-i18n-extractor foo.haml -n -y en.yml`
+
+Should give you the below...
+
 Note how some of the strings are replaced, and the ones that shouldn't, aren't. Yup. Beautiful, for 2 and half seconds of work, right?
 
-Haml:
-
 <pre>
-  shai@comp ~/p/project master $ cat app/views/admin/notifications/index.html.i18n-extractor.haml 
-  %h1= t('.consumer_notifications')
 
-  .nav= will_paginate(@consumer_notifications)
-  %table.themed{cellspacing: 0}
-    %thead
-      %tr
-        %th.first= t('.type')
-        %th= t('.identifier')
-        %th= t('.data')
-        %th= t('.success')
-        %th= t('.reported_to')
-    - @consumer_notifications.each do |cn|
-      %tr
-        %td.type= cn.notification.type
-        %td.identifier= cn.notification.identifier
-        %td.data= cn.notification.data
-        %td.success= cn.success
-        %td.reported_to= cn.reported_to
-  .nav= will_paginate(@consumer_notifications)
+shai@comp $ cat /tmp/foo.haml
+
+= render :partial => "layouts/adminnav", :locals => {:account => nil }
+.row
+  .admin.span12
+    %h1
+      = t('.billing_month')
+      = @billing_month.display_name
+
+    %h3
+      = t('.all_invoices_billable')
+      %span{:style => (@billable_invoices == @active_invoices) ? "color: #090" : "color: #900"}
+        =t('.billable_invoices_out_of_activ', :billable_invoices => (@billable_invoices), :active_invoices => (@active_invoices))
+    %h3
+      = t('.24_hours_past_end_of_billing_m')
+      %span{:style => (@billing_month.past_cutoff) ? "color: #090" : "color: #900"}
+        = @billing_month.past_cutoff
+
+    - if @billing_month.open?
+      - if @billing_month.past_cutoff && (@billable_invoices == @active_invoices)
+        = form_for @billing_month, :url => close_admin_billing_month_url(@billing_month), :method => "POST" do |f|
+          = f.submit "Close This Month (cannot be undone)", :class => 'btn btn-primary'
+      - else
+        %p
+          = t('.billing_month_cannot_be_closed')
+      %p
+        = t('.closing_the_billing_month_will')
+      %p
+        = t('.after_closing_you_will_need_to')
+    - elsif @billing_month.closing?
+      = t('.month_is_currently_closing_rel')
+    - elsif @billing_month.closed?
+      = t('.month_is_closed')
 </pre>
 
 Yaml:
 
 <pre>
-  shai@comp ~/p/project master $ cat config/locales/en.yml
-  ---
-  en:
-    notifications:
-      consumer_notifications: Consumer Notifications
-      type: Type
-      identifier: Identifier
-      data: Data
-      success: Success
-      reported_to: Reported To
+
+shai@comp $ cat /tmp/en.yml
+
+---
+en:
+  tmp:
+    foo:
+      billing_month: Billing Month
+      all_invoices_billable: All Invoices Billable?
+      billable_invoices_out_of_activ: ! ' "%{billable_invoices} out of %{active_invoices}"'
+      24_hours_past_end_of_billing_m: 24 hours past end of billing month?
+      billing_month_cannot_be_closed: Billing Month cannot be closed yet.
+      closing_the_billing_month_will: Closing the billing month will mark all the
+        invoices as "Posted".
+      after_closing_you_will_need_to: After closing you will need to do a payment
+        run to charge all the affected customers for the amounts due in posted invoices.
+      month_is_currently_closing_rel: Month is currently closing (reload to check
+        if it's done)
+      month_is_closed: Month is closed
 </pre>
 
 
