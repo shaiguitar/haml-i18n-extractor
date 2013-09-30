@@ -62,7 +62,7 @@ shai@comp $ cat /tmp/foo.haml
     - if @billing_month.open?
       - if @billing_month.past_cutoff && (@billable_invoices == @active_invoices)
         = form_for @billing_month, :url => close_admin_billing_month_url(@billing_month), :method => "POST" do |f|
-          = f.submit "Close This Month (cannot be undone)", :class => 'btn btn-primary'
+          = f.submit t('.close_this_month_cannot_be_und'), :class => 'btn btn-primary'
       - else
         %p
           Billing Month cannot be closed yet.
@@ -145,6 +145,7 @@ en:
       month_is_currently_closing_rel: Month is currently closing (reload to check
         if it's done)
       month_is_closed: Month is closed
+      close_this_month_cannot_be_und: Close This Month (cannot be undone)
 </pre>
 
 
