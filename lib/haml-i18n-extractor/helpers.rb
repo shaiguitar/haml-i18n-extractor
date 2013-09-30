@@ -49,18 +49,6 @@ module Haml
             txt.match(/link_to/) || txt.match(/^\s*['"]/) # %element= 'foo'
           end
 
-          def could_match_script?(txt)
-            # want to match:
-            # = 'foo'
-            # = "foo"
-            # = link_to 'bla'
-            #
-            # but not match:
-            # = ruby_var = 2
-            scanner = StringScanner.new(txt)
-            scanner.scan(/\s+/)
-            scanner.scan(/['"]/) || scanner.scan(/link_to/)
-          end
         end
 
         module Highline

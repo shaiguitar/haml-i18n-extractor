@@ -19,7 +19,8 @@ module Haml
       %{link_to("TEXT"), role: 'button', data: {toggle: 'dropdown'} do} => "TEXT",
       %{link_to   "TEXT", role: 'button', data: {toggle: 'dropdown'} do} => "TEXT",
       %{link_to pending_account_invoices_path(account) do} => "",
-      %{link_to(pending_account_invoices_path(account),"http://random")} => ""
+      %{link_to(pending_account_invoices_path(account),"http://random")} => "",
+      %{f.submit "Close This Month (cannot be undone)", :class => 'btn btn-primary'} => "Close This Month (cannot be undone)"
     }
 
     def test_it_finds_text_pretty_simply

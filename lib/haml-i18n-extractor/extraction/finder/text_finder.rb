@@ -55,7 +55,7 @@ module Haml
 
         def script(line)
           txt = line[:value][:text]
-          if could_match_script?(txt)
+          if ExceptionFinder.could_match_script?(txt)
             FinderResult.new(:script, ExceptionFinder.new(txt).find)
           else
             FinderResult.new(:script, "")
