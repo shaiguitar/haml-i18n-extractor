@@ -45,10 +45,6 @@ module Haml
             txt.match(/<!--/) || txt.match(/-->\s*$/)
           end
 
-          def link_to?(txt)
-            txt.match(/link_to/) || txt.match(/^\s*['"]/) # %element= 'foo'
-          end
-
         end
 
         module Highline
