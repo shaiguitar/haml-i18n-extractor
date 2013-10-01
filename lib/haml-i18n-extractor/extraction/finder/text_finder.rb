@@ -42,7 +42,7 @@ module Haml
           txt = line[:value][:value]
           if txt
             has_script_in_tag = line[:value][:parse] # %element= foo
-            if has_script_in_tag && !ExceptionFinder.could_match_script?(txt)
+            if has_script_in_tag && !ExceptionFinder.could_match?(txt)
               FinderResult.new(:tag, "")
             else
               FinderResult.new(:tag, ExceptionFinder.new(txt).find)
@@ -54,7 +54,7 @@ module Haml
 
         def script(line)
           txt = line[:value][:text]
-          if ExceptionFinder.could_match_script?(txt)
+          if ExceptionFinder.could_match?(txt)
             FinderResult.new(:script, ExceptionFinder.new(txt).find)
           else
             FinderResult.new(:script, "")

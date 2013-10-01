@@ -23,7 +23,7 @@ module Haml
           @text = text
         end
 
-        def self.could_match_script?(txt)
+        def self.could_match?(txt)
           # want to match:
           # = 'foo'
           # = "foo"
