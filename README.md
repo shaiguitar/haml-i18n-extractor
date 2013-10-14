@@ -27,12 +27,6 @@ end
 
 `cd your-rails-app-to-translate && haml-i18n-extractor --help`
 
-## Demo using interactive mode
-
-The demo is pretty outdated at this point. I would take it off the readme, but heck, I'm lazy. If you want a brief bad version of some of the stuff it does, since that video is pretty old, see it here (your browser needs to support swf):
-
-[Demo](http://shairosenfeld.com/haml-i18n-extractor-demo.swf)
-
 ## Example output
 
 This should be a before and after picture of using this lib, whether using the non-interactive/interactive mode. There are more examples in the tests where you can see more use cases being translated.
@@ -156,6 +150,12 @@ en:
 If you want the latest code aka edge, you can also simply clone this repo and install the gem from the root of the repo:
 
 `gem uninstall -x haml-i18n-extractor; rm *gem; gem build *gemspec; gem install --local *gem`
+
+## Demo using interactive mode
+
+The demo is pretty outdated at this point. I should probably take it off the readme. But just in case you want a brief bad version of some of the stuff it does, since that video is pretty old, see it here (your browser needs to support swf):
+
+[Demo](http://shairosenfeld.com/haml-i18n-extractor-demo.swf)
 
 ## Feedback
 
