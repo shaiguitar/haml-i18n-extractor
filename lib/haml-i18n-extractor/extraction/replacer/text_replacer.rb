@@ -21,7 +21,7 @@ module Haml
         end
 
         def result
-          @result ||= Haml::I18n::Extractor::ReplacerResult.new(modified_line, t_name, @text_to_replace, true, @path)
+          @result ||= build_result
         end
 
         def replace_hash
@@ -49,6 +49,15 @@ module Haml
         end
  
         private
+
+        def build_result
+          result_class = Haml::I18n::Extractor::ReplacerResult
+          if full_line.strip.match(/^#\{[^}]+\}$/)
+            result_class.new(nil, nil, @text_to_replace, false, @path)
+          else
+            result_class.new(modified_line, t_name, @text_to_replace, true, @path)
+         end
+        end
 
         T_REGEX = /t\('\.(.*?)'\)/
 
