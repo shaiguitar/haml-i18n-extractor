@@ -28,12 +28,14 @@ module Haml
     def test_scripts_with_no_strings
       assert_equal find_text("= true"), ""
       assert_equal find_type("= true"), :script
+      assert_equal find_options("= true"), {}
     end
 
     # html tag mode
     def test_tag_text_is_an_tag
       assert_equal find_text("%span Text to find"), "Text to find"
       assert_equal find_type("%span Text to find"), :tag
+      assert_equal find_options("%span Text to find"), {:place => :content}
     end
 
     def test_tag_text_with_class_is_an_tag
@@ -47,8 +49,8 @@ module Haml
     end
 
     def test_tag_text_with_ruby_eval_code_and_class_is_a_script_script
-      assert_equal find_text( "%span#whatever-with-thing= ruby_eval_code"), ""
-      assert_equal find_type( "%span#whatever-with-thing= ruby_eval_code"), :tag
+      assert_equal find_text("%span#whatever-with-thing= ruby_eval_code"), ""
+      assert_equal find_type("%span#whatever-with-thing= ruby_eval_code"), :tag
     end
 
     def test_ruby_style_tags_ahref__httpwhatever_whatever
@@ -112,21 +114,23 @@ module Haml
 
     def process_haml(haml)
       metadata = Haml::I18n::Extractor::HamlParser.new(haml).metadata.first
-      text_finder = Haml::I18n::Extractor::TextFinder.new(haml,metadata)
+      text_finder = Haml::I18n::Extractor::TextFinder.new(haml, metadata)
       text_finder.process_by_regex
     end
 
     def find_type(haml)
       result = process_haml(haml)
-      type, text =  [result.type, result.match]
-      type
+      result.type
     end
 
     def find_text(haml)
       result = process_haml(haml)
-      type, text =  [result.type, result.match]
-      text
+      result.match
     end
 
+    def find_options(haml)
+      result = process_haml(haml)
+      result.options
+    end
   end
 end

@@ -22,7 +22,15 @@ module Haml
           result
         end
 
-        class FinderResult < Struct.new(:type, :match); end
+        class FinderResult
+          attr_accessor :type, :match, :options
+
+          def initialize(type, match, options = {})
+            @type = type
+            @match = match
+            @options = options
+          end
+        end
 
         private
 
@@ -45,7 +53,7 @@ module Haml
             if has_script_in_tag && !ExceptionFinder.could_match?(txt)
               FinderResult.new(:tag, "")
             else
-              FinderResult.new(:tag, ExceptionFinder.new(txt).find)
+              FinderResult.new(:tag, ExceptionFinder.new(txt).find, place: :content)
             end
           else
             FinderResult.new(:tag, "")

@@ -2,17 +2,16 @@ module Haml
   module I18n
     class Extractor
       class TextReplacer
-
         include Helpers::StringHelpers
 
         attr_reader :full_line, :text_to_replace, :line_type
 
-
-        def initialize(full_line, text_to_replace,line_type, path, metadata = {})
+        def initialize(full_line, text_to_replace, line_type, path, metadata = {}, options = {})
           @path = path
           @orig_line = @full_line = full_line
           @text_to_replace = text_to_replace
           @metadata = metadata
+          @options = options
           if LINE_TYPES_ALL.include?(line_type)
             @line_type = line_type
           else
@@ -47,16 +46,16 @@ module Haml
           apply_ruby_evaling!(full_line, keyname)
           full_line
         end
- 
+
         private
 
         def build_result
           result_class = Haml::I18n::Extractor::ReplacerResult
-          if full_line.strip.match(/^#\{[^}]+\}$/)
+          if @text_to_replace.strip.match(/^#\{[^}]+\}$/)
             result_class.new(nil, nil, @text_to_replace, false, @path)
           else
             result_class.new(modified_line, t_name, @text_to_replace, true, @path)
-         end
+          end
         end
 
         T_REGEX = /t\('\.(.*?)'\)/
@@ -121,14 +120,20 @@ module Haml
 
         def gsub_replacement!(str, text_to_replace, keyname_method)
           # FIXME refactor this method
-         text_to_replace = $1 if (orig_interpolated? && text_to_replace.match(/^['"](.*)['"]$/))
+          text_to_replace = $1 if (orig_interpolated? && text_to_replace.match(/^['"](.*)['"]$/))
+          prefix = ''
+          if line_type == :tag && @options[:place] == :content
+            prefix = str.match(/%\w+(?:\.\w+)*(?:\{[^}]+\})?/)[0]
+            str[0...prefix.size] = ''
+          end
 
           # if there are quotes surrounding the string, we want them removed as well...
-          unless str.gsub!('"' + text_to_replace + '"', keyname_method )
+          unless str.gsub!('"' + text_to_replace + '"', keyname_method)
             unless str.gsub!("'" + text_to_replace + "'", keyname_method)
               str.gsub!(text_to_replace, keyname_method)
             end
           end
+          str.prepend(prefix)
         end
 
       end
