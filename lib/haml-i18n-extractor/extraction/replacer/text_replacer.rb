@@ -123,7 +123,7 @@ module Haml
           text_to_replace = $1 if (orig_interpolated? && text_to_replace.match(/^['"](.*)['"]$/))
           prefix = ''
           if line_type == :tag && @options[:place] == :content
-            prefix = str.match(/%\w+(?:\.\w+)*(?:\{[^}]+\})?/)[0]
+            prefix = str.match(/%\w+(?:[.#]\w+)*(?:\{[^}]+\})?/)[0]
             str[0...prefix.size] = ''
           end
 
