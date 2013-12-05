@@ -11,10 +11,14 @@ module Haml
         @extractors ||= []
       end
 
-      class InvalidSyntax < StandardError ; end
-      class NotADirectory < StandardError ; end
-      class NotDefinedLineType < StandardError ; end
-      class AbortFile < StandardError ; end
+      class InvalidSyntax < StandardError;
+      end
+      class NotADirectory < StandardError;
+      end
+      class NotDefinedLineType < StandardError;
+      end
+      class AbortFile < StandardError;
+      end
 
       LINE_TYPES_ALL = [:plain, :script, :silent_script, :haml_comment, :tag, :comment, :doctype, :filter, :root]
       LINE_TYPES_ADD_EVAL = [:plain, :tag, :script]
@@ -63,14 +67,14 @@ module Haml
 
       def new_body
         begin
-          @current_line = 1
+          current_line = 1
           @haml_reader.lines.each do |orig_line|
-            process_line(orig_line, @current_line)
-            @current_line += 1
+            process_line(orig_line, current_line)
+            current_line += 1
           end
         rescue AbortFile
           @prompter.moving_to_next_file
-          add_rest_of_file_to_body(@current_line)
+          add_rest_of_file_to_body(current_line)
         end
         @body.join("\n") + "\n"
       end
@@ -81,41 +85,60 @@ module Haml
       # refactor more?
       def process_line(orig_line, line_no)
         orig_line.chomp!
-        orig_line, whitespace = handle_line_whitespace(orig_line)
-        finder_result = finding_result(orig_line, line_no)
-        replacer_result = replacement_result(orig_line, finder_result.match, finder_result.type, line_no)
-        should_be_replaced = replacer_result.should_be_replaced
-        text_to_replace = replacer_result.modified_line
+        replacement, replacement_info = replacements[line_no]
 
-        user_action = should_be_replaced ? user_action_yes : user_action_no
+        user_action = replacement ? user_action_yes : user_action_no
 
-        if should_be_replaced
+        if replacement
           if interactive?
-            user_action = @prompter.ask_user(orig_line,text_to_replace)
+            user_action = @prompter.ask_user(orig_line.strip, replacement.strip)
           end
         end
 
         if user_action.tag?
           @tagging_writer.write(@haml_reader.path, line_no)
-          add_to_body("#{whitespace}#{orig_line}")
+          add_to_body(orig_line)
         elsif user_action.next?
           raise AbortFile, "stopping to process the rest of the file"
-       elsif user_action.replace_line?
-          add_to_yaml_info(line_no, replacer_result.info)
-          add_to_body("#{whitespace}#{text_to_replace}")
+        elsif user_action.replace_line?
+          add_to_yaml_info(line_no, replacement_info)
+          add_to_body(replacement)
         elsif user_action.no_replace?
-          add_to_yaml_info(line_no, Haml::I18n::Extractor::ReplacerResult.new(nil,nil,nil,false,nil).info)
-          add_to_body("#{whitespace}#{orig_line}")
+          add_to_yaml_info(line_no, Haml::I18n::Extractor::ReplacerResult.new(nil, nil, nil, false, nil).info)
+          add_to_body(orig_line)
         end
 
-        return should_be_replaced
+        replacement
       end
 
       def interactive?
         !!@interactive
       end
 
+      def has_replacements?
+        !replacements.empty?
+      end
+
+      def replacements
+        @replacements ||= collect_replacements
+      end
+
       private
+
+      def collect_replacements
+        line_no = 1
+        replacements = {}
+        @haml_reader.lines.each do |orig_line|
+          orig_line, whitespace = handle_line_whitespace(orig_line.chomp)
+          finder_result = finding_result(orig_line, line_no)
+          replacer_result = replacement_result(orig_line, finder_result.match, finder_result.type, line_no)
+          if replacer_result.should_be_replaced
+            replacements[line_no] = ["#{whitespace}#{replacer_result.modified_line}", replacer_result.info]
+          end
+          line_no += 1
+        end
+        replacements
+      end
 
       def add_rest_of_file_to_body(line_no)
         @haml_reader.lines[line_no-1..@haml_reader.lines.size-1].map do |orig_ln|
@@ -127,7 +150,7 @@ module Haml
         if line_match && !line_match.empty?
           Haml::I18n::Extractor::TextReplacer.new(orig_line, line_match, line_type, @haml_reader.path, line_metadata(line_no)).result
         else
-          Haml::I18n::Extractor::ReplacerResult.new(orig_line, nil,line_match, false, "")
+          Haml::I18n::Extractor::ReplacerResult.new(orig_line, nil, line_match, false, "")
         end
       end
 
@@ -135,8 +158,8 @@ module Haml
         @info_for_yaml[line_no] = hash
       end
 
-      def finding_result(orig_line,lineno)
-        Haml::I18n::Extractor::TextFinder.new(orig_line,line_metadata(lineno)).process_by_regex
+      def finding_result(orig_line, lineno)
+        Haml::I18n::Extractor::TextFinder.new(orig_line, line_metadata(lineno)).process_by_regex
       end
 
       def line_metadata(lineno)
@@ -147,7 +170,7 @@ module Haml
         orig_line.rstrip.match(/([ \t]+)?(.*)/)
         whitespace_indentation = $1
         orig_line = $2
-        [ orig_line, whitespace_indentation ]
+        [orig_line, whitespace_indentation]
       end
 
       def add_to_body(ln)
