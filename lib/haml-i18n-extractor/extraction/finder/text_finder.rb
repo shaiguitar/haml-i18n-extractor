@@ -10,7 +10,7 @@ module Haml
         # if any of the private handler methods return nil the extractor just outputs orig_line and keeps on going.
         # if there's an empty string that should do the trick to ( ExceptionFinder can return no match that way )
         def initialize(orig_line, line_metadata)
-        @orig_line = orig_line
+          @orig_line = orig_line
           @metadata = line_metadata
         end
 
@@ -34,19 +34,19 @@ module Haml
 
         private
 
-        def extract_attribute(metadata, attribute_name)
-          value = metadata[:attributes][attribute_name.to_s]
+        def extract_attribute(line, attribute_name)
+          value = line[:value][:attributes][attribute_name.to_s]
           if value
             "\"#{value}\""
           else
-            metadata[:attributes_hashes].map { |hash|
+            line[:value][:attributes_hashes].map { |hash|
               $1 if hash =~ /(?:\b#{attribute_name}:|:#{attribute_name}\s*=>)\s*([^,]+)/
             }.compact.first
           end
         end
 
         def string_value?(value)
-          value.start_with?(?') || value.start_with?(?")
+          value && (value.start_with?(?') || value.start_with?(?"))
         end
 
         def output_debug
@@ -62,21 +62,17 @@ module Haml
         end
 
         def tag(line)
-          title_value = extract_attribute(line[:value], :title)
+          title_value = extract_attribute(line, :title)
           if string_value?(title_value)
             FinderResult.new(:tag, title_value[1...-1], :place => :attribute, :attribute_name => :title)
           else
             txt = line[:value][:value]
             if txt
               has_script_in_tag = line[:value][:parse] # %element= foo
-              if has_script_in_tag
-                if ExceptionFinder.could_match?(txt)
-                  FinderResult.new(:tag, ExceptionFinder.new(txt).find, :place => :content)
-                else
-                  FinderResult.new(:tag, '')
-                end
+              if has_script_in_tag && !ExceptionFinder.could_match?(txt)
+                FinderResult.new(:tag, '')
               else
-                FinderResult.new(:tag, txt)
+                FinderResult.new(:tag, ExceptionFinder.new(txt).find, :place => :content)
               end
             else
               FinderResult.new(:tag, '')

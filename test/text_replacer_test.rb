@@ -30,6 +30,13 @@ module Haml
       assert_equal replacer.result.should_be_replaced, false
     end
 
+    def test_it_wont_replace_if_whole_line_in_tag_is_a_expression
+      replacer = Haml::I18n::Extractor::TextReplacer.new('#{whole_line_expression}',
+                                                         "\"\#{whole_line_expression}\"",
+                                                         :script, '/path/to/doesntmatter.haml')
+      assert_equal replacer.result.should_be_replaced, false
+    end
+
     def test_it_wont_replace_attributes_if_replacement_place_is_content
       replacer = Haml::I18n::Extractor::TextReplacer.new('%span{title: "Height, cm"} Height',
                                                          'Height',

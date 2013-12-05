@@ -55,7 +55,8 @@ module Haml
 
         def build_result
           result_class = Haml::I18n::Extractor::ReplacerResult
-          if @text_to_replace.strip.match(/^#\{[^}]+\}$/)
+          expression = @line_type == :script || tag_with_code? ? @text_to_replace[1...-1] : @text_to_replace
+          if expression.strip.match(/^#\{[^}]+\}$/)
             result_class.new(nil, nil, @text_to_replace, false, @path)
           else
             result_class.new(modified_line, t_name, @text_to_replace, true, @path)
@@ -105,6 +106,10 @@ module Haml
           end
         end
 
+        def tag_with_code?
+          @metadata[:value] && @metadata[:value][:parse]
+        end
+
         def already_evaled?(str)
           if @line_type == :tag
             if orig_interpolated?
@@ -113,7 +118,7 @@ module Haml
               #   %tag foo #{var} bar
               str.split('').last == '='
             else
-              @metadata[:value] && @metadata[:value][:parse]
+              tag_with_code?
             end
           elsif @line_type == :script
             # we need this for tags that come in like :plain but have interpolation
