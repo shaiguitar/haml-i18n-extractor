@@ -30,12 +30,22 @@ module Haml
       assert_equal replacer.result.should_be_replaced, false
     end
 
-    def test_it_can_replace_title_for_tag
+    def test_it_wont_replace_attributes_if_replacement_place_is_content
       replacer = Haml::I18n::Extractor::TextReplacer.new('%span{title: "Height, cm"} Height',
                                                          'Height',
                                                          :tag, '/path/to/doesntmatter.haml', {}, place: :content)
       assert_equal({:modified_line => '%span{title: "Height, cm"}= t(\'.height\')',
                     :t_name => "height", :replaced_text => "Height", :path => "/path/to/doesntmatter.haml"},
+                   replacer.replace_hash)
+    end
+
+    def test_it_can_replace_title_attribute
+      replacer = Haml::I18n::Extractor::TextReplacer.new('%span{title: "Height, cm"}= "Height, cm"',
+                                                         'Height, cm',
+                                                         :tag, '/path/to/doesntmatter.haml', {},
+                                                         place: :attribute, attribute_name: :title)
+      assert_equal({:modified_line => '%span{title: t(\'.height_cm\')}= "Height, cm"',
+                    :t_name => "height_cm", :replaced_text => "Height, cm", :path => "/path/to/doesntmatter.haml"},
                    replacer.replace_hash)
     end
 

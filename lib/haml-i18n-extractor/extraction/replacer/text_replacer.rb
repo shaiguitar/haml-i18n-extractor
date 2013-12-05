@@ -4,6 +4,10 @@ module Haml
       class TextReplacer
         include Helpers::StringHelpers
 
+        TAG_REGEX = /%\w+/
+        TAG_CLASSES_AND_ID_REGEX = /%(?:[.#]\w+)*/
+        TAG_ATTRIBUTES_REGEX = /(?:\{[^}]+\})?/
+
         attr_reader :full_line, :text_to_replace, :line_type
 
         def initialize(full_line, text_to_replace, line_type, path, metadata = {}, options = {})
@@ -86,11 +90,14 @@ module Haml
         def apply_ruby_evaling!(str, keyname)
           if LINE_TYPES_ADD_EVAL.include?(@line_type)
             if @line_type == :tag
-              match_keyname = Regexp.new('[\s\t]*' + Regexp.escape(keyname))
-              str.match(/(.*?)(#{match_keyname})/)
-              elem = $1
-              if elem
-                str.gsub!(Regexp.new(Regexp.escape(elem)), "#{elem}=") unless already_evaled?(elem)
+              scanner = StringScanner.new(str.dup)
+              scanner.skip(TAG_REGEX)
+              scanner.skip(TAG_CLASSES_AND_ID_REGEX)
+              scanner.skip(TAG_ATTRIBUTES_REGEX)
+              if scanner.scan_until(/[\s\t]*#{Regexp.escape(keyname)}/)
+                unless already_evaled?(scanner.pre_match)
+                  str[0..-1] = "#{scanner.pre_match}=#{scanner.matched}#{scanner.post_match}"
+                end
               end
             elsif @line_type == :plain || (@line_type == :script && !already_evaled?(full_line))
               str.gsub!(str, "= "+str)
@@ -121,19 +128,21 @@ module Haml
         def gsub_replacement!(str, text_to_replace, keyname_method)
           # FIXME refactor this method
           text_to_replace = $1 if (orig_interpolated? && text_to_replace.match(/^['"](.*)['"]$/))
-          prefix = ''
-          if line_type == :tag && @options[:place] == :content
-            prefix = str.match(/%\w+(?:[.#]\w+)*(?:\{[^}]+\})?/)[0]
-            str[0...prefix.size] = ''
-          end
-
-          # if there are quotes surrounding the string, we want them removed as well...
-          unless str.gsub!('"' + text_to_replace + '"', keyname_method)
-            unless str.gsub!("'" + text_to_replace + "'", keyname_method)
-              str.gsub!(text_to_replace, keyname_method)
+          scanner = StringScanner.new(str.dup)
+          str[0..-1] = ''
+          if line_type == :tag
+            if @options[:place] == :content
+              scanner.skip(TAG_REGEX)
+              scanner.skip(TAG_CLASSES_AND_ID_REGEX)
+              scanner.skip(TAG_ATTRIBUTES_REGEX)
+            elsif @options[:place] == :attribute
+              scanner.skip(TAG_REGEX)
+              scanner.skip(TAG_CLASSES_AND_ID_REGEX)
+              scanner.skip_until(/\b#{@options[:attribute_name]}:|:#{@options[:attribute_name]}\s*=>\s*/)
             end
           end
-          str.prepend(prefix)
+          scanner.scan_until(/(['"]|)#{Regexp.escape(text_to_replace)}\1/)
+          str << scanner.pre_match << keyname_method << scanner.post_match
         end
 
       end
