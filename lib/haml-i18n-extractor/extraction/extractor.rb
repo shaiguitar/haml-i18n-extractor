@@ -45,7 +45,8 @@ module Haml
         self.class.extractors << self
       end
 
-      def run
+      def run(type = nil)
+        @haml_writer.type = type if type
         assign_replacements
         validate_haml(@haml_writer.body)
         @yaml_writer.write_file
