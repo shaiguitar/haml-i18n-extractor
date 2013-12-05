@@ -4,7 +4,7 @@
   = link_to t('.real_text_here'), id: 'customer-control-menu', role: 'button', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
     = t('.there')
 
-  %span.creator{:title => "This user is an= t('.owner') of this account"} t('.owner')
+  %span.creator{:title => t('.this_user_is_an_owner_of_this_')} owner
   %span.title&= user.name
   %strong= t('.accountname', :accountname => (@account.name))
 
