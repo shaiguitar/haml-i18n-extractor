@@ -110,6 +110,16 @@ module Haml
       assert_equal find_type('%p.what{:attr => :val}= "Statistics for #{@name}"'), :tag
     end
 
+    def test_html_tag_it_finds_title_attribute_value
+      assert_equal find_text('%p{:title => "Text to find", :class => css_cls}=ruby_eval_code'), "Text to find"
+      assert_equal find_text('%p{:title => "Text to find"}=ruby_eval_code'), "Text to find"
+      assert_equal find_text('%p{title: "Text to find"}=ruby_eval_code'), "Text to find"
+      assert_equal find_text('%p{title: "Text to find"} Another text'), "Text to find"
+      assert_equal find_type('%p{:title => "Text to find"}=ruby_eval_code'), :tag
+      assert_equal find_options('%p{:title => "Text to find"}=ruby_eval_code'),
+                   {:place => :attribute, :attribute_name => :title}
+    end
+
     private
 
     def process_haml(haml)

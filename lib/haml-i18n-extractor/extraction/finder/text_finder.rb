@@ -9,8 +9,8 @@ module Haml
 
         # if any of the private handler methods return nil the extractor just outputs orig_line and keeps on going.
         # if there's an empty string that should do the trick to ( ExceptionFinder can return no match that way )
-        def initialize(orig_line,line_metadata)
-          @orig_line = orig_line
+        def initialize(orig_line, line_metadata)
+        @orig_line = orig_line
           @metadata = line_metadata
         end
 
@@ -18,7 +18,7 @@ module Haml
           # [ line_type, text_found ]
           #output_debug if Haml::I18n::Extractor.debug?
           result = @metadata && send("#{@metadata[:type]}", @metadata)
-          result = FinderResult.new(nil,nil) if result.nil?
+          result = FinderResult.new(nil, nil) if result.nil?
           result
         end
 
@@ -34,6 +34,21 @@ module Haml
 
         private
 
+        def extract_attribute(metadata, attribute_name)
+          value = metadata[:attributes][attribute_name.to_s]
+          if value
+            "\"#{value}\""
+          else
+            metadata[:attributes_hashes].map { |hash|
+              $1 if hash =~ /(?:\b#{attribute_name}:|:#{attribute_name}\s*=>)\s*([^,]+)/
+            }.compact.first
+          end
+        end
+
+        def string_value?(value)
+          value.start_with?(?') || value.start_with?(?")
+        end
+
         def output_debug
           puts @metadata && @metadata[:type]
           puts @metadata.inspect
@@ -47,16 +62,25 @@ module Haml
         end
 
         def tag(line)
-          txt = line[:value][:value]
-          if txt
-            has_script_in_tag = line[:value][:parse] # %element= foo
-            if has_script_in_tag && !ExceptionFinder.could_match?(txt)
-              FinderResult.new(:tag, "")
-            else
-              FinderResult.new(:tag, ExceptionFinder.new(txt).find, place: :content)
-            end
+          title_value = extract_attribute(line[:value], :title)
+          if string_value?(title_value)
+            FinderResult.new(:tag, title_value[1...-1], :place => :attribute, :attribute_name => :title)
           else
-            FinderResult.new(:tag, "")
+            txt = line[:value][:value]
+            if txt
+              has_script_in_tag = line[:value][:parse] # %element= foo
+              if has_script_in_tag
+                if ExceptionFinder.could_match?(txt)
+                  FinderResult.new(:tag, ExceptionFinder.new(txt).find, :place => :content)
+                else
+                  FinderResult.new(:tag, '')
+                end
+              else
+                FinderResult.new(:tag, txt)
+              end
+            else
+              FinderResult.new(:tag, '')
+            end
           end
         end
 
@@ -73,12 +97,29 @@ module Haml
         #
         # move to method missing and LINE_TYPES_IGNORE?
         # LINE_TYPES_IGNORE = [:silent_script, :haml_comment, :comment, :doctype, :root]
-        def filter(line); end
-        def silent_script(line); end
-        def haml_comment(line); end
-        def comment(line); end
-        def doctype(line); end
-        def root(line); end
+        def filter(line)
+          ;
+        end
+
+        def silent_script(line)
+          ;
+        end
+
+        def haml_comment(line)
+          ;
+        end
+
+        def comment(line)
+          ;
+        end
+
+        def doctype(line)
+          ;
+        end
+
+        def root(line)
+          ;
+        end
 
       end
     end
