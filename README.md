@@ -151,26 +151,12 @@ If you want the latest code aka edge, you can also simply clone this repo and in
 
 `gem uninstall -x haml-i18n-extractor; rm *gem; gem build *gemspec; gem install --local *gem`
 
-## Demo using interactive mode
-
-The demo is pretty outdated at this point. I should probably take it off the readme. But just in case you want a brief bad version of some of the stuff it does, since that video is pretty old, see it here (your browser needs to support swf):
-
-[Demo](http://shairosenfeld.com/haml-i18n-extractor-demo.swf)
-
 ## Feedback
 
-Can use github issues to address any concern you have, or simply email me, with the contact info here: [http://shairosenfeld.com/](http://shairosenfeld.com/). 
+Can use github issues to address any concern you have, or simply email me, with the contact info here: [http://shairosenfeld.com/](http://shairosenfeld.com/).
 
 You can also find me on twitter with the same username as my GH one.
 
 ## Have an idea or an issue?
 
-Open an [issue](https://github.com/shaiguitar/haml-i18n-extractor/issues/new). Feeling like giving back? Contribute!
-
-## Contributing
-
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+Open an [issue](https://github.com/shaiguitar/haml-i18n-extractor/issues/new).
