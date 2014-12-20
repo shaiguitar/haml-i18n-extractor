@@ -5,8 +5,6 @@ module Haml
 
         module StringHelpers
 
-          # do not pollute the key space it will make it invalid yaml
-          NOT_ALLOWED_IN_KEYNAME =  %w( ~ ` ! @ # $ % ^ & * - ( ) , ? { } = ' ’ " : ; \\ / . | > < [ ] )
           # limit the number of chars
           LIMIT_KEY_NAME = 60
 
@@ -15,9 +13,7 @@ module Haml
           end
 
           def normalized_name(str)
-            NOT_ALLOWED_IN_KEYNAME.each{ |rm_me| str.gsub!(rm_me, "") }
-            str = str.gsub(/\s+/, " ").strip
-            str.tr(' ', '_')[0..LIMIT_KEY_NAME-1]
+            str.gsub(/[^\w\s]/, '').squeeze[0...LIMIT_KEY_NAME].strip.gsub(/[\s]/, '_')
           end
 
           def normalize_interpolation(str)
