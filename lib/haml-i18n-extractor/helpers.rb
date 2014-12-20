@@ -13,7 +13,7 @@ module Haml
           end
 
           def normalized_name(str)
-            str.gsub(/[^\w\s]/, '').squeeze[0...LIMIT_KEY_NAME].strip.gsub(/[\s]/, '_')
+            str.gsub(/[^\w\s]/, '').squeeze(' ')[0...LIMIT_KEY_NAME].strip.gsub(/[\s]/, '_')
           end
 
           def normalize_interpolation(str)
