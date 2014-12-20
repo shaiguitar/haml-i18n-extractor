@@ -23,6 +23,10 @@ module Haml
       attr_reader :info_for_yaml, :yaml_writer, :type
       attr_reader :current_line
 
+      def self.run(*args)
+        new(*args).run
+      end
+
       def initialize(haml_path, opts = {})
         @options = opts
         @type = @options[:type]
