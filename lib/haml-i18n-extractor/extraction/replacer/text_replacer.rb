@@ -2,17 +2,20 @@ module Haml
   module I18n
     class Extractor
       class TextReplacer
-
         include Helpers::StringHelpers
+
+        TAG_REGEX = /%\w+/
+        TAG_CLASSES_AND_ID_REGEX = /(?:[.#]\w+)*/
+        TAG_ATTRIBUTES_REGEX = /(?:\{[^}]+\})?/
 
         attr_reader :full_line, :text_to_replace, :line_type
 
-
-        def initialize(full_line, text_to_replace,line_type, path, metadata = {})
+        def initialize(full_line, text_to_replace, line_type, path, metadata = {}, options = {})
           @path = path
           @orig_line = @full_line = full_line
           @text_to_replace = text_to_replace
           @metadata = metadata
+          @options = options
           if LINE_TYPES_ALL.include?(line_type)
             @line_type = line_type
           else
@@ -21,7 +24,7 @@ module Haml
         end
 
         def result
-          @result ||= Haml::I18n::Extractor::ReplacerResult.new(modified_line, t_name, @text_to_replace, true, @path)
+          @result ||= build_result
         end
 
         def replace_hash
@@ -47,8 +50,18 @@ module Haml
           apply_ruby_evaling!(full_line, keyname)
           full_line
         end
- 
+
         private
+
+        def build_result
+          result_class = Haml::I18n::Extractor::ReplacerResult
+          expression = @line_type == :script || tag_with_code? ? @text_to_replace[1...-1] : @text_to_replace
+          if expression.strip.match(/^#\{[^}]+\}$/)
+            result_class.new(nil, nil, @text_to_replace, false, @path)
+          else
+            result_class.new(modified_line, t_name, @text_to_replace, true, @path)
+          end
+        end
 
         T_REGEX = /t\('\.(.*?)'\)/
 
@@ -78,16 +91,23 @@ module Haml
         def apply_ruby_evaling!(str, keyname)
           if LINE_TYPES_ADD_EVAL.include?(@line_type)
             if @line_type == :tag
-              match_keyname = Regexp.new('[\s\t]*' + Regexp.escape(keyname))
-              str.match(/(.*?)(#{match_keyname})/)
-              elem = $1
-              if elem
-                str.gsub!(Regexp.new(Regexp.escape(elem)), "#{elem}=") unless already_evaled?(elem)
+              scanner = StringScanner.new(str.dup)
+              scanner.skip(TAG_REGEX)
+              scanner.skip(TAG_CLASSES_AND_ID_REGEX)
+              scanner.skip(TAG_ATTRIBUTES_REGEX)
+              if scanner.scan_until(/[\s\t]*#{Regexp.escape(keyname)}/)
+                unless already_evaled?(scanner.pre_match)
+                  str[0..-1] = "#{scanner.pre_match}=#{scanner.matched}#{scanner.post_match}"
+                end
               end
             elsif @line_type == :plain || (@line_type == :script && !already_evaled?(full_line))
               str.gsub!(str, "= "+str)
             end
           end
+        end
+
+        def tag_with_code?
+          @metadata[:value] && @metadata[:value][:parse]
         end
 
         def already_evaled?(str)
@@ -98,7 +118,7 @@ module Haml
               #   %tag foo #{var} bar
               str.split('').last == '='
             else
-              @metadata[:value] && @metadata[:value][:parse]
+              tag_with_code?
             end
           elsif @line_type == :script
             # we need this for tags that come in like :plain but have interpolation
@@ -112,14 +132,22 @@ module Haml
 
         def gsub_replacement!(str, text_to_replace, keyname_method)
           # FIXME refactor this method
-         text_to_replace = $1 if (orig_interpolated? && text_to_replace.match(/^['"](.*)['"]$/))
-
-          # if there are quotes surrounding the string, we want them removed as well...
-          unless str.gsub!('"' + text_to_replace + '"', keyname_method )
-            unless str.gsub!("'" + text_to_replace + "'", keyname_method)
-              str.gsub!(text_to_replace, keyname_method)
+          text_to_replace = $1 if (orig_interpolated? && text_to_replace.match(/^['"](.*)['"]$/))
+          scanner = StringScanner.new(str.dup)
+          str[0..-1] = ''
+          if line_type == :tag
+            if @options[:place] == :content
+              scanner.skip(TAG_REGEX)
+              scanner.skip(TAG_CLASSES_AND_ID_REGEX)
+              scanner.skip(TAG_ATTRIBUTES_REGEX)
+            elsif @options[:place] == :attribute
+              scanner.skip(TAG_REGEX)
+              scanner.skip(TAG_CLASSES_AND_ID_REGEX)
+              scanner.skip_until(/\b#{@options[:attribute_name]}:|:#{@options[:attribute_name]}\s*=>\s*/)
             end
           end
+          scanner.scan_until(/(['"]|)#{Regexp.escape(text_to_replace)}\1/)
+          str << scanner.pre_match << keyname_method << scanner.post_match
         end
 
       end

@@ -31,7 +31,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'minitest'
   gem.add_development_dependency 'nokogiri'
   gem.add_development_dependency 'rake'
-  gem.add_development_dependency 'actionpack'
+  gem.add_development_dependency 'actionpack', '>=2'
   gem.add_development_dependency 'rails'
 
 end
