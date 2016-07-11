@@ -21,3 +21,6 @@ tmp
 test/support/*i18n-extractor.haml
 config
 .tags.haml-i18n-extractor
+
+# RubyMine project files
+.idea
