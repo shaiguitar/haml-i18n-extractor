@@ -7,7 +7,7 @@ module Haml
       opts = {:non_interactive => nil, :interactive => nil}
       with_highline do
         begin
-          Haml::I18n::Extractor::CLI.new(opts).start
+          Haml::I18n::Extractor::CLI.new('', opts).start
         rescue Haml::I18n::Extractor::CLI::CliError
           assert @output.string.match(/--help/), "passing interactive or not"
         end
@@ -18,7 +18,7 @@ module Haml
       opts = {:non_interactive => nil, :path => nil}
        with_highline do
          begin
-           Haml::I18n::Extractor::CLI.new(opts).start
+           Haml::I18n::Extractor::CLI.new(nil, opts).start
          rescue Haml::I18n::Extractor::CLI::CliError
            assert @output.string.match(/--help/), "passing interactive or not needs path"
          end
@@ -27,5 +27,3 @@ module Haml
 
   end
 end
-
-

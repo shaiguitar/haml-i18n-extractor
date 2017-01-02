@@ -84,7 +84,7 @@ module Haml
     # keyname restrictions
     def test_it_limits_the_characters_of_the_t_namespace_it_provides_to_limit_key_name
       replacer = Haml::I18n::Extractor::TextReplacer.new("this is whatever" * 80, "this is whatever" * 80, :plain, "/path/to/doesntmatter.haml")
-      assert_equal replacer.replace_hash[:modified_line].size, Haml::I18n::Extractor::Helpers::StringHelpers::LIMIT_KEY_NAME + 8 # = t('.')
+      assert_equal Haml::I18n::Extractor::Helpers::StringHelpers::LIMIT_KEY_NAME + 9, replacer.replace_hash[:modified_line].size # = t('.')
     end
 
     def test_it_does_not_allow_weird_characters_in_the_keyname

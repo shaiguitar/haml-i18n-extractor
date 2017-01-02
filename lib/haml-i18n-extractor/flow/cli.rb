@@ -15,7 +15,9 @@ class Haml::I18n::Extractor
     end
 
     def initialize(path, options = {})
-      @path, @options = path, DEFAULT_OPTIONS.merge(options)
+      @path = path
+      @options = DEFAULT_OPTIONS.merge(options)
+      @prompter = Haml::I18n::Extractor::Prompter.new
     end
 
     def start
@@ -31,7 +33,13 @@ class Haml::I18n::Extractor
     attr_reader :path, :options
 
     def paths
-      @paths ||= File.directory?(path) ? Dir[File.join(path,'**/*.haml')] : Dir[path]
+      if path
+        @paths ||= File.directory?(path) ? Dir[File.join(path,'**/*.haml')] : Dir[path]
+      else
+        @prompter.puts("You must supply a path.")
+        @prompter.puts("See haml-i18n-extractor --help below:")
+        raise CliError
+      end
     end
 
   end
