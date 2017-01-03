@@ -1,0 +1,8 @@
+---
+en:
+  nested:
+    dir:
+      nested:
+        home: Home
+        new_accounts: New accounts
+        create_account: Create Account

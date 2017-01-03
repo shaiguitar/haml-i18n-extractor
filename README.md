@@ -10,6 +10,27 @@ It doesn't translate already translated keys, or things it identfies that are no
 
 You can use the binary which has an interactive (prompting) and non-interactive mode included in this library. You should be able to use the code directly as a lib too.
 
+## CLI usage
+Run haml-i18n-extractor GLOB_PATH_TO_HAML_FILES [OPTIONS]
+
+Options:
+--interactive (Run in interactive mode)
+--yaml-file (Specify path to yaml file)
+--i18n-scope (Specify i18n scope (e.g. de for German))
+--add-filename-prefix (See add filename prefix docs below)
+--base-path (Absolute path to base dir containing HAML files - see add filename prefix docs)
+
+## Add filename prefix
+If you have a lot of views, putting all the locale config in one file will be overwhelming and increases the risk of naming clashes. In this case, it's preferable to set up your locale config files inside directories, e.g. config/locales/admin/products/en.yml
+
+To achieve this, you need to specify two config variables:
+--add-filename-prefix true
+--base-path
+
+e.g. haml-i18n-extractor . --add-filename-prefix true --base-path /Users/jeremynagel/dev/some-project/views/
+
+Make sure that you use the absolute path for base-path and leave a trailing slash at the end otherwise the i18n tags will be missing a dot.
+
 ## Examples
 
 - Per file basis. You can use the lib directly in your code, as such:

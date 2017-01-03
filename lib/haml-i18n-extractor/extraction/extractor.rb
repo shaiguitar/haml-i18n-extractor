@@ -35,11 +35,24 @@ module Haml
         @options = opts
         @type = @options[:type]
         @interactive = @options[:interactive]
+        @base_path = @options[:base_path]
+        @add_filename_prefix = @options[:add_filename_prefix]
+
+        if (@add_filename_prefix && !@base_path)
+          @prompter.puts('You must supply the base path for the HAML files when using --add-filename-prefix')
+          @prompter.puts('e.g. haml-i18n-extractor . --add-filename-prefix true --base-path /Users/jeremynagel/dev/some-project/views/')
+          raise Error
+        end
+
         @prompter = Haml::I18n::Extractor::Prompter.new
         @haml_reader = Haml::I18n::Extractor::HamlReader.new(haml_path)
         validate_haml(@haml_reader.body)
         @haml_writer = Haml::I18n::Extractor::HamlWriter.new(haml_path, {:type => @type})
-        @yaml_writer = Haml::I18n::Extractor::YamlWriter.new(@options[:i18n_scope], @options[:yaml_file])
+        @yaml_writer = Haml::I18n::Extractor::YamlWriter.new(@options[:i18n_scope], @options[:yaml_file], {
+            :haml_path => haml_path,
+            :add_filename_prefix => opts[:add_filename_prefix],
+            :base_path => opts[:base_path]
+        })
         @tagging_writer ||= Haml::I18n::Extractor::TaggingWriter.new
         # hold all the processed lines
         @body = []
@@ -71,6 +84,7 @@ module Haml
       end
 
       def new_body
+        @body = []
         begin
           current_line = 1
           @haml_reader.lines.each do |orig_line|
@@ -153,7 +167,12 @@ module Haml
 
       def replacement_result(orig_line, line_match, line_type, line_no)
         if line_match && !line_match.empty?
-          Haml::I18n::Extractor::TextReplacer.new(orig_line, line_match, line_type, @haml_reader.path, line_metadata(line_no)).result
+          result = Haml::I18n::Extractor::TextReplacer.new(orig_line, line_match, line_type, @haml_reader.path, line_metadata(line_no), {
+            :add_filename_prefix => @add_filename_prefix,
+            :base_path => @base_path
+          }).result
+
+          result
         else
           Haml::I18n::Extractor::ReplacerResult.new(orig_line, nil, line_match, false, "")
         end

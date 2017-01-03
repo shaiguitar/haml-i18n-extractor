@@ -7,6 +7,8 @@ parser = Trollop::Parser.new do
   opt :interactive, "interactive mode"
   opt :yaml_file, "yaml file path, defaults to config/locales/en.yml", type: String
   opt :i18n_scope, "top level i18n scope, defaults to :en", type: String
+  opt :add_filename_prefix, "Add filename prefix to all keys and to yaml file", type: String
+  opt :base_path, "Base path to HAML templates", type: String
 end
 
 Haml::I18n::Extractor::CLI.start(

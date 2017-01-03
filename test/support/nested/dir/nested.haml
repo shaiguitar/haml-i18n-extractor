@@ -1,0 +1,24 @@
+- content_for :title do
+  = ['Admin', 'Accounts', 'New'].compact.join(' - ')
+.row
+  .col-md-12
+    %ul.breadcrumb
+      %li
+        = link_to root_url(subdomain: 'admin') do
+          %i.fa.fa-fw.fa-home
+          %span.text Home
+      %li
+        = link_to admin_accounts_path do
+          %i.fa.fa-fw.fa-globe
+          %span.text New accounts
+      %li.active=t('Create Account')
+
+/ main
+.content
+  .main-header
+    %h2 Create Account
+  / main-content
+  .main-content
+    .row
+      .col-md-12
+        = render 'form'

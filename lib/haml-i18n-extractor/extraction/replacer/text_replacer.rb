@@ -42,9 +42,8 @@ module Haml
 
         # the new full line, including a `t()` replacement instead of the `text_to_replace` portion.
         def modified_line
-          return @full_line if has_been_translated?(@full_line)
+          return @full_line if has_been_translated?(@full_line) && !@options[:add_filename_prefix]
           full_line = @full_line.dup
-          #puts t_method.inspect if Haml::I18n::Extractor.debug?
           keyname = orig_interpolated? ? interpolation_helper.keyname_with_vars : t_method
           gsub_replacement!(full_line, @text_to_replace, keyname)
           apply_ruby_evaling!(full_line, keyname)
@@ -75,6 +74,10 @@ module Haml
             name = normalized_name(text_to_replace.dup)
             name = normalized_name(orig_line.dup) if name.empty?
           end
+
+          if (@options[:add_filename_prefix])
+            name = @path.gsub(@options[:base_path], '').gsub(/(\.html)?\.haml/, '').gsub(/\//, '.') + '.' + name
+          end
           name
         end
 
@@ -95,7 +98,7 @@ module Haml
               scanner.skip(TAG_REGEX)
               scanner.skip(TAG_CLASSES_AND_ID_REGEX)
               scanner.skip(TAG_ATTRIBUTES_REGEX)
-              if scanner.scan_until(/[\s\t]*#{Regexp.escape(keyname)}/)
+              if scanner.scan_until(/[\s]*#{Regexp.escape(keyname)}/)
                 unless already_evaled?(scanner.pre_match)
                   str[0..-1] = "#{scanner.pre_match}=#{scanner.matched}#{scanner.post_match}"
                 end
@@ -122,7 +125,7 @@ module Haml
             end
           elsif @line_type == :script
             # we need this for tags that come in like :plain but have interpolation
-            str.match(/^[\s\t]*=/)
+            str.match(/^[\s]*=/)
           end
         end
 

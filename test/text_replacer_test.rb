@@ -57,6 +57,17 @@ module Haml
     end
 
     # some text replacement examples
+    def test_it_will_prepend_i18n_tag_with_filename_if_filename_prefix_option_passed
+      replacer = Haml::I18n::Extractor::TextReplacer.new("this is whatever", "this is whatever", :plain, "path/to/doesntmatter.haml", {}, {
+        :add_filename_prefix => 1234,
+        :base_path => 'path/'
+      })
+      expected_replacement_hash = {:modified_line => "= t('.to.doesntmatter.this_is_whatever')",
+                                           :t_name => "to.doesntmatter.this_is_whatever", :replaced_text => "this is whatever", :path => "path/to/doesntmatter.haml"}
+      assert_equal expected_replacement_hash, replacer.replace_hash
+    end
+
+    # some text replacement examples
     def test_it_can_replace_the_body_of_haml_with_t_characters
       replacer = Haml::I18n::Extractor::TextReplacer.new("this is whatever", "this is whatever", :plain, "/path/to/doesntmatter.haml")
       assert_equal replacer.replace_hash, {:modified_line => "= t('.this_is_whatever')",

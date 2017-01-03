@@ -15,7 +15,7 @@ module Haml
 
     def locale_config_dir
       dir = File.expand_path(File.join(File.dirname(__FILE__), "/tmp/config/locales"))
-      if ! File.exists?(dir)
+      if ! File.exist?(dir)
         FileUtils.mkdir_p(dir)
       end
       dir
@@ -32,11 +32,12 @@ module Haml
     end
 
     def existing_yaml_hash
-      {"en" => {
-        "viewname" => {
-          "translate_key" => "Translate Key"
+      {
+        "en" => {
+          "viewname" => {
+            "translate_key" => "Translate Key"
+          }
         }
-      }
       }
     end
 
@@ -80,8 +81,8 @@ module Haml
       setup_yaml_file
       @ex1.yaml_writer.write_file(locale_config_file)
       really_written = YAML.load(File.read(locale_config_file))
-      assert_equal really_written['en']['viewname'], existing_yaml_hash['en']['viewname']
-      assert_equal really_written['en']['support'], ex1_yaml_hash['en']['support']
+      assert_equal existing_yaml_hash['en']['viewname'], really_written['en']['viewname']
+      assert_equal ex1_yaml_hash['en']['support'], really_written['en']['support']
     end
 
     def test_it_can_accept_a_different_yml_file
@@ -102,6 +103,15 @@ module Haml
     def test_it_will_assume_yaml_file_according_to_i18n_scope_if_no_yaml_file_is_passed
       yaml_writer = Haml::I18n::Extractor::YamlWriter.new("he", nil)
       assert_equal yaml_writer.yaml_file, "./config/locales/he.yml"
+    end
+
+    def test_it_will_put_yaml_file_in_appropriate_dir_if_add_filename_prefix_set
+      yaml_writer = Haml::I18n::Extractor::YamlWriter.new("en", nil, {
+          :haml_path => 'some/path/to/the-haml.haml',
+          :add_filename_prefix => true,
+          :base_path => File.dirname(__FILE__) + '/support/',
+      })
+      assert_equal "./config/locales/some/path/to/the-haml/en.yml", yaml_writer.yaml_file
     end
 
     def test_it_will_not_assume_yaml_file_according_to_i18n_scope_if_yaml_file_is_passed

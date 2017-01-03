@@ -5,8 +5,8 @@ module Haml
 
     # empty line
     def test_empty_lines_filters_matches_with_nometadata
-      assert_equal find_text(""), nil
-      assert_equal find_type(""), nil
+      assert_nil find_text("")
+      assert_nil find_type("")
     end
 
     # regular text mode

@@ -12,9 +12,9 @@ module Haml
 
     def test_it_uses_a_file_which_it_uses_to_keep_track_of_user_tagged_lines
       TestHelper.hax_shit
-      assert ! File.exists?(FILE), "no tagging file should exist"
+      assert ! File.exist?(FILE), "no tagging file should exist"
       Haml::I18n::Extractor::TaggingWriter.new
-      assert File.exists?(FILE), "tagging file should be created on init"
+      assert File.exist?(FILE), "tagging file should be created on init"
     end
 
     def test_it_can_write_in_a_format

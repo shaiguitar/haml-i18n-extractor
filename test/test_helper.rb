@@ -114,7 +114,7 @@ module TestHelper
   def self.hax_shit
     Dir.glob("*yml").map {|p| FileUtils.rm(p) } # HAX, TODO: handle with yaml files correctly (config/en.yml)
     Dir.glob("config/locales/*yml").map {|p| FileUtils.rm(p) } # HAX, TODO: handle with yaml files correctly (config/en.yml)
-    if File.exists?(Haml::I18n::Extractor::TaggingWriter::DB)
+    if File.exist?(Haml::I18n::Extractor::TaggingWriter::DB)
       FileUtils.rm_rf(Haml::I18n::Extractor::TaggingWriter::DB) # HAX, TODO: setup/teardown
     end
   end
