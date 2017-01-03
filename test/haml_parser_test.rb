@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module Haml
-  class HamlParserTest < MiniTest::Unit::TestCase
+  class HamlParserTest < Minitest::Test
 
     def setup
       @body = "- if true\n  bar"
@@ -10,12 +10,6 @@ module Haml
     def test_it_can_collect_metadata_about_lines
       tree = Haml::I18n::Extractor::HamlParser.new(@body)
       line_metadatas = tree.flattened_values
-      assert_equal line_metadatas.size, 2
-    end
-
-    def test_it_can_collect_metadata_about_lines
-      parser = Haml::I18n::Extractor::HamlParser.new(@body)
-      line_metadatas = parser.flattened_values
       assert_equal line_metadatas.size, 2
     end
 

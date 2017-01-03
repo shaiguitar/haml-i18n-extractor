@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module Haml
-  class StringFinderTest < MiniTest::Unit::TestCase
+  class StringFinderTest < Minitest::Test
 
     # empty line
     def test_empty_lines_filters_matches_with_nometadata

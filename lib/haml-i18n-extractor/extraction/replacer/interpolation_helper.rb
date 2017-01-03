@@ -37,10 +37,11 @@ module Haml
 
         def extract_interpolation(str)
           scanner = StringScanner.new(str)
-          scanner.scan_until /\#{/
+          scanner.scan_until(/\#{/)
           rest_scanner = StringScanner.new(scanner.rest)
           rest_scanner.scan_until(/}/)
           interpolated = rest_scanner.pre_match
+          interpolated
         end
 
 
@@ -48,4 +49,3 @@ module Haml
     end
   end
 end
-

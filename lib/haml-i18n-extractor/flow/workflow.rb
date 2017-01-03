@@ -18,7 +18,7 @@ module Haml
 
         def files
           @haml_files ||= Dir.glob(@project_path + "/**/*").select do |file|
-            file.match /.haml$/
+            file.match(/.haml$/)
           end
         end
 

@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module Haml
-  class YamlWriterTest < MiniTest::Unit::TestCase
+  class YamlWriterTest < Minitest::Test
 
     def setup
       @temp_locale_dir = "./test/tmp/"

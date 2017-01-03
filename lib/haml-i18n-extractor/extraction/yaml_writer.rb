@@ -105,7 +105,7 @@ module Haml
           index = array_of_dirs.index("views")
 
           if (@options[:add_filename_prefix])
-            array_of_dirs = path_without_base_path = pathname.dirname.to_s.gsub(@options[:base_path], '').split("/")
+            array_of_dirs = pathname.dirname.to_s.gsub(@options[:base_path], '').split("/")
             array_of_dirs << view_name
           else
             if index

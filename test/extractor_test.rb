@@ -2,7 +2,7 @@ require 'test_helper'
 
 module Haml
   # really should just be part of integration_test.rb , testing shit from the orchestration class
-  class ExtractorTest < MiniTest::Unit::TestCase
+  class ExtractorTest < Minitest::Test
 
     def setup
       @ex1 = Haml::I18n::Extractor.new(file_path("ex1.haml"))

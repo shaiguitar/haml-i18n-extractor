@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module Haml
-  class TextReplacerTest < MiniTest::Unit::TestCase
+  class TextReplacerTest < Minitest::Test
 
     def test_it_initializes_with_the_line_it_is_going_to_replace_and_the_match_to_replace
       Haml::I18n::Extractor::TextReplacer.new("this is whatever", "this is whatever", :plain, "/path/to/doesntmatter.haml")
@@ -9,7 +9,7 @@ module Haml
 
     def test_but_it_raises_if_passed_a_wrong_line_type
       begin
-        replacer = Haml::I18n::Extractor::TextReplacer.new("regular text", "regular text", :this_is_not_defined, "/path/to/doesntmatter.haml")
+        Haml::I18n::Extractor::TextReplacer.new("regular text", "regular text", :this_is_not_defined, "/path/to/doesntmatter.haml")
         assert false, 'should raise'
       rescue Haml::I18n::Extractor::NotDefinedLineType
         assert true, 'raised NotDefinedLineType'
@@ -30,7 +30,7 @@ module Haml
       assert_equal replacer.result.should_be_replaced, false
     end
 
-    def test_it_wont_replace_if_whole_line_in_tag_is_a_expression
+    def test_it_wont_replace_if_whole_line_in_tag_is_a_expression2
       replacer = Haml::I18n::Extractor::TextReplacer.new('#{whole_line_expression}',
                                                          "\"\#{whole_line_expression}\"",
                                                          :script, '/path/to/doesntmatter.haml')

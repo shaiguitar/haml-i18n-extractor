@@ -2,7 +2,7 @@ require 'test_helper'
 
 module Haml
   # misnomer, this is also testing UserAction
-  class PrompterAndUserActionTest < MiniTest::Unit::TestCase
+  class PrompterAndUserActionTest < Minitest::Test
 
     def test_asks_to_process_line_yes
       with_highline("y") do
@@ -22,8 +22,5 @@ module Haml
       end
     end
 
- end
+  end
 end
-
-
-

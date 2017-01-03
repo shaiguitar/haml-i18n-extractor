@@ -2,7 +2,7 @@ require 'test_helper'
 require 'fileutils'
 
 module Haml
-  class HamlWriterTest < MiniTest::Unit::TestCase
+  class HamlWriterTest < Minitest::Test
 
     ORIG_TEMP_FILE_PATH = File.join(TestHelper::TMPDIR, "foo_haml_extractor_test.haml")
 

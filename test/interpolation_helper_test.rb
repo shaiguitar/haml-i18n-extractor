@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module Haml
-  class InterpolationHelperTest < MiniTest::Unit::TestCase
+  class InterpolationHelperTest < Minitest::Test
 
     def test_it_takes_text_and_returns_interpolations
       replace = "this may \#{be} the \#{dup}"
@@ -38,6 +38,3 @@ module Haml
 
   end
 end
-
-
-
