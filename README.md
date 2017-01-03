@@ -14,10 +14,15 @@ You can use the binary which has an interactive (prompting) and non-interactive 
 Run haml-i18n-extractor GLOB_PATH_TO_HAML_FILES [OPTIONS]
 
 Options:
+
 --interactive (Run in interactive mode)
+
 --yaml-file (Specify path to yaml file)
+
 --i18n-scope (Specify i18n scope (e.g. de for German))
+
 --add-filename-prefix (See add filename prefix docs below)
+
 --base-path (Absolute path to base dir containing HAML files - see add filename prefix docs)
 
 ## Add filename prefix
