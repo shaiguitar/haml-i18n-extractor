@@ -111,7 +111,7 @@ module Haml
           :add_filename_prefix => true,
           :base_path => File.dirname(__FILE__) + '/support/',
       })
-      assert_equal "./config/locales/some/path/to/the-haml/en.yml", yaml_writer.yaml_file
+      assert_equal "./config/locales/en/some/path/to/the-haml/en.yml", yaml_writer.yaml_file
     end
 
     def test_it_will_not_assume_yaml_file_according_to_i18n_scope_if_yaml_file_is_passed

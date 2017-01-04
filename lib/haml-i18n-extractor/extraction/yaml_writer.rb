@@ -17,7 +17,7 @@ module Haml
           @options = options
           if (options[:add_filename_prefix])
             @dir_prefix = options[:haml_path].gsub(options[:base_path], '').gsub(/(\.html)?\.haml/, '')
-            @yaml_file = "./config/locales/#{@dir_prefix}/#{@i18n_scope}.yml"
+            @yaml_file = "./config/locales/#{@i18n_scope}/#{@dir_prefix}/#{@i18n_scope}.yml"
           else
             @yaml_file = yaml_file || "./config/locales/#{@i18n_scope}.yml"
           end
