@@ -16,7 +16,10 @@ module Haml
           @i18n_scope = i18n_scope && i18n_scope.to_sym || :en
           @options = options
           if (options[:add_filename_prefix])
-            @dir_prefix = options[:haml_path].gsub(options[:base_path], '').gsub(/(\.html)?\.haml/, '')
+            @dir_prefix_including_filename = options[:haml_path].gsub(options[:base_path], '').gsub(/(\.html)?\.haml/, '')
+            dir_prefix_parts = @dir_prefix_including_filename.split('/')
+            dir_prefix_without_filename = dir_prefix_parts.first dir_prefix_parts.size - 1
+            @dir_prefix = dir_prefix_without_filename.join('/')
             @yaml_file = "./config/locales/#{@i18n_scope}/#{@dir_prefix}/#{@i18n_scope}.yml"
           else
             @yaml_file = yaml_file || "./config/locales/#{@i18n_scope}.yml"
@@ -68,7 +71,7 @@ module Haml
             my_hash.each do |k, v|
               is_leaf_node = !v.is_a?(Hash)
               if (@options[:add_filename_prefix] && is_leaf_node)
-                dir_prefix_to_dots = (@dir_prefix + '/').gsub('/', '.')
+                dir_prefix_to_dots = (@dir_prefix_including_filename + '/').gsub('/', '.')
                 key_without_dir_prefix = k.to_s.gsub(dir_prefix_to_dots, '')
                 result[key_without_dir_prefix] = v
               else

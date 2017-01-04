@@ -65,7 +65,7 @@ module Haml
       expected_haml_output = File.read(file_path("nested/dir/nested.expected.haml"))
       expected_yaml_output = YAML.load File.read(file_path("nested/dir/nested.expected.yml"))
       assert_equal expected_haml_output, @ex1.new_body
-      assert_equal './config/locales/en/nested/dir/nested/en.yml', @ex1.yaml_writer.yaml_file
+      assert_equal './config/locales/en/nested/dir/en.yml', @ex1.yaml_writer.yaml_file
       assert_equal expected_yaml_output, @ex1.yaml_writer.yaml_hash
     end
 
