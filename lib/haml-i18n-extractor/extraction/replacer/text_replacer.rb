@@ -76,7 +76,7 @@ module Haml
           end
 
           if (@options[:add_filename_prefix])
-            name = @path.gsub(@options[:base_path], '').gsub(/(\.html)?\.haml/, '').gsub(/\//, '.') + '.' + name
+            name = @path.gsub(@options[:base_path], '').gsub(/(\.html)?\.haml/, '').gsub(/\//, '.').gsub('_', '') + '.' + name
           end
           name
         end
@@ -87,7 +87,8 @@ module Haml
         end
 
         def with_translate_method(name)
-          "t('.#{name}')"
+          prefix = @options[:add_filename_prefix] ? '' : '.'
+          "t('#{prefix}#{name}')"
         end
 
         # adds the = to the right place in the string ... = t()

@@ -55,7 +55,7 @@ module Haml
     end
 
     def test_handles_nested_directories_when_add_prefix_setting_is_enabled
-      @ex1 = Haml::I18n::Extractor.new(file_path("nested/dir/nested.haml"), {
+      @ex1 = Haml::I18n::Extractor.new(file_path("nested/dir/_nested.haml"), {
           :base_path => File.dirname(__FILE__) + '/support/',
           :add_filename_prefix => true
       })

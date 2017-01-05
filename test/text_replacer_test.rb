@@ -62,7 +62,7 @@ module Haml
         :add_filename_prefix => 1234,
         :base_path => 'path/'
       })
-      expected_replacement_hash = {:modified_line => "= t('.to.doesntmatter.this_is_whatever')",
+      expected_replacement_hash = {:modified_line => "= t('to.doesntmatter.this_is_whatever')",
                                            :t_name => "to.doesntmatter.this_is_whatever", :replaced_text => "this is whatever", :path => "path/to/doesntmatter.haml"}
       assert_equal expected_replacement_hash, replacer.replace_hash
     end
