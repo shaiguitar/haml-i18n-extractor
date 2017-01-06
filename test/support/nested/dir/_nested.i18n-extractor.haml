@@ -22,3 +22,5 @@
     .row
       .col-md-12
         = render 'form'
+
+%span.text= t('nested.dir.nested.job_jobid_jobqueue', :jobid => (@job.id), :jobqueue => (@job.queue))

@@ -56,7 +56,7 @@ module Haml
     def test_it_can_deal_with_interpolated_vars
       @ex5 = Haml::I18n::Extractor.new(file_path("ex5.haml"))
       @ex5.run
-      assert_equal @ex5.yaml_writer.yaml_hash, ex5_yaml_hash
+      assert_equal ex5_yaml_hash, @ex5.yaml_writer.yaml_hash
     end
 
     def test_it_can_deal_with_utf8_characters

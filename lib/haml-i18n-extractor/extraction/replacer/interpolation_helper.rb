@@ -6,16 +6,18 @@ module Haml
         include Helpers::StringHelpers
 
         # takes an original_line and text_to_replace, keyname_name and gives back the result for that...
-        def initialize(text_to_replace, t_name)
+        def initialize(text_to_replace, t_name, options = {})
           if Extractor.debug?
             puts "<interpolationhelper>#{text_to_replace.inspect} #{t_name.inspect}</interpolationhelper>"
           end
           @t_name = t_name
           @text_to_replace = text_to_replace
+          @options = options
         end
 
         def keyname_with_vars()
-          "t('.#{@t_name}', #{interpolated_vars})"
+          prefix = @options[:add_filename_prefix] ? '' : '.'
+          "t('#{prefix}#{@t_name}', #{interpolated_vars})"
         end
 
         def interpolated_vars
@@ -43,8 +45,6 @@ module Haml
           interpolated = rest_scanner.pre_match
           interpolated
         end
-
-
       end
     end
   end

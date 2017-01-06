@@ -31,7 +31,7 @@ module Haml
 
     def test_it_can_replace_a_string_body_and_have_expected_output_ex5
       expected_output = File.read(file_path("ex5.output.haml"))
-      assert_equal Haml::I18n::Extractor.new(file_path("ex5.haml")).new_body, expected_output
+      assert_equal expected_output, Haml::I18n::Extractor.new(file_path("ex5.haml")).new_body
     end
 
     def test_it_can_replace_a_string_body_and_have_expected_output_ex4
@@ -46,7 +46,7 @@ module Haml
 
     def test_it_can_replace_a_string_body_and_have_expected_output_ex2
       expected_output = File.read(file_path("ex2.output.haml"))
-      assert_equal Haml::I18n::Extractor.new(file_path("ex2.haml")).new_body, expected_output
+      assert_equal expected_output, Haml::I18n::Extractor.new(file_path("ex2.haml")).new_body
     end
 
     def test_it_can_replace_a_string_body_and_have_expected_output_ex1

@@ -6,3 +6,4 @@ en:
         home: Home
         new_accounts: New accounts
         create_account: Create Account
+        job_jobid_jobqueue: 'Job #%{jobid} (%{jobqueue})'

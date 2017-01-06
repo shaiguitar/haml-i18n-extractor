@@ -33,7 +33,7 @@ module Haml
         end
 
         def interpolation_helper
-          Haml::I18n::Extractor::InterpolationHelper.new(@text_to_replace, t_name)
+          Haml::I18n::Extractor::InterpolationHelper.new(@text_to_replace, t_name, @options)
         end
 
         def orig_interpolated?
@@ -45,6 +45,7 @@ module Haml
           return @full_line if has_been_translated?(@full_line) && !@options[:add_filename_prefix]
           full_line = @full_line.dup
           keyname = orig_interpolated? ? interpolation_helper.keyname_with_vars : t_method
+          @text_to_replace = remove_quotes_from_interpolated_text(@text_to_replace)
           gsub_replacement!(full_line, @text_to_replace, keyname)
           apply_ruby_evaling!(full_line, keyname)
           full_line
@@ -134,9 +135,20 @@ module Haml
           str.match T_REGEX
         end
 
+        # We end up with unwanted quotes around interpolated text
+        # e.g. '"Job ##{@job.id} (#{@job.queue})"'
+        # Remove them so the result is 'Job ##{@job.id} (#{@job.queue})'
+        def remove_quotes_from_interpolated_text(text_to_replace)
+          copy = text_to_replace
+          if (orig_interpolated?)
+            matches = /^"(.*)"$/.match(copy)
+            copy = matches[1] if (matches)
+          end
+          copy
+        end
+
         def gsub_replacement!(str, text_to_replace, keyname_method)
           # FIXME refactor this method
-          text_to_replace = $1 if (orig_interpolated? && text_to_replace.match(/^['"](.*)['"]$/))
           scanner = StringScanner.new(str.dup)
           str[0..-1] = ''
           if line_type == :tag
@@ -151,7 +163,7 @@ module Haml
             end
           end
           scanner.scan_until(/(['"]|)#{Regexp.escape(text_to_replace)}\1/)
-          str << scanner.pre_match << keyname_method << scanner.post_match
+          str << scanner.pre_match.to_s << keyname_method << scanner.post_match.to_s
         end
 
       end

@@ -2,9 +2,11 @@
 en:
   support:
     ex5:
-      text_here: Text here
-      script_with_quote_with_interpolationbub_interpolated: ! '"script with quote %{with_interpolationbub}
-        interpolated!"'
+      this_is_h_quality_cake: "This is %{h_quality} cake!"
+      this_is_the_h_quality_cake: "This is the ' %{h_quality} ' cake!"
+      text_here: '"Text here"'
+      script_with_quote_with_interpolationbub_interpolated: ! "script with quote %{with_interpolationbub}
+        interpolated!"
       this_may_be_the_dup: ! ' "this may %{be} the %{dup}"'
       go_to_adnamefirst: ! 'Go to %{adnamefirst}'
-      no_quotes_some_var_with_text: ! '"No quotes %{some_var} with text"'
+      no_quotes_some_var_with_text: ! "No quotes %{some_var} with text"
