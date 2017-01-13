@@ -11,12 +11,13 @@ module Haml
 
         FORM_SUBMIT_BUTTON_SINGLE_Q = /[a-z]\.submit\s?['](.*?)['].*$/
         FORM_SUBMIT_BUTTON_DOUBLE_Q = /[a-z]\.submit\s?["](.*?)["].*$/
+        ARRAY_OF_STRINGS = /^[\s]?\[(.*)\]/
 
         # this class simply returns text except for anything that matches these regexes.
         # returns first match.
         EXCEPTION_MATCHES = [ LINK_TO_BLOCK_FORM_DOUBLE_Q, LINK_TO_BLOCK_FORM_SINGLE_Q,
                               LINK_TO_REGEX_DOUBLE_Q, LINK_TO_REGEX_SINGLE_Q , LINK_TO_NO_QUOTES,
-                              FORM_SUBMIT_BUTTON_SINGLE_Q, FORM_SUBMIT_BUTTON_DOUBLE_Q]
+                              FORM_SUBMIT_BUTTON_SINGLE_Q, FORM_SUBMIT_BUTTON_DOUBLE_Q, ARRAY_OF_STRINGS]
 
 
         def initialize(text)
@@ -39,6 +40,10 @@ module Haml
         def find
           ret = @text
           EXCEPTION_MATCHES.each do |regex|
+            if @text.match(ARRAY_OF_STRINGS)
+              ret = $1.gsub(/['"]/,'').split(', ')
+              break
+            end
             if @text.match(regex)
               ret = $1
               break # return whatever it finds on first try, order of above regexes matters
@@ -51,5 +56,3 @@ module Haml
     end
   end
 end
-
-

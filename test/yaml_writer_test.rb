@@ -122,11 +122,14 @@ module Haml
     def test_it_relies_on_the_info_for_yaml_having_a_certain_format
       setup_info_for_yaml
       @ex1.yaml_writer.info_for_yaml.each do |line_no, info_for_line|
-        assert info_for_line.has_key?(:modified_line), "hash info has :modified_line key"
-        assert info_for_line.has_key?(:t_name), "hash info has :t_name key"
-        assert info_for_line.has_key?(:replaced_text), "hash info has :replaced_text key"
-        # FIXME: since the scope right now is we're running this per file this will be the same, but keeping this right now.
-        assert info_for_line.has_key?(:path), "hash info has :path key"
+        assert info_for_line.is_a?(Array), "hash info should be an array"
+        info_for_line.each do |sub_info_for_line|
+          assert sub_info_for_line.has_key?(:modified_line), "hash info has :modified_line key"
+          assert sub_info_for_line.has_key?(:t_name), "hash info has :t_name key"
+          assert sub_info_for_line.has_key?(:replaced_text), "hash info has :replaced_text key"
+          # FIXME: since the scope right now is we're running this per file this will be the same, but keeping this right now.
+          assert sub_info_for_line.has_key?(:path), "hash info has :path key"
+        end
       end
     end
 

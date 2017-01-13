@@ -34,11 +34,13 @@ module Haml
         # {:en => {:view_name => {:key_name => :string_name } } }
         def yaml_hash
           yml = Hash.new
-          @info_for_yaml.map do |line_no, info|
-            unless info[:t_name].nil?
-              keyspace = [@i18n_scope,standardized_viewnames(info[:path]), info[:t_name],
-                          normalize_interpolation(info[:replaced_text])].flatten
-              yml.deep_merge!(nested_hash({},keyspace))
+          @info_for_yaml.map do |line_no, info_array|
+            info_array.each_with_index do |info, index|
+              unless info[:t_name].nil?
+                keyspace = [@i18n_scope,standardized_viewnames(info[:path]), info[:t_name],
+                            normalize_interpolation(info[:replaced_text])].flatten
+                yml.deep_merge!(nested_hash({},keyspace))
+              end
             end
           end
           yml = hashify(yml)

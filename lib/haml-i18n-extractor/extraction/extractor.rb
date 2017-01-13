@@ -20,7 +20,7 @@ module Haml
       class AbortFile < StandardError;
       end
 
-      LINE_TYPES_ALL = [:plain, :script, :silent_script, :haml_comment, :tag, :comment, :doctype, :filter, :root]
+      LINE_TYPES_ALL = [:plain, :script, :silent_script, :haml_comment, :tag, :comment, :doctype, :filter, :root, :script_array]
       LINE_TYPES_ADD_EVAL = [:plain, :tag, :script]
 
       attr_reader :haml_reader, :haml_writer
@@ -123,7 +123,7 @@ module Haml
           add_to_yaml_info(line_no, replacement_info)
           add_to_body(replacement)
         elsif user_action.no_replace?
-          add_to_yaml_info(line_no, Haml::I18n::Extractor::ReplacerResult.new(nil, nil, nil, false, nil).info)
+          add_to_yaml_info(line_no, [Haml::I18n::Extractor::ReplacerResult.new(nil, nil, nil, false, nil).info])
           add_to_body(orig_line)
         end
 
@@ -150,9 +150,17 @@ module Haml
         @haml_reader.lines.each do |orig_line|
           orig_line, whitespace = handle_line_whitespace(orig_line.chomp)
           finder_result = finding_result(orig_line, line_no)
-          replacer_result = replacement_result(orig_line, finder_result.match, finder_result.type, line_no)
-          if replacer_result.should_be_replaced
-            replacements[line_no] = ["#{whitespace}#{replacer_result.modified_line}", replacer_result.info]
+          is_array_match = finder_result.match.is_a?(Array)
+          finder_result_matches = is_array_match ? finder_result.match : [finder_result.match]
+
+          replacement_info = []
+          finder_result_matches.each_with_index do |match, index|
+            replacer_result = replacement_result(orig_line, match, finder_result.type, line_no)
+            if replacer_result.should_be_replaced
+              replacement_info.push(replacer_result.info)
+              replacements[line_no] = ["#{whitespace}#{replacer_result.modified_line}", replacement_info]
+              orig_line = replacer_result.modified_line
+            end
           end
           line_no += 1
         end

@@ -3,6 +3,9 @@ en:
   nested:
     dir:
       nested:
+        admin: Admin
+        accounts: Accounts
+        new: New
         home: Home
         new_accounts: New accounts
         create_account: Create Account
