@@ -73,7 +73,7 @@ module Haml
             my_hash.each do |k, v|
               is_leaf_node = !v.is_a?(Hash)
               if (@options[:add_filename_prefix] && is_leaf_node)
-                dir_prefix_to_dots = (@dir_prefix_including_filename + '/').gsub('/', '.').gsub('_', '')
+                dir_prefix_to_dots = (@dir_prefix_including_filename + '/').gsub('/', '.')
                 key_without_dir_prefix = k.to_s.gsub(dir_prefix_to_dots, '')
                 result[key_without_dir_prefix] = v
               else

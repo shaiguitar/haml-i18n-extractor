@@ -77,7 +77,7 @@ module Haml
           end
 
           if (@options[:add_filename_prefix])
-            name = @path.gsub(@options[:base_path], '').gsub(/(\.html)?\.haml/, '').gsub(/\//, '.').gsub('_', '') + '.' + name
+            name = @path.gsub(@options[:base_path], '').gsub(/(\.html)?\.haml/, '').gsub(/\//, '.') + '.' + name
           end
           name
         end

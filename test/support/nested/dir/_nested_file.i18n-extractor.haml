@@ -1,0 +1,26 @@
+- content_for :title do
+  = [t('nested.dir._nested_file.admin'), t('nested.dir._nested_file.accounts'), t('nested.dir._nested_file.new')].compact.join(' - ')
+.row
+  .col-md-12
+    %ul.breadcrumb
+      %li
+        = link_to root_url(subdomain: 'admin') do
+          %i.fa.fa-fw.fa-home
+          %span.text= t('nested.dir._nested_file.home')
+      %li
+        = link_to admin_accounts_path do
+          %i.fa.fa-fw.fa-globe
+          %span.text= t('nested.dir._nested_file.new_accounts')
+      %li.active=t('Create Account')
+
+/ main
+.content
+  .main-header
+    %h2= t('nested.dir._nested_file.create_account')
+  / main-content
+  .main-content
+    .row
+      .col-md-12
+        = render 'form'
+
+%span.text= t('nested.dir._nested_file.job_jobid_jobqueue', :jobid => (@job.id), :jobqueue => (@job.queue))

@@ -2,7 +2,7 @@
 en:
   nested:
     dir:
-      nested:
+      nested_file:
         admin: Admin
         accounts: Accounts
         new: New
