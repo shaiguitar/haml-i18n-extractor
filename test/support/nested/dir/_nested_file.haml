@@ -4,7 +4,7 @@
   .col-md-12
     %ul.breadcrumb
       %li
-        = link_to root_url(subdomain: 'admin') do
+        = link_to root_url(subdomain: 'Admin') do
           %i.fa.fa-fw.fa-home
           %span.text Home
       %li
@@ -12,6 +12,8 @@
           %i.fa.fa-fw.fa-globe
           %span.text New accounts
       %li.active=t('Create Account')
+    %fieldset
+      = f.input :blah, label: 'BLAH', hint: 'BLABBLOO'
 
 / main
 .content

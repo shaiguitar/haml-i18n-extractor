@@ -8,5 +8,8 @@ en:
         new: New
         home: Home
         new_accounts: New accounts
+        blah: BLAH
+        blabbloo: BLABBLOO
         create_account: Create Account
+        form: form
         job_jobid_jobqueue: 'Job #%{jobid} (%{jobqueue})'

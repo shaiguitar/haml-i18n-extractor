@@ -21,7 +21,7 @@ module Haml
     end
 
     def test_scripts_with_strings
-      assert_equal find_text("= 'jessica'"), " 'jessica'"
+      assert_equal find_text("= 'jessica'"), "jessica"
       assert_equal find_type("= 'jessica'"), :script
     end
 
@@ -60,53 +60,53 @@ module Haml
 
     # script scripts / ruby eval mode
     def test_script_scripts_with_strings
-      assert_equal find_text('= "bob"'), " \"bob\""
-      assert_equal find_text("= 'bob'"), " 'bob'"
+      assert_equal find_text('= "bob"'), "bob"
+      assert_equal find_text("= 'bob'"), "bob"
       assert_equal find_type("= 'bob'"), :script
     end
 
     def test_script_scripts_does_not_interpolate_ruby_vars_in_strings
-      assert_equal find_text('= "ruby can #{var}"'), " \"ruby can \#{var}\""
+      assert_equal find_text('= "ruby can #{var}"'), "ruby can \#{var}"
       assert_equal find_type('= "ruby can #{var}"'), :script
     end
 
     # special script scripts exceptions
     def test_it_finds_link_to_texts_as_an_exception_to_the_rule
-      assert_equal find_text('= link_to "This should be found", "/"'), "This should be found"
-      assert_equal find_type('= link_to "This should be found", "/"'), :script
+      assert_equal find_text('= link_to "This should be found", "/"'), ["This should be found", "/"]
+      assert_equal find_type('= link_to "This should be found", "/"'), :script_array
     end
 
     def test_it_finds_link_to_texts_as_an_exception_to_the_rule_and_does_not_interpolate
-      assert_equal find_text('= "Statistics for #{@name}"'), " \"Statistics for \#{@name}\""
+      assert_equal "Statistics for \#{@name}", find_text('= "Statistics for #{@name}"')
       assert_equal find_type('= "Statistics for #{@name}"'), :script
     end
 
     # html tag mode with ruby evaling
     def test_html_tag_with_ruby_eval_with_strings
-      assert_equal find_text('%p= "bob"'), "\"bob\""
-      assert_equal find_text("%p.what= 'bob'"), "'bob'"
-      assert_equal find_text("%p.what{:attr => :val}= 'bob'"), "'bob'"
-      assert_equal find_type("%p.what{:attr => :val}= 'bob'"), :tag
+      assert_equal "bob", find_text('%p= "bob"')
+      assert_equal "bob", find_text("%p.what= 'bob'")
+      assert_equal "bob", find_text("%p.what{:attr => :val}= 'bob'")
+      assert_equal :tag, find_type("%p.what{:attr => :val}= 'bob'")
     end
 
     def test_html_tag_script_scripts_does_not_interpolate_ruby_vars_in_strings
-      assert_equal find_text('%p= "ruby can #{var}"'), "\"ruby can \#{var}\""
-      assert_equal find_text('%p.what= "ruby can #{var}"'), "\"ruby can \#{var}\""
-      assert_equal find_text('%p.what{:attr => :val}= "ruby can #{var}"'), "\"ruby can \#{var}\""
+      assert_equal find_text('%p= "ruby can #{var}"'), "ruby can \#{var}"
+      assert_equal find_text('%p.what= "ruby can #{var}"'), "ruby can \#{var}"
+      assert_equal find_text('%p.what{:attr => :val}= "ruby can #{var}"'), "ruby can \#{var}"
       assert_equal find_type('%p.what{:attr => :val}= "ruby can #{var}"'), :tag
     end
 
     def test_html_tag_it_finds_link_to_texts_as_an_exception_to_the_rule
-      assert_equal find_text('%p= link_to "This should be found", "/"'), "This should be found"
-      assert_equal find_text('%p.what= link_to "This should be found", "/"'), "This should be found"
-      assert_equal find_text('%p.what{:attr => :val}= link_to "This should be found", "/"'), "This should be found"
-      assert_equal find_type('%p.what{:attr => :val}= link_to "This should be found", "/"'), :tag
+      assert_equal ["This should be found", "/"], find_text('%p= link_to "This should be found", "/"')
+      assert_equal ["This should be found", "/"], find_text('%p.what= link_to "This should be found", "/"')
+      assert_equal ["This should be found", "/"], find_text('%p.what{:attr => :val}= link_to "This should be found", "/"')
+      assert_equal :tag, find_type('%p.what{:attr => :val}= link_to "This should be found", "/"')
     end
 
     def test_html_tag_it_finds_link_to_texts_as_an_exception_to_the_rule_and_does_not_interpolate
-      assert_equal find_text('%p= "Statistics for #{@name}"'), "\"Statistics for \#{@name}\""
-      assert_equal find_text('%p.what= "Statistics for #{@name}"'), "\"Statistics for \#{@name}\""
-      assert_equal find_text('%p.what{:attr => :val}= "Statistics for #{@name}"'), "\"Statistics for \#{@name}\""
+      assert_equal find_text('%p= "Statistics for #{@name}"'), "Statistics for \#{@name}"
+      assert_equal find_text('%p.what= "Statistics for #{@name}"'), "Statistics for \#{@name}"
+      assert_equal find_text('%p.what{:attr => :val}= "Statistics for #{@name}"'), "Statistics for \#{@name}"
       assert_equal find_type('%p.what{:attr => :val}= "Statistics for #{@name}"'), :tag
     end
 

@@ -84,7 +84,6 @@ module Haml
           txt = line[:value][:text]
           if ExceptionFinder.could_match?(txt)
             match = ExceptionFinder.new(txt).find
-
             if (match.is_a?(Array))
               FinderResult.new(:script_array, match)
             else
