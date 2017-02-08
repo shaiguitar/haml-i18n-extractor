@@ -64,7 +64,7 @@ module Haml
         def tag(line)
           title_value = extract_attribute(line, :title)
           if string_value?(title_value)
-            FinderResult.new(:tag, title_value[1...-1], :place => :attribute, :attribute_name => :title)
+            FinderResult.new(:tag, title_value[1...-1].gsub(/['"]*/, ''), :place => :attribute, :attribute_name => :title)
           else
             txt = line[:value][:value]
             if txt

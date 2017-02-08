@@ -60,7 +60,7 @@ module Haml
           end
           final_yaml_hash = existing_yaml_hash.deep_merge!(yaml_hash)
           f = File.open(pth, "w+")
-          f.puts final_yaml_hash.to_yaml
+          f.puts final_yaml_hash.to_yaml(:line_width => 400)
           f.flush
         end
 

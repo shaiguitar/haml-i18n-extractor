@@ -155,7 +155,7 @@ module Haml
 
           replacement_info = []
           finder_result_matches.each_with_index do |match, index|
-            replacer_result = replacement_result(orig_line, match, finder_result.type, line_no)
+            replacer_result = replacement_result(orig_line, match, finder_result.type, line_no, finder_result.options)
             if replacer_result.should_be_replaced
               replacement_info.push(replacer_result.info)
               replacements[line_no] = ["#{whitespace}#{replacer_result.modified_line}", replacement_info]
@@ -173,12 +173,12 @@ module Haml
         end
       end
 
-      def replacement_result(orig_line, line_match, line_type, line_no)
+      def replacement_result(orig_line, line_match, line_type, line_no, options)
         if line_match && !line_match.empty?
           result = Haml::I18n::Extractor::TextReplacer.new(orig_line, line_match, line_type, @haml_reader.path, line_metadata(line_no), {
             :add_filename_prefix => @add_filename_prefix,
             :base_path => @base_path
-          }).result
+          }.merge(options)).result
 
           result
         else

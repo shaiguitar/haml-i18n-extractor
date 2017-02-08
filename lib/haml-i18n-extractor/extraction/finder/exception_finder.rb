@@ -13,7 +13,7 @@ module Haml
         FORM_SUBMIT_BUTTON_DOUBLE_Q = /[a-z]\.submit\s?["](.*?)["].*$/
         # get quoted strings that are not preceded by t( - not translated
         # based on https://www.metaltoad.com/blog/regex-quoted-string-escapable-quotes
-        QUOTED_STRINGS = /((?<![\\]|t\()['"])((?:.(?!(?<![\\])\1))*.?)\1/
+        QUOTED_STRINGS = /((?<![\\]|t\(|class:[\s*])['"])((?:.(?!(?<![\\])\1))*.?)\1/
         ARRAY_OF_STRINGS = /^[\s]?\[(.*)\]/
 
         # this class simply returns text except for anything that matches these regexes.
@@ -62,7 +62,7 @@ module Haml
         # Remove any matches that are just quote marks
         # e.g. "Blah" would get kept but "'" and "t(blah)" would be discarded
         def filter_out_invalid_quoted_strings(arr)
-          arr.select { |str| str != "'" && str != '"' }
+          arr.select { |str| str != "'" && str != '"' && !str.start_with?(',')}
         end
 
       end
