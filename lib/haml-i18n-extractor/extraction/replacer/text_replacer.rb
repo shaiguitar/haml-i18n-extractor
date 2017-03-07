@@ -77,7 +77,11 @@ module Haml
           end
 
           if (@options[:add_filename_prefix])
-            name = @path.gsub(@options[:base_path], '').gsub(/(\.html)?\.haml/, '').gsub(/\//, '.') + '.' + name
+            filename = File.basename(@path)
+            path_without_filename = @path.gsub(@options[:base_path], '').gsub(filename, '')
+            filename_without_leading_underscore = filename.gsub(/^_/, "")
+            path_with_corrected_filename = path_without_filename.to_s + filename_without_leading_underscore.to_s
+            name = path_with_corrected_filename.gsub(/(\.html)?\.haml/, '').gsub(/\//, '.') + '.' + name.gsub(/^_/, '')
           end
           name
         end

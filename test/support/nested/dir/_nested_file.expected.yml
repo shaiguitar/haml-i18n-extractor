@@ -19,3 +19,7 @@ en:
         userusername_useremail: "%{userusername} (%{useremail})"
         the_software_is_provided_as_is_without_warranty_of_any_kind_e: The software is provided \"as is\", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.
         required: required
+        site_titles_job_electricity_profile: "%{site_title}'s Job electricity profile"
+        there_has_been_an_increase_in_load_during_out_of_hours_by_kw_: >-
+          There has been an increase in load during out of hours by %{kw_increase} kW seen from %{date}. This can be easily seen on %{event_urlenergylink} for the past few weeks, with an increase of %{kw_increase} kW on the main meter. Have any schedules been changed or has maintenance been carried out on equipment recently? For more information on how to resolve these issues, please review our support
+          article on %{support_link_addressing_baseload}.

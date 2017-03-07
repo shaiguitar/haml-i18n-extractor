@@ -17,6 +17,7 @@ module Haml
           @options = options
           if (options[:add_filename_prefix])
             @dir_prefix_including_filename = options[:haml_path].gsub(options[:base_path], '').gsub(/(\.html)?\.haml/, '')
+
             dir_prefix_parts = @dir_prefix_including_filename.split('/')
             dir_prefix_without_filename = dir_prefix_parts.first dir_prefix_parts.size - 1
             @dir_prefix = dir_prefix_without_filename.join('/')
@@ -44,6 +45,7 @@ module Haml
             end
           end
           yml = hashify(yml)
+
         end
 
         def write_file(filename = nil)
@@ -73,7 +75,12 @@ module Haml
             my_hash.each do |k, v|
               is_leaf_node = !v.is_a?(Hash)
               if (@options[:add_filename_prefix] && is_leaf_node)
-                dir_prefix_to_dots = (@dir_prefix_including_filename + '/').gsub('/', '.')
+                filename = File.basename(@dir_prefix_including_filename)
+                path_without_filename = @dir_prefix_including_filename.gsub(@options[:base_path], '').gsub(filename, '')
+                filename_without_leading_underscore = filename.gsub!(/^_/, "")
+                path_with_corrected_filename = path_without_filename + filename_without_leading_underscore
+
+                dir_prefix_to_dots = (path_with_corrected_filename + '/').gsub('/', '.')
                 key_without_dir_prefix = k.to_s.gsub(dir_prefix_to_dots, '')
                 result[key_without_dir_prefix] = v
               else
@@ -107,6 +114,7 @@ module Haml
           array_of_dirs = pathname.dirname.to_s.split("/")
           view_name = pathname.basename.to_s.gsub(/.html.haml$/,"").gsub(/.haml$/,"")
           view_name.gsub!(/^_/, "")
+
           index = array_of_dirs.index("views")
 
           if (@options[:add_filename_prefix])

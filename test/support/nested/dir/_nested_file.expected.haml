@@ -1,45 +1,49 @@
 - content_for :title do
-  = [t('nested.dir._nested_file.admin'), t('nested.dir._nested_file.accounts'), t('nested.dir._nested_file.new')].compact.join(' - ')
+  = [t('nested.dir.nested_file.admin'), t('nested.dir.nested_file.accounts'), t('nested.dir.nested_file.new')].compact.join(' - ')
 .row
   .col-md-12
     %ul.breadcrumb
       %li
-        = link_to root_url(subdomain: t('nested.dir._nested_file.admin')) do
+        = link_to root_url(subdomain: t('nested.dir.nested_file.admin')) do
           %i.fa.fa-fw.fa-home
-          %span.text= t('nested.dir._nested_file.home')
+          %span.text= t('nested.dir.nested_file.home')
       %li
         = link_to admin_accounts_path do
           %i.fa.fa-fw.fa-globe
-          %span.text= t('nested.dir._nested_file.new_accounts')
+          %span.text= t('nested.dir.nested_file.new_accounts')
       %li.active=t('Create Account')
     %fieldset
-      = f.input :blah, label: t('nested.dir._nested_file.blah'), hint: t('nested.dir._nested_file.blabbloo')
+      = f.input :blah, label: t('nested.dir.nested_file.blah'), hint: t('nested.dir.nested_file.blabbloo')
 
 / main
 .content
   .main-header
-    %h2= t('nested.dir._nested_file.create_account')
+    %h2= t('nested.dir.nested_file.create_account')
   / main-content
   .main-content
     .row
       .col-md-12
-        = render t('nested.dir._nested_file.form')
+        = render t('nested.dir.nested_file.form')
 
-%span.text= t('nested.dir._nested_file.job_jobid_jobqueue', :jobid => (@job.id), :jobqueue => (@job.queue))
+%span.text= t('nested.dir.nested_file.job_jobid_jobqueue', :jobid => (@job.id), :jobqueue => (@job.queue))
 
 %p
-  %label{ for: 'fieldName' }= t('nested.dir._nested_file.name')
+  %label{ for: 'fieldName' }= t('nested.dir.nested_file.name')
   %br
   %input#fieldName{ name: 'cm-name', type: 'text' }
 
-%label{ for: 'fieldyhiddl' }= t('nested.dir._nested_file.phone_number')
+%label{ for: 'fieldyhiddl' }= t('nested.dir.nested_file.phone_number')
 
-= link_to t('nested.dir._nested_file.sign_up_for_energylink'), signup_path, class: 'btn btn-lg btn-success'
+= link_to t('nested.dir.nested_file.sign_up_for_energylink'), signup_path, class: 'btn btn-lg btn-success'
 
-%span.identifier= t('nested.dir._nested_file.userusername_useremail', :userusername => (user.username), :useremail => (user.email))
+%span.identifier= t('nested.dir.nested_file.userusername_useremail', :userusername => (user.username), :useremail => (user.email))
 -#
-%div= t('nested.dir._nested_file.the_software_is_provided_as_is_without_warranty_of_any_kind_e')
+%div= t('nested.dir.nested_file.the_software_is_provided_as_is_without_warranty_of_any_kind_e')
 -#
 -## Running the extractor tool when a yaml file already exists removes quotes from other keys....
 -#
-%abbr{ title: t('nested.dir._nested_file.required') }*
+%abbr{ title: t('nested.dir.nested_file.required') }*
+
+%p= t('nested.dir.nested_file.site_titles_job_electricity_profile', :site_title => (site_title))
+
+%div= t('nested.dir.nested_file.there_has_been_an_increase_in_load_during_out_of_hours_by_kw_', :kw_increase => (kw_increase), :date => (date), :event_urlenergylink => (event_url:EnergyLink), :kw_increase => (kw_increase), :support_link_addressing_baseload => (support_link: Addressing Baseload))

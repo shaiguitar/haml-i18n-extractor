@@ -61,7 +61,7 @@ module Haml
       })
       assert_nil @ex1.yaml_writer.info_for_yaml
       @ex1.run
-      @ex1.yaml_writer.write_file
+      @ex1.yaml_writer.write_file(file_path("nested/dir/actual_yml.yml"))
       expected_haml_output = File.read(file_path("nested/dir/_nested_file.expected.haml"))
       expected_yaml_output = YAML.load File.read(file_path("nested/dir/_nested_file.expected.yml"))
       assert_equal expected_haml_output, @ex1.new_body
