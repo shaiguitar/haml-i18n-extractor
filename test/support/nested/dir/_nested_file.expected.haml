@@ -25,7 +25,7 @@
       .col-md-12
         = render t('nested.dir.nested_file.form')
 
-%span.text= t('nested.dir.nested_file.job_jobid_jobqueue', jobid: (@job.id), jobqueue: (@job.queue))
+%span.text= t('nested.dir.nested_file.job_jobid_jobqueue', jobid: @job.id, jobqueue: @job.queue)
 
 %p
   %label{ for: 'fieldName' }= t('nested.dir.nested_file.name')
@@ -36,7 +36,7 @@
 
 = link_to t('nested.dir.nested_file.sign_up_for_energylink'), signup_path, class: 'btn btn-lg btn-success'
 
-%span.identifier= t('nested.dir.nested_file.userusername_useremail', userusername: (user.username), useremail: (user.email))
+%span.identifier= t('nested.dir.nested_file.userusername_useremail', userusername: user.username, useremail: user.email)
 -#
 %div= t('nested.dir.nested_file.the_software_is_provided_as_is_without_warranty_of_any_kind_e')
 -#
@@ -44,6 +44,6 @@
 -#
 %abbr{ title: t('nested.dir.nested_file.required') }*
 
-%p= t('nested.dir.nested_file.site_titles_job_electricity_profile', site_title: (site_title))
+%p= t('nested.dir.nested_file.site_titles_job_electricity_profile', site_title: site_title)
 
-%div= t('nested.dir.nested_file.there_has_been_an_increase_in_load_during_out_of_hours_by_kw_', kw_increase: (kw_increase), date: (date), event_urlenergylink: (event_url:EnergyLink), kw_increase: (kw_increase), support_link_addressing_baseload: (support_link: Addressing Baseload))
+%div= t('nested.dir.nested_file.there_has_been_an_increase_in_load_during_out_of_hours_by_kw_', kw_increase: kw_increase, date: date, event_urlenergylink: event_url:EnergyLink, kw_increase: kw_increase, support_link_addressing_baseload: support_link: Addressing Baseload)
