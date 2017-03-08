@@ -8,7 +8,7 @@
     %h3
       = t('.all_invoices_billable')
       %span{:style => (@billable_invoices == @active_invoices) ? "color: #090" : "color: #900"}
-        = t('.billable_invoices_out_of_active_invoices', :billable_invoices => (@billable_invoices), :active_invoices => (@active_invoices))
+        = t('.billable_invoices_out_of_active_invoices', billable_invoices: (@billable_invoices), active_invoices: (@active_invoices))
     %h3
       = t('.24_hours_past_end_of_billing_month')
       %span{:style => (@billing_month.past_cutoff) ? "color: #090" : "color: #900"}
