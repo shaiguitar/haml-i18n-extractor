@@ -77,9 +77,8 @@ module Haml
               if (@options[:add_filename_prefix] && is_leaf_node)
                 filename = File.basename(@dir_prefix_including_filename)
                 path_without_filename = @dir_prefix_including_filename.gsub(@options[:base_path], '').gsub(filename, '')
-                filename_without_leading_underscore = filename.gsub!(/^_/, "")
+                filename_without_leading_underscore = filename.gsub(/^_/, "")
                 path_with_corrected_filename = path_without_filename.to_s + filename_without_leading_underscore.to_s
-
                 dir_prefix_to_dots = (path_with_corrected_filename + '/').gsub('/', '.')
                 key_without_dir_prefix = k.to_s.gsub(dir_prefix_to_dots, '')
                 result[key_without_dir_prefix] = v

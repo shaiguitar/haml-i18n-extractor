@@ -56,14 +56,30 @@ module Haml
 
     def test_handles_nested_directories_when_add_prefix_setting_is_enabled
       @ex1 = Haml::I18n::Extractor.new(file_path("nested/dir/_nested_file.haml"), {
-          :base_path => File.dirname(__FILE__) + '/support/',
-          :add_filename_prefix => true
+        :base_path => File.dirname(__FILE__) + '/support/',
+        :add_filename_prefix => true
       })
       assert_nil @ex1.yaml_writer.info_for_yaml
       @ex1.run
       @ex1.yaml_writer.write_file(file_path("nested/dir/actual_yml.yml"))
       expected_haml_output = File.read(file_path("nested/dir/_nested_file.expected.haml"))
       expected_yaml_output = YAML.load File.read(file_path("nested/dir/_nested_file.expected.yml"))
+      assert_equal expected_haml_output, @ex1.new_body
+      assert_equal './config/locales/en/nested/dir/en.yml', @ex1.yaml_writer.yaml_file
+      assert_equal expected_yaml_output, @ex1.yaml_writer.yaml_hash
+    end
+
+    def test_handles_files_without_leading_underscore_in_nested_directories_when_add_prefix_setting_is_enabled
+      @ex1 = Haml::I18n::Extractor.new(file_path("nested/dir/nested-no-leading-underscore.haml"), {
+        :base_path => File.dirname(__FILE__) + '/support/',
+        :add_filename_prefix => true
+      })
+      assert_nil @ex1.yaml_writer.info_for_yaml
+      @ex1.run
+      @ex1.yaml_writer.write_file(file_path("nested/dir/actual_no_underscore_yml.yml"))
+      @ex1.haml_writer.write_file()
+      expected_haml_output = File.read(file_path("nested/dir/nested-no-leading-underscore.expected.haml"))
+      expected_yaml_output = YAML.load File.read(file_path("nested/dir/nested-no-leading-underscore.expected.yml"))
       assert_equal expected_haml_output, @ex1.new_body
       assert_equal './config/locales/en/nested/dir/en.yml', @ex1.yaml_writer.yaml_file
       assert_equal expected_yaml_output, @ex1.yaml_writer.yaml_hash
