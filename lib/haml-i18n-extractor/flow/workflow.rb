@@ -18,7 +18,7 @@ module Haml
 
         def files
           @haml_files ||= Dir.glob(@project_path + "/**/*").select do |file|
-           file.match /.haml$/
+            file.match(/.haml$/)
           end
         end
 
@@ -37,12 +37,7 @@ module Haml
           if interactive?
             start_message
             files.each do |haml_path|
-              type = process_file?(haml_path)
-              if type
-                process(haml_path, type)
-              else
-                @prompter.not_processing(haml_path)
-              end
+              process(haml_path)
             end
             end_message
           else
@@ -62,15 +57,20 @@ module Haml
           (files.index(file) + 1).to_s
         end
 
-        def process(haml_path, type)
-          @prompter.process(haml_path, type)
-          @passed_options.merge!({:type => type}) # overwrite or dump haml
-          begin
-            @extractor = Haml::I18n::Extractor.new(haml_path, @passed_options)
-            Extractor.extractors << @extractor
-            @extractor.run
-          rescue Haml::I18n::Extractor::InvalidSyntax
-            @prompter.syntax_error(haml_path)
+        def process(haml_path, type = nil)
+          @extractor = Haml::I18n::Extractor.new(haml_path, @passed_options)
+          Extractor.extractors << @extractor
+          type = type || (@extractor.has_replacements? && process_file?(haml_path))
+          if type
+            @prompter.process(haml_path, type)
+            @passed_options.merge!({:type => type}) # overwrite or dump haml
+            begin
+              @extractor.run
+            rescue Haml::I18n::Extractor::InvalidSyntax
+              @prompter.syntax_error(haml_path)
+            end
+          else
+            @prompter.not_processing(haml_path)
           end
         end
       end

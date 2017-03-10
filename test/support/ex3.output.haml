@@ -1,15 +1,15 @@
 %h1
-  = link_to t('.link_to_id_customercontrolmenu'), id: 'customer-control-menu', role: 'button', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
+  = link_to t('.link_to_id_customercontrolmenu_role_button_class_dropdowntogg'), id: 'customer-control-menu', role: 'button', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
     = t('.here')
   = link_to t('.real_text_here'), id: 'customer-control-menu', role: 'button', class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
     = t('.there')
 
-  %span.creator{:title => "This user is an= t('.owner') of this account"} t('.owner')
+  %span.creator{:title => t('.this_user_is_an_owner_of_this_account')} owner
   %span.title&= user.name
-  %strong= t('.accountname', :accountname => (@account.name))
+  %strong= t('.accountname', accountname: @account.name)
 
   %table(style="width:400px")
     %td= t('.td')
-    %td= t('.accountsendattr_none', :accountsendattr_none => (@account.send(attr) || '(none)'))
+    %td= t('.accountsendattr_none', accountsendattr_none: @account.send(attr) || '(none)')
 
 %p#brand= link_to t('.some_place'), '/'

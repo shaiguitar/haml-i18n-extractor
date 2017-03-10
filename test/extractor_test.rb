@@ -2,7 +2,7 @@ require 'test_helper'
 
 module Haml
   # really should just be part of integration_test.rb , testing shit from the orchestration class
-  class ExtractorTest < MiniTest::Unit::TestCase
+  class ExtractorTest < Minitest::Test
 
     def setup
       @ex1 = Haml::I18n::Extractor.new(file_path("ex1.haml"))
@@ -99,22 +99,22 @@ module Haml
 
     def test_it_writes_the_haml_to_an_out_file_if_valid_haml_output
       FileUtils.rm_rf(@ex1.haml_writer.path)
-      assert_equal File.exists?(@ex1.haml_writer.path), false
+      assert_equal File.exist?(@ex1.haml_writer.path), false
       @ex1.run
-      assert_equal File.exists?(@ex1.haml_writer.path), true
+      assert_equal File.exist?(@ex1.haml_writer.path), true
     end
 
     def test_it_writes_the_locale_info_to_an_out_file_when_run
       TestHelper.hax_shit
-      assert_equal File.exists?(@ex1.yaml_writer.yaml_file), false
+      assert_equal File.exist?(@ex1.yaml_writer.yaml_file), false
       @ex1.run
-      assert_equal File.exists?(@ex1.yaml_writer.yaml_file), true
+      assert_equal File.exist?(@ex1.yaml_writer.yaml_file), true
       assert_equal YAML.load(File.read(@ex1.yaml_writer.yaml_file)), @ex1.yaml_writer.yaml_hash
     end
 
     def test_sends_a_hash_over_of_replacement_info_to_its_yaml_writer_when_run
       @ex1 = Haml::I18n::Extractor.new(file_path("ex1.haml"))
-      assert_equal @ex1.yaml_writer.info_for_yaml, nil
+      assert_nil @ex1.yaml_writer.info_for_yaml
       @ex1.run
       assert @ex1.yaml_writer.info_for_yaml.is_a?(Hash), "its is hash of info about the files lines"
       assert_equal @ex1.yaml_writer.info_for_yaml.size, @ex1.haml_reader.lines.size
@@ -132,6 +132,6 @@ module Haml
         assert true, "it should not allow invalid output to be written"
       end
     end
-    
+
   end
 end

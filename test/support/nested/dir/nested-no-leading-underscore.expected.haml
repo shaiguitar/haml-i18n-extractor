@@ -1,0 +1,42 @@
+.container
+  -# Breadcrumbs
+  %ol.breadcrumb
+    %li= link_to current_account.title, current_account
+    %li
+      = link_to account_settings_path do
+        %i.fa.fa-fw.fa-cog
+        %span.text= t('nested.dir.nested-no-leading-underscore.account_settings')
+    %li
+      = link_to tariffs_path do
+        %i.fa.fa-fw.fa-calculator
+        %span.text= t('nested.dir.nested-no-leading-underscore.tariffs')
+    %li
+      = link_to tariff_path(@tariff) do
+        %i.fa.fa-fw.fa-calculator
+        %span.text= @tariff.friendly_title
+    %li.active
+      %i.fa.fa-fw.fa-plus
+      %span.text= t('nested.dir.nested-no-leading-underscore.add_volume_charge')
+
+  #pageTitle
+    .pull-left
+      %h1= current_account.title
+
+    %ul.nav
+      %li
+        .btn-group
+          = link_to new_tariff_path, class: 'btn btn-default btn-sm' do
+            %i.fa.fa-fw.fa-plus
+            %span.text= t('nested.dir.nested-no-leading-underscore.new_tariff')
+      %li
+        .btn-group
+          = link_to account_settings_path, class: 'btn btn-default btn-sm' do
+            %i.fa.fa-fw.fa-cog
+            %span.text= t('nested.dir.nested-no-leading-underscore.settings')
+
+  .row
+    .col-md-3
+      = render partial: t('nested.dir.nested-no-leading-underscore.account_settingsnavigation'), locals: { parent: t('nested.dir.nested-no-leading-underscore.tariff') }
+
+    .col-md-9
+      = render t('nested.dir.nested-no-leading-underscore.form')

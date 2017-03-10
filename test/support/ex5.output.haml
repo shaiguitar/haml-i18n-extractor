@@ -1,7 +1,9 @@
+%p= t('.this_is_h_quality_cake', h_quality: h quality)
+%p= t('.this_is_the_h_quality_cake', h_quality: h quality)
 .class= t('.text_here')
-.other-class#id= t('.script_with_quote_with_interpo', :with_interpolationbub => (with_interpolation(bub)))
+.other-class#id= t('.script_with_quote_with_interpolationbub_interpolated', with_interpolationbub: with_interpolation(bub))
 
-=t('.this_may_be_the_dup', :be => (be), :dup => (dup))
-= link_to t('.adnamefirst', :adnamefirst => (ad.name.first)), url_for([ad, :ok])
+= t('.this_may_be_the_dup', be: be, dup: dup)
+= link_to t('.go_to_adnamefirst', adnamefirst: ad.name.first), url_for([ad, :ok])
 
-= t('.no_quotes_some_var_with_text', :some_var => (some_var))
+= t('.no_quotes_some_var_with_text', some_var: some_var)

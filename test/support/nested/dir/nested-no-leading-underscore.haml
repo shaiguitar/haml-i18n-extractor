@@ -1,0 +1,42 @@
+.container
+  -# Breadcrumbs
+  %ol.breadcrumb
+    %li= link_to current_account.title, current_account
+    %li
+      = link_to account_settings_path do
+        %i.fa.fa-fw.fa-cog
+        %span.text Account Settings
+    %li
+      = link_to tariffs_path do
+        %i.fa.fa-fw.fa-calculator
+        %span.text Tariffs
+    %li
+      = link_to tariff_path(@tariff) do
+        %i.fa.fa-fw.fa-calculator
+        %span.text= @tariff.friendly_title
+    %li.active
+      %i.fa.fa-fw.fa-plus
+      %span.text Add Volume Charge
+
+  #pageTitle
+    .pull-left
+      %h1= current_account.title
+
+    %ul.nav
+      %li
+        .btn-group
+          = link_to new_tariff_path, class: 'btn btn-default btn-sm' do
+            %i.fa.fa-fw.fa-plus
+            %span.text New Tariff
+      %li
+        .btn-group
+          = link_to account_settings_path, class: 'btn btn-default btn-sm' do
+            %i.fa.fa-fw.fa-cog
+            %span.text Settings
+
+  .row
+    .col-md-3
+      = render partial: 'account_settings/navigation', locals: { parent: 'tariff' }
+
+    .col-md-9
+      = render 'form'

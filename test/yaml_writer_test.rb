@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module Haml
-  class YamlWriterTest < MiniTest::Unit::TestCase
+  class YamlWriterTest < Minitest::Test
 
     def setup
       @temp_locale_dir = "./test/tmp/"
@@ -15,7 +15,7 @@ module Haml
 
     def locale_config_dir
       dir = File.expand_path(File.join(File.dirname(__FILE__), "/tmp/config/locales"))
-      if ! File.exists?(dir)
+      if ! File.exist?(dir)
         FileUtils.mkdir_p(dir)
       end
       dir
@@ -32,11 +32,13 @@ module Haml
     end
 
     def existing_yaml_hash
-      {"en" => {
-        "viewname" => {
-          "translate_key" => "Translate Key"
+      {
+        "en" => {
+          "viewname" => {
+            "translate_key" => "Translate Key",
+            "this_daily_report_prepared" => 'This %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONGThis %{daily_site_report_url:daily report} from %{account_url:EnergyLink} has been prepared for %{account_url:%{account_title}} on %{date} REALLY LONG'
+          }
         }
-      }
       }
     end
 
@@ -55,7 +57,7 @@ module Haml
     def test_it_can_deal_with_interpolated_vars
       @ex5 = Haml::I18n::Extractor.new(file_path("ex5.haml"))
       @ex5.run
-      assert_equal @ex5.yaml_writer.yaml_hash, ex5_yaml_hash
+      assert_equal ex5_yaml_hash, @ex5.yaml_writer.yaml_hash
     end
 
     def test_it_can_deal_with_utf8_characters
@@ -80,8 +82,8 @@ module Haml
       setup_yaml_file
       @ex1.yaml_writer.write_file(locale_config_file)
       really_written = YAML.load(File.read(locale_config_file))
-      assert_equal really_written['en']['viewname'], existing_yaml_hash['en']['viewname']
-      assert_equal really_written['en']['support'], ex1_yaml_hash['en']['support']
+      assert_equal existing_yaml_hash['en']['viewname'], really_written['en']['viewname']
+      assert_equal ex1_yaml_hash['en']['support'], really_written['en']['support']
     end
 
     def test_it_can_accept_a_different_yml_file
@@ -104,6 +106,15 @@ module Haml
       assert_equal yaml_writer.yaml_file, "./config/locales/he.yml"
     end
 
+    def test_it_will_put_yaml_file_in_appropriate_dir_if_add_filename_prefix_set
+      yaml_writer = Haml::I18n::Extractor::YamlWriter.new("en", nil, {
+          :haml_path => 'some/path/to/the-haml.haml',
+          :add_filename_prefix => true,
+          :base_path => File.dirname(__FILE__) + '/support/',
+      })
+      assert_equal "./config/locales/en/some/path/to/en.yml", yaml_writer.yaml_file
+    end
+
     def test_it_will_not_assume_yaml_file_according_to_i18n_scope_if_yaml_file_is_passed
       yaml_writer = Haml::I18n::Extractor::YamlWriter.new("he", "/tmp/foo.yml")
       assert_equal yaml_writer.yaml_file, "/tmp/foo.yml"
@@ -112,11 +123,14 @@ module Haml
     def test_it_relies_on_the_info_for_yaml_having_a_certain_format
       setup_info_for_yaml
       @ex1.yaml_writer.info_for_yaml.each do |line_no, info_for_line|
-        assert info_for_line.has_key?(:modified_line), "hash info has :modified_line key"
-        assert info_for_line.has_key?(:t_name), "hash info has :t_name key"
-        assert info_for_line.has_key?(:replaced_text), "hash info has :replaced_text key"
-        # FIXME: since the scope right now is we're running this per file this will be the same, but keeping this right now.
-        assert info_for_line.has_key?(:path), "hash info has :path key"
+        assert info_for_line.is_a?(Array), "hash info should be an array"
+        info_for_line.each do |sub_info_for_line|
+          assert sub_info_for_line.has_key?(:modified_line), "hash info has :modified_line key"
+          assert sub_info_for_line.has_key?(:t_name), "hash info has :t_name key"
+          assert sub_info_for_line.has_key?(:replaced_text), "hash info has :replaced_text key"
+          # FIXME: since the scope right now is we're running this per file this will be the same, but keeping this right now.
+          assert sub_info_for_line.has_key?(:path), "hash info has :path key"
+        end
       end
     end
 

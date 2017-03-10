@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module Haml
-  class WorkflowTest < MiniTest::Unit::TestCase
+  class WorkflowTest < Minitest::Test
 
     def setup
       TestHelper.setup_project_directory! # tests here rely on this setup...
@@ -15,7 +15,7 @@ module Haml
     def test_it_should_work_on_a_directory_mkay
       begin
         filename = "#{TestHelper::PROJECT_DIR}app/views/bar/thang.haml"
-        bad_worfklow = Haml::I18n::Extractor::Workflow.new(filename)
+        Haml::I18n::Extractor::Workflow.new(filename)
         assert false, "should raise"
       rescue Haml::I18n::Extractor::NotADirectory
         assert true, "workflow works on a directory bubba."

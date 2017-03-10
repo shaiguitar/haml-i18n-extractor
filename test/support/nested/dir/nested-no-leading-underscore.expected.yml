@@ -1,0 +1,13 @@
+---
+en:
+  nested:
+    dir:
+      nested-no-leading-underscore:
+        account_settings: Account Settings
+        tariffs: Tariffs
+        add_volume_charge: Add Volume Charge
+        new_tariff: New Tariff
+        settings: Settings
+        account_settingsnavigation: account_settings/navigation
+        tariff: tariff
+        form: form

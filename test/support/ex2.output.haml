@@ -1,4 +1,4 @@
-= render :partial => "layouts/adminnav", :locals => {:account => nil }
+= render :partial => t('.layoutsadminnav'), :locals => {:account => nil }
 .row
   .admin.span12
     %h1
@@ -8,24 +8,24 @@
     %h3
       = t('.all_invoices_billable')
       %span{:style => (@billable_invoices == @active_invoices) ? "color: #090" : "color: #900"}
-        =t('.billable_invoices_out_of_activ', :billable_invoices => (@billable_invoices), :active_invoices => (@active_invoices))
+        = t('.billable_invoices_out_of_active_invoices', billable_invoices: @billable_invoices, active_invoices: @active_invoices)
     %h3
-      = t('.24_hours_past_end_of_billing_m')
+      = t('.24_hours_past_end_of_billing_month')
       %span{:style => (@billing_month.past_cutoff) ? "color: #090" : "color: #900"}
         = @billing_month.past_cutoff
 
     - if @billing_month.open?
       - if @billing_month.past_cutoff && (@billable_invoices == @active_invoices)
-        = form_for @billing_month, :url => close_admin_billing_month_url(@billing_month), :method => "POST" do |f|
-          = f.submit t('.close_this_month_cannot_be_und'), :class => 'btn btn-primary'
+        = form_for @billing_month, :url => close_admin_billing_month_url(@billing_month), :method => t('.post') do |f|
+          = f.submit t('.close_this_month_cannot_be_undone'), :class => 'btn btn-primary'
       - else
         %p
-          = t('.billing_month_cannot_be_closed')
+          = t('.billing_month_cannot_be_closed_yet')
       %p
-        = t('.closing_the_billing_month_will')
+        = t('.closing_the_billing_month_will_mark_all_the_invoices_as_poste')
       %p
-        = t('.after_closing_you_will_need_to')
+        = t('.after_closing_you_will_need_to_do_a_payment_run_to_charge_all')
     - elsif @billing_month.closing?
-      = t('.month_is_currently_closing_rel')
+      = t('.month_is_currently_closing_reload_to_check_if_its_done')
     - elsif @billing_month.closed?
       = t('.month_is_closed')
