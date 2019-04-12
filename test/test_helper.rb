@@ -32,11 +32,11 @@ class MiniTest::Unit::TestCase
     return engine.to_html(base) if base
     engine.to_html(scope, locals, &block)
   end
-  
+
   def assert_warning(message)
     the_real_stderr, $stderr = $stderr, StringIO.new
     yield
-  
+
     if message.is_a?(Regexp)
       assert_match message, $stderr.string.strip
     else
@@ -45,15 +45,15 @@ class MiniTest::Unit::TestCase
   ensure
     $stderr = the_real_stderr
   end
-  
+
   def silence_warnings(&block)
     Haml::Util.silence_warnings(&block)
   end
-  
+
   def rails_form_opener
     '<div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /></div>'
   end
-  
+
   def assert_raises_message(klass, message)
     yield
   rescue Exception => e
@@ -62,7 +62,7 @@ class MiniTest::Unit::TestCase
   else
     flunk "Expected exception #{klass}, none raised"
   end
-  
+
   def self.error(*args)
     Haml::Error.message(*args)
   end
@@ -114,7 +114,7 @@ module TestHelper
   def self.hax_shit
     Dir.glob("*yml").map {|p| FileUtils.rm(p) } # HAX, TODO: handle with yaml files correctly (config/en.yml)
     Dir.glob("config/locales/*yml").map {|p| FileUtils.rm(p) } # HAX, TODO: handle with yaml files correctly (config/en.yml)
-    if File.exists?(Haml::I18n::Extractor::TaggingWriter::DB)
+    if File.exist?(Haml::I18n::Extractor::TaggingWriter::DB)
       FileUtils.rm_rf(Haml::I18n::Extractor::TaggingWriter::DB) # HAX, TODO: setup/teardown
     end
   end
@@ -165,5 +165,5 @@ EOH
   def self.teardown_project_directory!
     FileUtils.rm_rf(PROJECT_DIR)
   end
-  
+
 end

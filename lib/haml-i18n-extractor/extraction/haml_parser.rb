@@ -6,12 +6,14 @@ module Haml
       class HamlParser < Haml::Parser
 
         def initialize(haml)
-          super(haml, Haml::Options.new)
+          super(Haml::Options.new)
+
+          @haml = haml
         end
 
         def flattened_values
           # make the haml we passed in a parse tree!
-          @ht_parse_tree = self.parse 
+          @ht_parse_tree = self.call(haml)
           ret = flatten_tree_attrs(@ht_parse_tree,[])
           ret[1..-2] # we only want the actual lines, not the root node and last line which don't really exist
           #ret
@@ -30,6 +32,8 @@ module Haml
         end
 
         private
+
+        attr_reader :haml
 
         def node_attributes(node)
           attrs = {}
