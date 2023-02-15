@@ -1,6 +1,6 @@
 # Haml::I18n::Extractor
 
-*Update: please see https://github.com/COzero/haml-i18n-extractor for newer updates*
+*Update: please see https://github.com/clbustos/haml-i18n-extractor for newer updates*
 
 Extract strings likely to be translated from haml templates for I18n translation. Replace the text, create yaml files, do all things you thought macros would solve, but didn't end up really saving THAT much time. Automate that pain away.
 
